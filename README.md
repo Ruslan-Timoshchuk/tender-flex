@@ -1,0 +1,1 @@
+TenderFlex platform that help tendering process to be quick and transparent
