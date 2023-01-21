@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import pl.com.tenderflex.model.Role;
 
 @EnableWebSecurity
 public class SecurityConfig {
@@ -15,8 +16,8 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/**/auth/**")
-            .permitAll()
+            .antMatchers("/**/auth/**").permitAll()
+            .antMatchers("/**/tender/**").hasAuthority(String.valueOf(Role.CONTRACTOR))
             .anyRequest()
             .authenticated();
         return http.build();

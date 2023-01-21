@@ -19,4 +19,10 @@ public class ExceptionHandlerAdvice {
      public ApiError handleExceptionAuthenticationControllerException(AuthenticationControllerException exception) {
         return new ApiError(HttpStatus.UNAUTHORIZED, exception);
     }
+    
+    @ExceptionHandler(ServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ApiError handleExceptionServiceException(ServiceException exception) {
+        return new ApiError(HttpStatus.BAD_GATEWAY, exception);
+    }
 }

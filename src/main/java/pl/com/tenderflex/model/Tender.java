@@ -5,26 +5,44 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class Tender {
 
-    private Organization organization;   
+    private Integer id;
+    private User contractor;
+    private Organization organization;
     private String cpvCode;
     private TenderType type;
     private String details;
     private Integer minPrice;
     private Integer maxPrice;
-    private Currency currency;  
+    private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private final LocalDate publication;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private final LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate deadlineForSignedContract;   
+    private LocalDate deadlineForSignedContract;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
-    
+
     public Tender() {
         this.publication = LocalDate.now();
         this.deadline = LocalDate.now().plusDays(1);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(User contractor) {
+        this.contractor = contractor;
     }
 
     public Organization getOrganization() {

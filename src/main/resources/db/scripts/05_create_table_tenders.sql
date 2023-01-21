@@ -1,5 +1,6 @@
 CREATE TABLE tenders (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    contractor_id INTEGER REFERENCES users(id),
     organization_id INTEGER REFERENCES organizations(id),
     cpv_code VARCHAR NOT NULL,
     tender_type VARCHAR NOT NULL,
