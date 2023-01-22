@@ -21,8 +21,8 @@ public class ExceptionHandlerAdvice {
     }
     
     @ExceptionHandler(ServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleExceptionServiceException(ServiceException exception) {
-        return new ApiError(HttpStatus.BAD_GATEWAY, exception);
+        return new ApiError(HttpStatus.BAD_REQUEST, exception);
     }
 }
