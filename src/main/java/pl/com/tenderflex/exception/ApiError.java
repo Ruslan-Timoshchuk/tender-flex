@@ -11,12 +11,14 @@ public class ApiError {
     private final Integer code;
     private final HttpStatus status;
     private final String message;
+    private final String cause;
    
-    public ApiError(HttpStatus status, Throwable exception) {
+    public ApiError(HttpStatus status, Throwable exception, Throwable cause) {
         this.timestamp = LocalDateTime.now();
         this.code = status.value();
         this.status = status;
         this.message = exception.getMessage();
+        this.cause = cause.getMessage();
     }
     
     public Integer getCode() {
@@ -29,5 +31,9 @@ public class ApiError {
     
     public String getMessage() {
         return message;
-    }   
+    }
+
+    public String getCause() {
+        return cause;
+    }    
 }
