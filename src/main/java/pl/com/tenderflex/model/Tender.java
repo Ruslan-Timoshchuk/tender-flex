@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Tender {
 
     private Integer id;
-    private User contractor;
+    private Integer contractorId;
     private Organization organization;
     private String cpvCode;
     private TenderType type;
@@ -17,16 +17,16 @@ public class Tender {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private final LocalDate publication;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private final LocalDate deadline;
+    private LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
 
-    public Tender() {
-        this.publication = LocalDate.now();
-        this.deadline = LocalDate.now().plusDays(1);
+    public Tender(Organization organization, LocalDate publication) {
+        this.organization = organization;
+        this.publication = publication;
     }
 
     public Integer getId() {
@@ -37,12 +37,12 @@ public class Tender {
         this.id = id;
     }
 
-    public User getContractor() {
-        return contractor;
+    public Integer getContractorId() {
+        return contractorId;
     }
 
-    public void setContractor(User contractor) {
-        this.contractor = contractor;
+    public void setContractorId(Integer contractorId) {
+        this.contractorId = contractorId;
     }
 
     public Organization getOrganization() {
@@ -101,6 +101,14 @@ public class Tender {
         this.currency = currency;
     }
 
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
     public LocalDate getDeadlineForSignedContract() {
         return deadlineForSignedContract;
     }
@@ -135,9 +143,5 @@ public class Tender {
 
     public LocalDate getPublication() {
         return publication;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
     }
 }

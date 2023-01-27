@@ -15,6 +15,8 @@
 
   <properties>
     <java.version>17</java.version>
+    <aws.java.sdk>1.12.392</aws.java.sdk>
+    <commons.io.utils>2.11.0</commons.io.utils>
   </properties>
 
   <dependencies>
@@ -42,6 +44,16 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>${aws.java.sdk}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons.io.utils}</version>
     </dependency>
   </dependencies>
 

@@ -1,15 +1,16 @@
-package pl.com.tenderflex.dao;
+package pl.com.tenderflex.dao.impl;
 
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
 @Repository
-public class TenderDao {
+public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication, deadline, "
@@ -24,6 +25,7 @@ public class TenderDao {
         this.organizationDao = organizationDao;
     }
 
+    @Override
     public Tender create(Tender tender, Integer contractorId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         Organization organization = organizationDao.create(tender.getOrganization());

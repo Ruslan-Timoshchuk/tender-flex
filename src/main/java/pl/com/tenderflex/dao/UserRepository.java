@@ -1,8 +1,8 @@
-package pl.com.tenderflex.service;
+package pl.com.tenderflex.dao;
 
 import pl.com.tenderflex.model.User;
 
-public interface UserService {
+public interface UserRepository {
 
     User getByEmail(String email);
     

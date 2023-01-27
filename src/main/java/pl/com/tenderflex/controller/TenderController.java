@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.tenderflex.dto.Attachment;
-import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.dto.TenderDetails;
 import pl.com.tenderflex.service.TenderService;
 
 @RestController
@@ -25,7 +25,7 @@ public class TenderController {
     @PostMapping(consumes = { "multipart/form-data" })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
-            @ModelAttribute Attachment attachment, @RequestPart("tender") Tender tender) {
-        tenderService.createTender(attachment, tender, contractorId);
+            @ModelAttribute Attachment attachment, @RequestPart("tender") TenderDetails tenderDetails) {
+        tenderService.createTender(attachment, tenderDetails, contractorId);  
     }
 }

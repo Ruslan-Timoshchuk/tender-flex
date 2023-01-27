@@ -9,6 +9,10 @@ public class Organization {
     private String city;
     private ContactPerson contactPerson; 
     
+    public Organization(ContactPerson contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+    
     public Integer getId() {
         return id;
     }

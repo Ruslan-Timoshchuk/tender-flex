@@ -1,4 +1,4 @@
-package pl.com.tenderflex.dao;
+package pl.com.tenderflex.dao.impl;
 
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
