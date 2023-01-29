@@ -13,8 +13,8 @@ import pl.com.tenderflex.model.Tender;
 public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
-            + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication, deadline, "
-            + "deadlineForSignedContract, status, contractFileName, awardDecisionFileName, rejectDecisionFileName) "
+            + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication_date, deadline, "
+            + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;

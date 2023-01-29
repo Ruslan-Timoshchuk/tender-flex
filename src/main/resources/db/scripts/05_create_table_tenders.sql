@@ -8,11 +8,11 @@ CREATE TABLE tenders (
     min_price BIGINT NOT NULL,
     max_price BIGINT NOT NULL,
     currency VARCHAR NOT NULL,
-    publication TIMESTAMP NOT NULL,
+    publication_date TIMESTAMP NOT NULL,
     deadline TIMESTAMP NOT NULL,
-    deadlineForSignedContract TIMESTAMP,
+    deadline_for_signed_contract TIMESTAMP,
     status VARCHAR NOT NULL,
-    contractFileName VARCHAR NOT NULL,
-    awardDecisionFileName VARCHAR NOT NULL,
-    rejectDecisionFileName VARCHAR NOT NULL
+    contract_file_name VARCHAR NOT NULL,
+    award_decision_file_name VARCHAR NOT NULL,
+    reject_decision_file_name VARCHAR NOT NULL
 );

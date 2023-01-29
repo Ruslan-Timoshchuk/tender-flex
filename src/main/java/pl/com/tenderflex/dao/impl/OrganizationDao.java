@@ -12,7 +12,7 @@ import pl.com.tenderflex.model.Organization;
 public class OrganizationDao {
 
     public static final String ADD_NEW_ORGANIZATION_QUERY = "INSERT INTO "
-            + "organizations(name, nationalRegistrationNumber, country, city, contact_person_id) VALUES (?, ?, ?, ?, ?)";
+            + "organizations(organization_name, national_registration_number, country, city, contact_person_id) VALUES (?, ?, ?, ?, ?)";
     
     private final JdbcTemplate jdbcTemplate;
     private final ContactPersonDao contactPersonDao;
