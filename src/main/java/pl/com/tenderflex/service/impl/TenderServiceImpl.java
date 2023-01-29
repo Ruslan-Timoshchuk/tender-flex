@@ -2,6 +2,8 @@ package pl.com.tenderflex.service.impl;
 
 import static java.util.Arrays.asList;
 import java.io.IOException;
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,5 +67,10 @@ public class TenderServiceImpl implements TenderService {
         } catch (DataAccessException | IOException e) {
             throw new ServiceException("Error occurred when saving the tender", e);
         }
+    }
+    
+    @Override
+    public List<Tender> getByContractor(Integer contractorId, Integer currentTendersAmount, Integer tendersToSkip){
+        return tenderRepository.getByContractor(contractorId, currentTendersAmount, tendersToSkip);     
     }
 }

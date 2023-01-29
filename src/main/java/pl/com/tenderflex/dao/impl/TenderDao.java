@@ -1,11 +1,13 @@
 package pl.com.tenderflex.dao.impl;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import pl.com.tenderflex.dao.TenderRepository;
+import pl.com.tenderflex.dao.mapper.TenderMapper;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
@@ -16,13 +18,21 @@ public class TenderDao implements TenderRepository {
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication_date, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT first_name, last_name, phone, organization_name, "
+            + "national_registration_number, country, city, publication_date, ten.id, "
+            + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
+            + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
+            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE contractor_id = ? LIMIT ? OFFSET ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
+    private final TenderMapper tenderMapper;
 
-    public TenderDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao) {
+    public TenderDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao, TenderMapper tenderMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.organizationDao = organizationDao;
+        this.tenderMapper = tenderMapper;
     }
 
     @Override
@@ -50,5 +60,11 @@ public class TenderDao implements TenderRepository {
         }, keyHolder);
         tender.setId(keyHolder.getKeyAs(Integer.class));
         return tender;
+    }
+
+    @Override
+    public List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {
+        return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderMapper, contractorId, amountTenders,
+                amountTendersToSkip);
     }
 }
