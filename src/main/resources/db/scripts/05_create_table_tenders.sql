@@ -11,6 +11,7 @@ CREATE TABLE tenders (
     publication TIMESTAMP NOT NULL,
     deadline TIMESTAMP NOT NULL,
     deadlineForSignedContract TIMESTAMP,
+    status VARCHAR NOT NULL,
     contractFileName VARCHAR NOT NULL,
     awardDecisionFileName VARCHAR NOT NULL,
     rejectDecisionFileName VARCHAR NOT NULL

@@ -19,6 +19,8 @@ import pl.com.tenderflex.service.TenderService;
 @Service
 public class TenderServiceImpl implements TenderService {
 
+    public static final String TENDER_IN_PROGRESS = "Tender in progress";
+
     private final TenderRepository tenderRepository;
     private final FileStorageService storageSevice;
 
@@ -52,12 +54,14 @@ public class TenderServiceImpl implements TenderService {
         tender.setCurrency(tenderDetails.getCurrency());
         tender.setDeadline(tenderDetails.getDeadline());
         tender.setDeadlineForSignedContract(tenderDetails.getDeadlineForSignedContract());
+        tender.setStatus(TENDER_IN_PROGRESS);
         tender.setContractFileName(contract.getOriginalFilename());
         tender.setAwardDecisionFileName(awardDecisionDocument.getOriginalFilename());
         tender.setRejectDecisionFileName(rejectDecisionDocument.getOriginalFilename());
         try {
-           Integer tenderId = tenderRepository.create(tender, contractorId).getId();
-            storageSevice.upload(asList(contract, awardDecisionDocument, rejectDecisionDocument), contractorId, tenderId);
+            Integer tenderId = tenderRepository.create(tender, contractorId).getId();
+            storageSevice.upload(asList(contract, awardDecisionDocument, rejectDecisionDocument), contractorId,
+                    tenderId);
         } catch (DataAccessException | IOException e) {
             throw new ServiceException("Error occurred when saving the tender", e);
         }

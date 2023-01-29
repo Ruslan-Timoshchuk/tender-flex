@@ -14,8 +14,8 @@ public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication, deadline, "
-            + "deadlineForSignedContract, contractFileName, awardDecisionFileName, rejectDecisionFileName) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "deadlineForSignedContract, status, contractFileName, awardDecisionFileName, rejectDecisionFileName) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -42,9 +42,10 @@ public class TenderDao implements TenderRepository {
             statement.setObject(9, tender.getPublication());
             statement.setObject(10, tender.getDeadline());
             statement.setObject(11, tender.getDeadlineForSignedContract());
-            statement.setString(12, tender.getContractFileName());
-            statement.setString(13, tender.getAwardDecisionFileName());
-            statement.setString(14, tender.getRejectDecisionFileName());
+            statement.setString(12, tender.getStatus());
+            statement.setString(13, tender.getContractFileName());
+            statement.setString(14, tender.getAwardDecisionFileName());
+            statement.setString(15, tender.getRejectDecisionFileName());
             return statement;
         }, keyHolder);
         tender.setId(keyHolder.getKeyAs(Integer.class));

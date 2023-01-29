@@ -20,6 +20,7 @@ public class Tender {
     private LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
+    private String status;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
@@ -115,6 +116,14 @@ public class Tender {
 
     public void setDeadlineForSignedContract(LocalDate deadlineForSignedContract) {
         this.deadlineForSignedContract = deadlineForSignedContract;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getContractFileName() {
