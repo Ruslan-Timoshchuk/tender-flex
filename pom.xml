@@ -17,6 +17,7 @@
     <java.version>17</java.version>
     <aws.java.sdk>1.12.392</aws.java.sdk>
     <commons.io.utils>2.11.0</commons.io.utils>
+    <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
   </properties>
 
   <dependencies>
@@ -55,6 +56,11 @@
       <artifactId>commons-io</artifactId>
       <version>${commons.io.utils}</version>
     </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -62,6 +68,19 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
       </plugin>
     </plugins>
   </build>

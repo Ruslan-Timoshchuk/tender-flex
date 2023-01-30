@@ -6,7 +6,7 @@ import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.TenderType;
 
-public class TenderDetails {
+public class TenderDetailsRequest {
 
     private String organizationName;
     private String nationalRegistrationNumber;
@@ -28,7 +28,7 @@ public class TenderDetails {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
 
-    public TenderDetails() {
+    public TenderDetailsRequest() {
         this.publication = LocalDate.now();
         this.deadline = LocalDate.now().plusDays(1);
     }

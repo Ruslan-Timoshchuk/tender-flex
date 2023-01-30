@@ -13,7 +13,7 @@ import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderType;
 
 @Component
-public class TenderMapper implements RowMapper<Tender>{
+public class TenderMapper implements RowMapper<Tender> {
 
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -28,6 +28,7 @@ public class TenderMapper implements RowMapper<Tender>{
         organization.setCity(resultSet.getString("city"));
         Tender tender = new Tender(organization, resultSet.getObject("publication_date", LocalDate.class));
         tender.setId(resultSet.getInt("id"));
+        tender.setContractorId(resultSet.getInt("contractor_id"));
         tender.setCpvCode(resultSet.getString("cpv_code"));
         tender.setType(TenderType.valueOf(resultSet.getString("tender_type")));
         tender.setDetails(resultSet.getString("details"));

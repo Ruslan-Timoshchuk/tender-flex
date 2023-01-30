@@ -19,7 +19,7 @@ public class TenderDao implements TenderRepository {
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT first_name, last_name, phone, organization_name, "
-            + "national_registration_number, country, city, publication_date, ten.id, "
+            + "national_registration_number, country, city, publication_date, ten.id, contractor_id, "
             + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
