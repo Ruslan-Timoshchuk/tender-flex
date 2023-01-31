@@ -23,7 +23,9 @@ public class TenderDao implements TenderRepository {
             + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
-            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE contractor_id = ? LIMIT ? OFFSET ?";
+            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE contractor_id = ? "
+            + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
+    public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -66,5 +68,10 @@ public class TenderDao implements TenderRepository {
     public List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {
         return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderMapper, contractorId, amountTenders,
                 amountTendersToSkip);
+    }
+
+    @Override
+    public Integer countTendersByContractor(Integer contractorId) {
+        return jdbcTemplate.queryForObject(COUNT_TENDERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
     }
 }

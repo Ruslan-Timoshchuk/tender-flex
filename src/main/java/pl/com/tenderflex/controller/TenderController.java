@@ -1,6 +1,5 @@
 package pl.com.tenderflex.controller;
 
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import pl.com.tenderflex.dto.Attachment;
+import pl.com.tenderflex.dto.Page;
 import pl.com.tenderflex.dto.TenderDetailsRequest;
 import pl.com.tenderflex.dto.TenderDetailsResponse;
 import pl.com.tenderflex.service.TenderService;
@@ -19,8 +20,6 @@ import pl.com.tenderflex.service.TenderService;
 @RestController
 @RequestMapping("/api/v1/tender")
 public class TenderController {
-
-    public static final int ITEMS_PER_PAGE = 5;
 
     private final TenderService tenderService;
 
@@ -30,11 +29,9 @@ public class TenderController {
 
     @GetMapping("/tenders_by_contractor")
     @ResponseStatus(HttpStatus.OK)
-    public List<TenderDetailsResponse> getAllByContractor(
-            @RequestParam(defaultValue = "5") Integer currentTendersAmount,
+    public Page<TenderDetailsResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
             @AuthenticationPrincipal(expression = "id") Integer contractorId) {
-        int tendersToSkip = currentTendersAmount - ITEMS_PER_PAGE;
-        return tenderService.getByContractor(contractorId, currentTendersAmount, tendersToSkip);
+        return tenderService.getByContractor(contractorId, currentPage);
     }
 
     @PostMapping(consumes = { "multipart/form-data" })

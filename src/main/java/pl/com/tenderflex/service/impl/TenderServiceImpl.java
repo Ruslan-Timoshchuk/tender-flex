@@ -2,7 +2,7 @@ package pl.com.tenderflex.service.impl;
 
 import static java.util.Arrays.asList;
 import java.io.IOException;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.MapStructMapper;
+import pl.com.tenderflex.dto.Page;
 import pl.com.tenderflex.dto.TenderDetailsRequest;
 import pl.com.tenderflex.dto.TenderDetailsResponse;
 import pl.com.tenderflex.exception.ServiceException;
@@ -22,6 +23,8 @@ public class TenderServiceImpl implements TenderService {
 
     public static final String TENDER_IN_PROGRESS = "Tender in progress";
 
+    @Value("${tenders.per.page}")
+    private Integer tendersPerPage;
     private final TenderRepository tenderRepository;
     private final FileStorageService storageSevice;
     private final MapStructMapper tenderMapper;
@@ -54,9 +57,23 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public List<TenderDetailsResponse> getByContractor(Integer contractorId, Integer currentTendersAmount,
-            Integer tendersToSkip) {
-        return tenderRepository.getByContractor(contractorId, currentTendersAmount, tendersToSkip).stream()
-                .map(tenderMapper::tenderToTenderDetailsResponse).toList();
+    public Page<TenderDetailsResponse> getByContractor(Integer contractorId, Integer currentPage) {
+        Integer amountTenders = currentPage * tendersPerPage;
+        Integer amountTendersToSkip = (currentPage - 1) * 5;
+        Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
+        Integer totalPages = 1;
+        if (allTendersAmount >= tendersPerPage) {
+            totalPages = allTendersAmount / tendersPerPage;
+            if (allTendersAmount % tendersPerPage > 0) {
+                totalPages++;
+            }
+        }
+        try {
+            return new Page<>(currentPage, totalPages,
+                    tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                            .map(tenderMapper::tenderToTenderDetailsResponse).toList());
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when searching tenders by contractor", e);
+        }
     }
 }
