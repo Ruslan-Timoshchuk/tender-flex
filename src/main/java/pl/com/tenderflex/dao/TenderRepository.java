@@ -11,4 +11,8 @@ public interface TenderRepository {
 
     Integer countTendersByContractor(Integer contractorId);
 
+    List<Tender> getByCondition(Integer amountTenders, Integer amountTendersToSkip);
+
+    Integer countAllTenders();
+
 }

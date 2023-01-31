@@ -76,4 +76,25 @@ public class TenderServiceImpl implements TenderService {
             throw new ServiceException("Error occurred when searching tenders by contractor", e);
         }
     }
+
+    @Override
+    public Page<TenderDetailsResponse> getByCondition(Integer currentPage) {
+        Integer amountTenders = currentPage * tendersPerPage;
+        Integer amountTendersToSkip = (currentPage - 1) * 5;
+        Integer allTendersAmount = tenderRepository.countAllTenders();
+        Integer totalPages = 1;
+        if (allTendersAmount >= tendersPerPage) {
+            totalPages = allTendersAmount / tendersPerPage;
+            if (allTendersAmount % tendersPerPage > 0) {
+                totalPages++;
+            }
+        }
+        try {
+            return new Page<>(currentPage, totalPages,
+                    tenderRepository.getByCondition(amountTenders, amountTendersToSkip).stream()
+                            .map(tenderMapper::tenderToTenderDetailsResponse).toList());
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when searching tenders by contractor", e);
+        }
+    }
 }

@@ -17,7 +17,9 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/**/auth/**").permitAll()
-            .antMatchers("/**/tender/**").hasAuthority(String.valueOf(Role.CONTRACTOR))
+            .antMatchers("/**/tender/create").hasAuthority(String.valueOf(Role.CONTRACTOR))
+            .antMatchers("/**/tender/tenders_by_contractor").hasAuthority(String.valueOf(Role.CONTRACTOR))
+            .antMatchers("/**/tender/all_tenders").hasAuthority(String.valueOf(Role.BIDDER))
             .anyRequest()
             .authenticated();
         return http.build();

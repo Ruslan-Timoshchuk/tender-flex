@@ -11,4 +11,6 @@ public interface TenderService {
 
     Page<TenderDetailsResponse> getByContractor(Integer contractorId, Integer currentPage);
 
+    Page<TenderDetailsResponse> getByCondition(Integer currentPage);
+
 }

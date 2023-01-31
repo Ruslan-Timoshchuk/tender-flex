@@ -27,6 +27,13 @@ public class TenderController {
         this.tenderService = tenderService;
     }
 
+    @PostMapping(path = "/create", consumes = { "multipart/form-data" })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
+            @ModelAttribute Attachment attachment, @RequestPart("tender") TenderDetailsRequest tenderDetails) {
+        tenderService.createTender(attachment, tenderDetails, contractorId);
+    }
+
     @GetMapping("/tenders_by_contractor")
     @ResponseStatus(HttpStatus.OK)
     public Page<TenderDetailsResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
@@ -34,10 +41,9 @@ public class TenderController {
         return tenderService.getByContractor(contractorId, currentPage);
     }
 
-    @PostMapping(consumes = { "multipart/form-data" })
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
-            @ModelAttribute Attachment attachment, @RequestPart("tender") TenderDetailsRequest tenderDetails) {
-        tenderService.createTender(attachment, tenderDetails, contractorId);
+    @GetMapping("/all_tenders")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<TenderDetailsResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage) {
+        return tenderService.getByCondition(currentPage);
     }
 }

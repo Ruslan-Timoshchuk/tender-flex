@@ -26,6 +26,14 @@ public class TenderDao implements TenderRepository {
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE contractor_id = ? "
             + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
+    public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT first_name, last_name, phone, organization_name, "
+            + "national_registration_number, country, city, publication_date, ten.id, contractor_id, "
+            + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
+            + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
+            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
+            + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
+    public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -73,5 +81,15 @@ public class TenderDao implements TenderRepository {
     @Override
     public Integer countTendersByContractor(Integer contractorId) {
         return jdbcTemplate.queryForObject(COUNT_TENDERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
+    }
+
+    @Override
+    public List<Tender> getByCondition(Integer amountTenders, Integer amountTendersToSkip) {
+        return jdbcTemplate.query(GET_TENDERS_BY_CONDITION_QUERY, tenderMapper, amountTenders, amountTendersToSkip);
+    }
+
+    @Override
+    public Integer countAllTenders() {
+        return jdbcTemplate.queryForObject(COUNT_ALL_TENDERS_QUERY, Integer.class);
     }
 }
