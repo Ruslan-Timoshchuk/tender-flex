@@ -7,5 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileStorageService {
 
     void upload(List<MultipartFile> files, Integer contractorId, Integer tenderId) throws IOException;
+    
+    void upload(MultipartFile document, Integer bidderId, Integer offerId);
 
 }

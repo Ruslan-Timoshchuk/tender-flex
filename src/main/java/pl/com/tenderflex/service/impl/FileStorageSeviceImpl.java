@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import pl.com.tenderflex.exception.ServiceException;
@@ -47,6 +48,25 @@ public class FileStorageSeviceImpl implements FileStorageService {
         } finally {
             transferManager.shutdownNow(false);
             deleteDirectory(uploadDir);
+        }
+    }
+
+    @Override
+    public void upload(MultipartFile document, Integer bidderId, Integer offerId) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(document.getContentType());
+        metadata.setContentLength(document.getSize());
+        amazonS3Client.doesBucketExistV2(bucketName);
+        StringBuilder directoryKeyPrefix = new StringBuilder();
+        directoryKeyPrefix.append(bidderId);
+        directoryKeyPrefix.append(SLASH_LINE);
+        directoryKeyPrefix.append(offerId);
+        directoryKeyPrefix.append(SLASH_LINE);
+        directoryKeyPrefix.append(document.getOriginalFilename());
+        try {
+            amazonS3Client.putObject(bucketName, directoryKeyPrefix.toString(), document.getInputStream(), metadata);
+        } catch (IOException | AmazonServiceException e) {
+            throw new ServiceException("Error occurred when uploading the document", e);
         }
     }
 

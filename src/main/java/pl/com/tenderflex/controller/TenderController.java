@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.Page;
 import pl.com.tenderflex.dto.TenderDetailsRequest;
