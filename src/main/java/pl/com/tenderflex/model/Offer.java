@@ -9,6 +9,8 @@ public class Offer {
     private Integer bidPrice;
     private Currency currency;
     private String documentName;
+    private String contractorStatus;
+    private String bidderStatus;
 
     public Integer getBidderId() {
         return bidderId;
@@ -64,5 +66,21 @@ public class Offer {
 
     public void setDocumentName(String documentName) {
         this.documentName = documentName;
+    }
+
+    public String getContractorStatus() {
+        return contractorStatus;
+    }
+
+    public void setContractorStatus(String contractorStatus) {
+        this.contractorStatus = contractorStatus;
+    }
+
+    public String getBidderStatus() {
+        return bidderStatus;
+    }
+
+    public void setBidderStatus(String bidderStatus) {
+        this.bidderStatus = bidderStatus;
     }
 }

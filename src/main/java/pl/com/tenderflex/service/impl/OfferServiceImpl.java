@@ -13,6 +13,9 @@ import pl.com.tenderflex.service.OfferService;
 @Service
 public class OfferServiceImpl implements OfferService {
 
+    public static final String OFFER_RECEIVED_STATUS = "Offer received";
+    public static final String OFFER_SENT_STATUS = "Offer sent to contractor";
+    
     private final FileStorageService fileStorageService;
     private final MapStructMapper offerMapper;
     private final OfferRepository offerRepository;
@@ -30,6 +33,8 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = offerMapper.offerDetailsRequestToOffer(offerDetailsRequest);
         offer.setDocumentName(document.getOriginalFilename());
         offer.setBidderId(bidderId);
+        offer.setContractorStatus(OFFER_RECEIVED_STATUS);
+        offer.setBidderStatus(OFFER_SENT_STATUS);
         Integer offerId = offerRepository.create(offer).getId();
         fileStorageService.upload(document, bidderId, offerId);
     }

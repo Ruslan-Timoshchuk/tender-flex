@@ -13,7 +13,7 @@ import pl.com.tenderflex.model.Organization;
 public class OfferDao implements OfferRepository {
 
     public static final String ADD_NEW_OFFER_QURY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
-            + "bid_price, currency, document_name) VALUES (?, ?, ?, ?, ?, ?)";
+            + "bid_price, currency, document_name, contractor_status, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -35,6 +35,8 @@ public class OfferDao implements OfferRepository {
             statement.setLong(4, offer.getBidPrice());
             statement.setString(5, String.valueOf(offer.getCurrency()));
             statement.setString(6, offer.getDocumentName());
+            statement.setString(7, offer.getContractorStatus());
+            statement.setString(8, offer.getBidderStatus());
             return statement;
         }, keyHolder);
         offer.setId(keyHolder.getKeyAs(Integer.class));

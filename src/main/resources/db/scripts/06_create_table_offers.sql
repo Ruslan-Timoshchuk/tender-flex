@@ -5,5 +5,7 @@ CREATE TABLE offers (
     organization_id INTEGER REFERENCES organizations(id),
     bid_price BIGINT NOT NULL,
     currency VARCHAR NOT NULL,
-    document_name VARCHAR NOT NULL
+    document_name VARCHAR NOT NULL,
+    contractor_status VARCHAR NOT NULL,
+    bidder_status VARCHAR NOT NULL
 );
