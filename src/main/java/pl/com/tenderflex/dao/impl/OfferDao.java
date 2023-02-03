@@ -14,7 +14,7 @@ public class OfferDao implements OfferRepository {
 
     public static final String ADD_NEW_OFFER_QUERY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
             + "bid_price, currency, document_name, contractor_status, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(o.id) AS amount_offers "
+    public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(o.id) AS offers_amount "
             + "FROM offers o WHERE tender_id = ?";
 
     private final JdbcTemplate jdbcTemplate;

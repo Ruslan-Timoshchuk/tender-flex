@@ -2,14 +2,11 @@ package pl.com.tenderflex.service.impl;
 
 import static java.util.Arrays.asList;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.BidderTenderResponse;
@@ -32,14 +29,12 @@ public class TenderServiceImpl implements TenderService {
     private final TenderRepository tenderRepository;
     private final FileStorageService storageSevice;
     private final MapStructMapper tenderMapper;
-    private final OfferRepository offerRepository;
 
     public TenderServiceImpl(TenderRepository tenderRepository, FileStorageService storageSevice,
-            MapStructMapper tenderMapper, OfferRepository offerRepository) {
+            MapStructMapper tenderMapper) {
         this.tenderRepository = tenderRepository;
         this.storageSevice = storageSevice;
         this.tenderMapper = tenderMapper;
-        this.offerRepository = offerRepository;
     }
 
     @Override
@@ -75,13 +70,9 @@ public class TenderServiceImpl implements TenderService {
             }
         }
         try {
-            List<ContractorTenderResponse> tenders = new ArrayList<>();
-            tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).forEach(tender -> {
-                ContractorTenderResponse tenderDetails = tenderMapper.tenderToContractorTenderResponse(tender);
-                tenderDetails.setAmountOffers(offerRepository.countOffersByTender(tender.getId()));
-                tenders.add(tenderDetails);
-            });
-            return new Page<>(currentPage, totalPages, tenders);
+            return new Page<>(currentPage, totalPages,
+                    tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                            .map(tenderMapper::tenderToContractorTenderResponse).toList());
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when searching tenders by contractor", e);
         }

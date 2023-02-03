@@ -11,7 +11,7 @@ public class ContractorTenderResponse {
     private String status;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
-    private Integer amountOffers;
+    private Integer offersAmount;
 
     public Integer getTenderId() {
         return tenderId;
@@ -53,11 +53,11 @@ public class ContractorTenderResponse {
         this.deadline = deadline;
     }
 
-    public Integer getAmountOffers() {
-        return amountOffers;
+    public Integer getOffersAmount() {
+        return offersAmount;
     }
 
-    public void setAmountOffers(Integer amountOffers) {
-        this.amountOffers = amountOffers;
+    public void setOffersAmount(Integer offersAmount) {
+        this.offersAmount = offersAmount;
     }
 }

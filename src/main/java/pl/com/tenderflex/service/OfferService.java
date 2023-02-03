@@ -7,6 +7,4 @@ public interface OfferService {
 
     void createOffer(MultipartFile document, OfferDetailsRequest offerDetailsRequest, Integer bidderId);
 
-    Integer countOffersByTender(Integer tenderId);
-
 }

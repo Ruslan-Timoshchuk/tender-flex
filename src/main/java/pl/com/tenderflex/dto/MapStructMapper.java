@@ -3,6 +3,7 @@ package pl.com.tenderflex.dto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Tender;
@@ -12,6 +13,8 @@ public abstract class MapStructMapper {
 
     @Autowired
     protected TenderRepository tenderRepository;
+    @Autowired
+    protected OfferRepository offerRepository;
 
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
@@ -35,6 +38,7 @@ public abstract class MapStructMapper {
     @Mapping(target = "organizationName", source = "tender.organization.name")
     @Mapping(target = "status", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "offersAmount", expression = "java(offerRepository.countOffersByTender(tender.getId()))")
     public abstract ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
 
     @Mapping(target = "tenderId", source = "id")

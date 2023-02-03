@@ -44,13 +44,4 @@ public class OfferServiceImpl implements OfferService {
             throw new ServiceException("Error occurred when saving the offer", e);
         }
     }
-
-    @Override
-    public Integer countOffersByTender(Integer tenderId) {
-        try {
-            return offerRepository.countOffersByTender(tenderId);
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when counting offers by tender", e);
-        }
-    }
 }
