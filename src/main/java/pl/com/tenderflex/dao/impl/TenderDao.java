@@ -34,6 +34,8 @@ public class TenderDao implements TenderRepository {
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
             + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
+    public static final String GET_OFFER_STATUS_BY_TENDER_QUERY = "SELECT coalesce(bidder_status, 'OFFER HASN''T SENT') "
+            + "AS bidder_status FROM tenders t LEFT JOIN offers o ON o.tender_id = t.id WHERE t.id = ? GROUP BY bidder_status";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -91,5 +93,10 @@ public class TenderDao implements TenderRepository {
     @Override
     public Integer countAllTenders() {
         return jdbcTemplate.queryForObject(COUNT_ALL_TENDERS_QUERY, Integer.class);
+    }
+
+    @Override
+    public String getOfferStatusForBidder(Integer tenderId) {
+        return jdbcTemplate.queryForObject(GET_OFFER_STATUS_BY_TENDER_QUERY, String.class, tenderId);
     }
 }

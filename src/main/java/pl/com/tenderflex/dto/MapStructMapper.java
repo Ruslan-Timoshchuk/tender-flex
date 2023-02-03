@@ -2,11 +2,16 @@ package pl.com.tenderflex.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Tender;
 
 @Mapper(componentModel = "spring")
-public interface MapStructMapper {
+public abstract class MapStructMapper {
+
+    @Autowired
+    protected TenderRepository tenderRepository;
 
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
@@ -23,34 +28,22 @@ public interface MapStructMapper {
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
-    Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
+    public abstract Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
 
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "cpvCode", source = "cpvCode")
     @Mapping(target = "organizationName", source = "tender.organization.name")
     @Mapping(target = "status", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
-    ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
-    
+    public abstract ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
+
     @Mapping(target = "tenderId", source = "id")
-    @Mapping(target = "organizationName", source = "tender.organization.name")
-    @Mapping(target = "nationalRegistrationNumber", source = "tender.organization.nationalRegistrationNumber")
-    @Mapping(target = "country", source = "tender.organization.country")
-    @Mapping(target = "city", source = "tender.organization.city")
-    @Mapping(target = "firstName", source = "tender.organization.contactPerson.firstName")
-    @Mapping(target = "lastName", source = "tender.organization.contactPerson.lastName")
-    @Mapping(target = "phone", source = "tender.organization.contactPerson.phone")
     @Mapping(target = "cpvCode", source = "cpvCode")
-    @Mapping(target = "type", source = "type")
-    @Mapping(target = "details", source = "details")
-    @Mapping(target = "minPrice", source = "minPrice")
-    @Mapping(target = "maxPrice", source = "maxPrice")
-    @Mapping(target = "currency", source = "currency")
-    @Mapping(target = "publication", source = "publication", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "organizationName", source = "tender.organization.name")
+    @Mapping(target = "tenderStatus", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "status", source = "status")
-    BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
+    @Mapping(target = "offerStatus", expression = "java(tenderRepository.getOfferStatusForBidder(tender.getId()))")
+    public abstract BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
 
     @Mapping(target = "tenderId", source = "tenderId")
     @Mapping(target = "organization.name", source = "organizationName")
@@ -62,6 +55,6 @@ public interface MapStructMapper {
     @Mapping(target = "organization.contactPerson.phone", source = "phone")
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "bidPrice", source = "bidPrice")
-    Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
+    public abstract Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.BidderTenderResponse;
@@ -19,7 +20,6 @@ import pl.com.tenderflex.dto.ContractorTenderResponse;
 import pl.com.tenderflex.exception.ServiceException;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.service.FileStorageService;
-import pl.com.tenderflex.service.OfferService;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
@@ -32,14 +32,14 @@ public class TenderServiceImpl implements TenderService {
     private final TenderRepository tenderRepository;
     private final FileStorageService storageSevice;
     private final MapStructMapper tenderMapper;
-    private final OfferService offerService;
+    private final OfferRepository offerRepository;
 
     public TenderServiceImpl(TenderRepository tenderRepository, FileStorageService storageSevice,
-            MapStructMapper tenderMapper, OfferService offerService) {
+            MapStructMapper tenderMapper, OfferRepository offerRepository) {
         this.tenderRepository = tenderRepository;
         this.storageSevice = storageSevice;
         this.tenderMapper = tenderMapper;
-        this.offerService = offerService;
+        this.offerRepository = offerRepository;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class TenderServiceImpl implements TenderService {
             List<ContractorTenderResponse> tenders = new ArrayList<>();
             tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).forEach(tender -> {
                 ContractorTenderResponse tenderDetails = tenderMapper.tenderToContractorTenderResponse(tender);
-                tenderDetails.setAmountOffers(offerService.countOffersByTender(tender.getId()));
+                tenderDetails.setAmountOffers(offerRepository.countOffersByTender(tender.getId()));
                 tenders.add(tenderDetails);
             });
             return new Page<>(currentPage, totalPages, tenders);
@@ -104,7 +104,7 @@ public class TenderServiceImpl implements TenderService {
                     tenderRepository.getByCondition(amountTenders, amountTendersToSkip).stream()
                             .map(tenderMapper::tenderToBidderTenderResponse).toList());
         } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when searching tenders by contractor", e);
+            throw new ServiceException("Error occurred when searching tenders by bidder", e);
         }
     }
 }

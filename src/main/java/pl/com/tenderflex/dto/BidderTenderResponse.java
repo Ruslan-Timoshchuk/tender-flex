@@ -2,96 +2,23 @@ package pl.com.tenderflex.dto;
 
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.com.tenderflex.model.Country;
-import pl.com.tenderflex.model.Currency;
-import pl.com.tenderflex.model.TenderType;
 
 public class BidderTenderResponse {
 
     private Integer tenderId;
-    private String organizationName;
-    private String nationalRegistrationNumber;
-    private Country country;
-    private String city;
-    private String firstName;
-    private String lastName;
-    private String phone;
     private String cpvCode;
-    private TenderType type;
-    private String details;
-    private Integer minPrice;
-    private Integer maxPrice;
-    private Currency currency;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate publication;
+    private String organizationName;
+    private String tenderStatus;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate deadlineForSignedContract;
-    private String status;
-    
+    private String offerStatus;
+
     public Integer getTenderId() {
         return tenderId;
     }
 
     public void setTenderId(Integer tenderId) {
         this.tenderId = tenderId;
-    }
-
-    public String getOrganizationName() {
-        return organizationName;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
-    }
-
-    public String getNationalRegistrationNumber() {
-        return nationalRegistrationNumber;
-    }
-
-    public void setNationalRegistrationNumber(String nationalRegistrationNumber) {
-        this.nationalRegistrationNumber = nationalRegistrationNumber;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getCpvCode() {
@@ -102,52 +29,20 @@ public class BidderTenderResponse {
         this.cpvCode = cpvCode;
     }
 
-    public TenderType getType() {
-        return type;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
-    public void setType(TenderType type) {
-        this.type = type;
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
-    public String getDetails() {
-        return details;
+    public String getTenderStatus() {
+        return tenderStatus;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public Integer getMinPrice() {
-        return minPrice;
-    }
-
-    public void setMinPrice(Integer minPrice) {
-        this.minPrice = minPrice;
-    }
-
-    public Integer getMaxPrice() {
-        return maxPrice;
-    }
-
-    public void setMaxPrice(Integer maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
-    public LocalDate getPublication() {
-        return publication;
-    }
-
-    public void setPublication(LocalDate publication) {
-        this.publication = publication;
+    public void setTenderStatus(String tenderStatus) {
+        this.tenderStatus = tenderStatus;
     }
 
     public LocalDate getDeadline() {
@@ -158,19 +53,11 @@ public class BidderTenderResponse {
         this.deadline = deadline;
     }
 
-    public LocalDate getDeadlineForSignedContract() {
-        return deadlineForSignedContract;
+    public String getOfferStatus() {
+        return offerStatus;
     }
 
-    public void setDeadlineForSignedContract(LocalDate deadlineForSignedContract) {
-        this.deadlineForSignedContract = deadlineForSignedContract;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setOfferStatus(String offerStatus) {
+        this.offerStatus = offerStatus;
     }
 }
