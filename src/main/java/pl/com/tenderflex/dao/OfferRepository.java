@@ -5,5 +5,7 @@ import pl.com.tenderflex.model.Offer;
 public interface OfferRepository {
 
     Offer create(Offer offer);
+
+    Integer countOffersByTender(Integer tenderId);
     
 }

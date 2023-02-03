@@ -25,6 +25,14 @@ public interface MapStructMapper {
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
 
+    @Mapping(target = "tenderId", source = "id")
+    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "organizationName", source = "tender.organization.name")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
+    
+    @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "organizationName", source = "tender.organization.name")
     @Mapping(target = "nationalRegistrationNumber", source = "tender.organization.nationalRegistrationNumber")
     @Mapping(target = "country", source = "tender.organization.country")
@@ -42,7 +50,7 @@ public interface MapStructMapper {
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "status", source = "status")
-    TenderDetailsResponse tenderToTenderDetailsResponse(Tender tender);
+    BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
 
     @Mapping(target = "tenderId", source = "tenderId")
     @Mapping(target = "organization.name", source = "organizationName")

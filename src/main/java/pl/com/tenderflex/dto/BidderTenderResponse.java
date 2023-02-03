@@ -6,8 +6,9 @@ import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.TenderType;
 
-public class TenderDetailsResponse {
+public class BidderTenderResponse {
 
+    private Integer tenderId;
     private String organizationName;
     private String nationalRegistrationNumber;
     private Country country;
@@ -28,6 +29,14 @@ public class TenderDetailsResponse {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
     private String status;
+    
+    public Integer getTenderId() {
+        return tenderId;
+    }
+
+    public void setTenderId(Integer tenderId) {
+        this.tenderId = tenderId;
+    }
 
     public String getOrganizationName() {
         return organizationName;

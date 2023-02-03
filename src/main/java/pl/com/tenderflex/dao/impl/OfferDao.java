@@ -12,8 +12,10 @@ import pl.com.tenderflex.model.Organization;
 @Repository
 public class OfferDao implements OfferRepository {
 
-    public static final String ADD_NEW_OFFER_QURY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
+    public static final String ADD_NEW_OFFER_QUERY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
             + "bid_price, currency, document_name, contractor_status, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(o.id) AS aomunt_offers "
+            + "FROM offers o LEFT JOIN tenders t ON t.id = o.tender_id WHERE tender_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -28,7 +30,7 @@ public class OfferDao implements OfferRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         Organization organization = organizationDao.create(offer.getOrganization());
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_OFFER_QURY, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(ADD_NEW_OFFER_QUERY, new String[] { "id" });
             statement.setInt(1, offer.getBidderId());
             statement.setInt(2, offer.getTenderId());
             statement.setInt(3, organization.getId());
@@ -41,5 +43,10 @@ public class OfferDao implements OfferRepository {
         }, keyHolder);
         offer.setId(keyHolder.getKeyAs(Integer.class));
         return offer;
+    }
+
+    @Override
+    public Integer countOffersByTender(Integer tenderId) {
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER_QUERY, Integer.class, tenderId);
     }
 }
