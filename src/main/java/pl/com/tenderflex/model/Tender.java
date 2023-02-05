@@ -24,7 +24,7 @@ public class Tender {
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
-
+       
     public Tender(Organization organization, LocalDate publication) {
         this.organization = organization;
         this.publication = publication;

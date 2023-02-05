@@ -7,5 +7,6 @@ CREATE TABLE offers (
     currency VARCHAR NOT NULL,
     document_name VARCHAR NOT NULL,
     contractor_status VARCHAR NOT NULL,
+    received_date TIMESTAMP NOT NULL,
     bidder_status VARCHAR NOT NULL
 );

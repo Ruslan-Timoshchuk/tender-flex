@@ -49,7 +49,7 @@ public abstract class MapStructMapper {
     @Mapping(target = "offerStatus", expression = "java(tenderRepository.getOfferStatusForBidder(tender.getId()))")
     public abstract BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
 
-    @Mapping(target = "tenderId", source = "tenderId")
+    @Mapping(target = "tender.id", source = "tenderId")
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
     @Mapping(target = "organization.country", source = "country")
@@ -60,5 +60,15 @@ public abstract class MapStructMapper {
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "bidPrice", source = "bidPrice")
     public abstract Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
+
+    @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "organizationNameByBidder", source = "organization.name")
+    @Mapping(target = "spvCode", source = "tender.cpvCode")
+    @Mapping(target = "price", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "country", source = "organization.country")
+    @Mapping(target = "receivedDate", source = "receivedDate")
+    @Mapping(target = "status", source = "contractorStatus")
+    public abstract ContractorOfferResponse offerToContractorOfferResponse(Offer offer);
 
 }

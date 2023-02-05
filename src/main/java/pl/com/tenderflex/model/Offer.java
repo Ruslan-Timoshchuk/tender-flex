@@ -1,15 +1,18 @@
 package pl.com.tenderflex.model;
 
+import java.time.LocalDate;
+
 public class Offer {
 
     private Integer id;
     private Integer bidderId;
-    private Integer tenderId;
+    private Tender tender;
     private Organization organization;
     private Integer bidPrice;
     private Currency currency;
     private String documentName;
     private String contractorStatus;
+    private LocalDate receivedDate;
     private String bidderStatus;
 
     public Integer getBidderId() {
@@ -28,12 +31,12 @@ public class Offer {
         this.id = id;
     }
 
-    public Integer getTenderId() {
-        return tenderId;
+    public Tender getTender() {
+        return tender;
     }
 
-    public void setTenderId(Integer tenderId) {
-        this.tenderId = tenderId;
+    public void setTender(Tender tender) {
+        this.tender = tender;
     }
 
     public Organization getOrganization() {
@@ -74,6 +77,14 @@ public class Offer {
 
     public void setContractorStatus(String contractorStatus) {
         this.contractorStatus = contractorStatus;
+    }
+
+    public LocalDate getReceivedDate() {
+        return receivedDate;
+    }
+
+    public void setReceivedDate(LocalDate receivedDate) {
+        this.receivedDate = receivedDate;
     }
 
     public String getBidderStatus() {

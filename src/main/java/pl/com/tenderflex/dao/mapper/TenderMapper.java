@@ -5,28 +5,23 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import pl.com.tenderflex.model.ContactPerson;
-import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
-import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderType;
 
 @Component
 public class TenderMapper implements RowMapper<Tender> {
 
+    private final OrganizationMapper organizationMapper;
+
+    public TenderMapper(OrganizationMapper organizationMapper) {
+        this.organizationMapper = organizationMapper;
+    }
+
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        ContactPerson contactPerson = new ContactPerson();
-        contactPerson.setFirstName(resultSet.getString("first_name"));
-        contactPerson.setLastName(resultSet.getString("last_name"));
-        contactPerson.setPhone(resultSet.getString("phone"));
-        Organization organization = new Organization(contactPerson);
-        organization.setName(resultSet.getString("organization_name"));
-        organization.setNationalRegistrationNumber(resultSet.getString("national_registration_number"));
-        organization.setCountry(Country.valueOf(resultSet.getString("country")));
-        organization.setCity(resultSet.getString("city"));
-        Tender tender = new Tender(organization, resultSet.getObject("publication_date", LocalDate.class));
+        Tender tender = new Tender(organizationMapper.mapRow(resultSet, rowNum),
+                resultSet.getObject("publication_date", LocalDate.class));
         tender.setId(resultSet.getInt("id"));
         tender.setContractorId(resultSet.getInt("contractor_id"));
         tender.setCpvCode(resultSet.getString("cpv_code"));
