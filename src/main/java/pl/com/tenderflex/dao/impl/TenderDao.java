@@ -19,7 +19,7 @@ public class TenderDao implements TenderRepository {
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT cp.id, first_name, last_name, phone, org.id, organization_name, "
-            + "national_registration_number, country, city, publication_date, ten.id, contractor_id, "
+            + "national_registration_number, country, city, publication_date, ten.id AS tender_id, contractor_id, "
             + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
@@ -27,7 +27,7 @@ public class TenderDao implements TenderRepository {
             + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
     public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT cp.id, first_name, last_name, phone, org.id, organization_name, "
-            + "national_registration_number, country, city, publication_date, ten.id, contractor_id, "
+            + "national_registration_number, country, city, publication_date, ten.id AS tender_id, contractor_id, "
             + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
@@ -37,7 +37,7 @@ public class TenderDao implements TenderRepository {
     public static final String GET_OFFER_STATUS_BY_TENDER_QUERY = "SELECT coalesce(bidder_status, 'OFFER HASN''T SENT') "
             + "AS bidder_status FROM tenders t LEFT JOIN offers o ON o.tender_id = t.id WHERE t.id = ? GROUP BY bidder_status";
     public static final String GET_TENDER_BY_ID_QUERY = "SELECT cp.id, first_name, last_name, phone, org.id, organization_name, "
-            + "national_registration_number, country, city, publication_date, ten.id, contractor_id, "
+            + "national_registration_number, country, city, publication_date, ten.id AS tender_id, contractor_id, "
             + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "

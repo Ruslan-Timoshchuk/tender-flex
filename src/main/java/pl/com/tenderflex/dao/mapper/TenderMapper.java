@@ -22,7 +22,7 @@ public class TenderMapper implements RowMapper<Tender> {
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         Tender tender = new Tender(organizationMapper.mapRow(resultSet, rowNum),
                 resultSet.getObject("publication_date", LocalDate.class));
-        tender.setId(resultSet.getInt("id"));
+        tender.setId(resultSet.getInt("tender_id"));
         tender.setContractorId(resultSet.getInt("contractor_id"));
         tender.setCpvCode(resultSet.getString("cpv_code"));
         tender.setType(TenderType.valueOf(resultSet.getString("tender_type")));
