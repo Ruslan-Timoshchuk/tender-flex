@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Organization;
 
@@ -18,7 +19,9 @@ public class OrganizationMapper implements RowMapper<Organization> {
 
     @Override
     public Organization mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Organization organization = new Organization(contactPersonMapper.mapRow(resultSet, rowNum));
+        ContactPerson contactPerson = contactPersonMapper.mapRow(resultSet, rowNum);
+        Organization organization = new Organization();
+        organization.setContactPerson(contactPerson);
         organization.setId(resultSet.getInt("id"));
         organization.setName(resultSet.getString("organization_name"));
         organization.setNationalRegistrationNumber(resultSet.getString("national_registration_number"));

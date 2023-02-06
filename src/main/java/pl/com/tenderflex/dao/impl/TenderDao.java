@@ -36,12 +36,6 @@ public class TenderDao implements TenderRepository {
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
     public static final String GET_OFFER_STATUS_BY_TENDER_QUERY = "SELECT coalesce(bidder_status, 'OFFER HASN''T SENT') "
             + "AS bidder_status FROM tenders t LEFT JOIN offers o ON o.tender_id = t.id WHERE t.id = ? GROUP BY bidder_status";
-    public static final String GET_TENDER_BY_ID_QUERY = "SELECT cp.id, first_name, last_name, phone, org.id, organization_name, "
-            + "national_registration_number, country, city, publication_date, ten.id AS tender_id, contractor_id, "
-            + "cpv_code, tender_type, details, min_price, max_price, currency, deadline, "
-            + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name "
-            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
-            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE ten.id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
@@ -104,9 +98,5 @@ public class TenderDao implements TenderRepository {
     @Override
     public String getOfferStatusForBidder(Integer tenderId) {
         return jdbcTemplate.queryForObject(GET_OFFER_STATUS_BY_TENDER_QUERY, String.class, tenderId);
-    }
-
-    public Tender getById(Integer tenderId) {
-        return jdbcTemplate.queryForObject(GET_TENDER_BY_ID_QUERY, tenderMapper, tenderId);
     }
 }

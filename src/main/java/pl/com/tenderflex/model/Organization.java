@@ -8,11 +8,7 @@ public class Organization {
     private Country country;
     private String city;
     private ContactPerson contactPerson; 
-       
-    public Organization(ContactPerson contactPerson) {
-        this.contactPerson = contactPerson;
-    }
-    
+            
     public Integer getId() {
         return id;
     }

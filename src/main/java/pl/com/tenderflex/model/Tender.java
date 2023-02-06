@@ -15,7 +15,7 @@ public class Tender {
     private Integer maxPrice;
     private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private final LocalDate publication;
+    private LocalDate publication;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
@@ -24,7 +24,10 @@ public class Tender {
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
-       
+
+    public Tender() {
+    }
+
     public Tender(Organization organization, LocalDate publication) {
         this.organization = organization;
         this.publication = publication;

@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.mapper.OfferMapper;
+import pl.com.tenderflex.dao.mapper.OfferContractorMapper;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Organization;
 
@@ -18,21 +18,20 @@ public class OfferDao implements OfferRepository {
             + "bid_price, currency, document_name, contractor_status, received_date, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(o.id) AS offers_amount "
             + "FROM offers o WHERE tender_id = ?";
-    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT o.id, o.bidder_id, o.tender_id, cp.id, cp.first_name, "
-            + "cp.last_name, cp.phone, org.id, org.organization_name, org.national_registration_number, org.country, org.city, "
-            + "o.bid_price, o.currency, o.document_name, o.contractor_status, o.received_date, o.bidder_status "
-            + "FROM offers o LEFT JOIN organizations org ON org.id = o.organization_id "
-            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
-            + "LEFT JOIN tenders t ON t.id = o.id WHERE t.contractor_id = ?";
+    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT o.id, org.organization_name, t.cpv_code, o.bid_price, "
+            + "o.currency, org.country, received_date, o.contractor_status FROM offers o "
+            + "LEFT JOIN organizations org ON org.id = o.organization_id "
+            + "LEFT JOIN tenders t ON t.id = o.tender_id WHERE t.contractor_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
-    private final OfferMapper offerMapper;
+    private final OfferContractorMapper offerContractorMapper;
 
-    public OfferDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao, OfferMapper offerMapper) {
+    public OfferDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao,
+            OfferContractorMapper offerContractorMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.organizationDao = organizationDao;
-        this.offerMapper = offerMapper;
+        this.offerContractorMapper = offerContractorMapper;
     }
 
     @Override
@@ -62,6 +61,6 @@ public class OfferDao implements OfferRepository {
     }
 
     public List<Offer> getOffersByContractor(Integer contractorId) {
-        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerMapper, contractorId);
+        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerContractorMapper, contractorId);
     }
 }
