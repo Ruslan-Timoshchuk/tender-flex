@@ -23,6 +23,7 @@ public class SecurityConfig {
             .antMatchers("/**/offer/received_offers").hasAuthority(String.valueOf(Role.CONTRACTOR))
             .antMatchers("/**/offer/by_contractor/{id}").hasAuthority(String.valueOf(Role.CONTRACTOR))
             .antMatchers("/**/tender/all_tenders").hasAuthority(String.valueOf(Role.BIDDER))
+            .antMatchers("/**/tender/details_for_bidder/{id}").hasAuthority(String.valueOf(Role.BIDDER))
             .antMatchers("/**/offer/create").hasAuthority(String.valueOf(Role.BIDDER))
             .anyRequest()
             .authenticated();

@@ -1,6 +1,7 @@
 package pl.com.tenderflex.service;
 
 import pl.com.tenderflex.dto.Attachment;
+import pl.com.tenderflex.dto.BidderTenderDetailsResponse;
 import pl.com.tenderflex.dto.BidderTenderResponse;
 import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.dto.Page;
@@ -15,6 +16,8 @@ public interface TenderService {
 
     Page<BidderTenderResponse> getByCondition(Integer currentPage);
 
-    ContractorTenderDetailsResponse getById(Integer tenderId);
+    ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
+
+    BidderTenderDetailsResponse getByIdForBidder(Integer tenderId);
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.tenderflex.dto.Attachment;
+import pl.com.tenderflex.dto.BidderTenderDetailsResponse;
 import pl.com.tenderflex.dto.BidderTenderResponse;
 import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.dto.Page;
@@ -51,7 +52,13 @@ public class TenderController {
 
     @GetMapping("/details_for_contractor/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ContractorTenderDetailsResponse getTenderById(@PathVariable("id") Integer tenderId) {
-        return tenderService.getById(tenderId);
+    public ContractorTenderDetailsResponse getTenderByIdForContractor(@PathVariable("id") Integer tenderId) {
+        return tenderService.getByIdForContractor(tenderId);
+    }
+
+    @GetMapping("/details_for_bidder/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId) {
+        return tenderService.getByIdForBidder(tenderId);
     }
 }

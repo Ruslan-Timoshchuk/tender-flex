@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
+import pl.com.tenderflex.dto.BidderTenderDetailsResponse;
 import pl.com.tenderflex.dto.BidderTenderResponse;
 import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.dto.MapStructMapper;
@@ -101,9 +102,18 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public ContractorTenderDetailsResponse getById(Integer tenderId) {
+    public ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId) {
         try {
             return tenderMapper.tenderToContractorTenderDetailsResponse(tenderRepository.getById(tenderId));
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when getting tender by id", e);
+        }
+    }
+
+    @Override
+    public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId) {
+        try {
+            return tenderMapper.tenderToBidderTenderDetailsResponse(tenderRepository.getById(tenderId));
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when getting tender by id", e);
         }
