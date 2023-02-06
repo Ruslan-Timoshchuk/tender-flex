@@ -71,4 +71,17 @@ public abstract class MapStructMapper {
     @Mapping(target = "status", source = "contractorStatus")
     public abstract ContractorOfferResponse offerToContractorOfferResponse(Offer offer);
 
+    @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "organizationNameByBidder", source = "organization.name")
+    @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
+    @Mapping(target = "country", source = "organization.country")
+    @Mapping(target = "city", source = "organization.city")
+    @Mapping(target = "firstName", source = "organization.contactPerson.firstName")
+    @Mapping(target = "lastName", source = "organization.contactPerson.lastName")
+    @Mapping(target = "phone", source = "organization.contactPerson.phone")
+    @Mapping(target = "bidPrice", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "documentName", source = "documentName")
+    public abstract ContractorOfferDetailsResponse offerToContractorOfferDetailsResponse(Offer offer);
+
 }

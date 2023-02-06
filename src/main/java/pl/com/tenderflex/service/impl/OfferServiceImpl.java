@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.OfferRepository;
+import pl.com.tenderflex.dto.ContractorOfferDetailsResponse;
 import pl.com.tenderflex.dto.ContractorOfferResponse;
 import pl.com.tenderflex.dto.MapStructMapper;
 import pl.com.tenderflex.dto.OfferDetailsRequest;
@@ -56,6 +57,15 @@ public class OfferServiceImpl implements OfferService {
                     .map(offerMapper::offerToContractorOfferResponse).toList();
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when getting offers by contractor", e);
+        }
+    }
+
+    @Override
+    public ContractorOfferDetailsResponse getById(Integer offerId) {
+        try {
+            return offerMapper.offerToContractorOfferDetailsResponse(offerRepository.getById(offerId));
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when getting offer by id", e);
         }
     }
 }

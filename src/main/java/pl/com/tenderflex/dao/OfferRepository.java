@@ -11,4 +11,6 @@ public interface OfferRepository {
 
     List<Offer> getOffersByContractor(Integer contractorId);
 
+    Offer getById(Integer offerId);
+
 }
