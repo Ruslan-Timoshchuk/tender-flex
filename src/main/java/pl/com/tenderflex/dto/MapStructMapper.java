@@ -84,4 +84,24 @@ public abstract class MapStructMapper {
     @Mapping(target = "documentName", source = "documentName")
     public abstract ContractorOfferDetailsResponse offerToContractorOfferDetailsResponse(Offer offer);
 
+    @Mapping(target = "tenderId", source = "id")
+    @Mapping(target = "organizationName", source = "organization.name")
+    @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
+    @Mapping(target = "country", source = "organization.country")
+    @Mapping(target = "city", source = "organization.city")
+    @Mapping(target = "firstName", source = "organization.contactPerson.firstName")
+    @Mapping(target = "lastName", source = "organization.contactPerson.lastName")
+    @Mapping(target = "phone", source = "organization.contactPerson.phone")
+    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "description", source = "details")
+    @Mapping(target = "minTenderValue", source = "minPrice")
+    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "deadlineForSignedContractSubmission", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "contractFileNameByContractor", source = "contractFileName")
+    @Mapping(target = "awardDecisionFileNameByContractor", source = "awardDecisionFileName")
+    @Mapping(target = "rejectFileNameByContractor", source = "rejectDecisionFileName")
+    public abstract ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender);
 }

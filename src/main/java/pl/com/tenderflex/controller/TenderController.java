@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.BidderTenderResponse;
+import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.dto.Page;
 import pl.com.tenderflex.dto.TenderDetailsRequest;
 import pl.com.tenderflex.dto.ContractorTenderResponse;
@@ -45,5 +47,11 @@ public class TenderController {
     @ResponseStatus(HttpStatus.OK)
     public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage) {
         return tenderService.getByCondition(currentPage);
+    }
+
+    @GetMapping("/details_for_contractor/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ContractorTenderDetailsResponse getTenderById(@PathVariable("id") Integer tenderId) {
+        return tenderService.getById(tenderId);
     }
 }

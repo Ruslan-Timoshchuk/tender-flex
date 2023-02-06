@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
 import pl.com.tenderflex.dto.BidderTenderResponse;
+import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.dto.MapStructMapper;
 import pl.com.tenderflex.dto.Page;
 import pl.com.tenderflex.dto.TenderDetailsRequest;
@@ -96,6 +97,15 @@ public class TenderServiceImpl implements TenderService {
                             .map(tenderMapper::tenderToBidderTenderResponse).toList());
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when searching tenders by bidder", e);
+        }
+    }
+
+    @Override
+    public ContractorTenderDetailsResponse getById(Integer tenderId) {
+        try {
+            return tenderMapper.tenderToContractorTenderDetailsResponse(tenderRepository.getById(tenderId));
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when getting tender by id", e);
         }
     }
 }

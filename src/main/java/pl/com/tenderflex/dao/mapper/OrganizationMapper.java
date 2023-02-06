@@ -22,7 +22,7 @@ public class OrganizationMapper implements RowMapper<Organization> {
         ContactPerson contactPerson = contactPersonMapper.mapRow(resultSet, rowNum);
         Organization organization = new Organization();
         organization.setContactPerson(contactPerson);
-        organization.setId(resultSet.getInt("id"));
+        organization.setId(resultSet.getInt("organization_id"));
         organization.setName(resultSet.getString("organization_name"));
         organization.setNationalRegistrationNumber(resultSet.getString("national_registration_number"));
         organization.setCountry(Country.valueOf(resultSet.getString("country")));

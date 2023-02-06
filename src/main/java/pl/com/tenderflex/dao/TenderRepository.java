@@ -16,5 +16,7 @@ public interface TenderRepository {
     Integer countAllTenders();
 
     String getOfferStatusForBidder(Integer tenderId);
- 
+
+    Tender getById(Integer tenderId);
+
 }
