@@ -3,7 +3,7 @@ package pl.com.tenderflex.dto;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 
-public class ContractorOfferDetailsResponse {
+public class OfferDetailsResponse {
 
     private Integer offerId;
     private String organizationNameByBidder;

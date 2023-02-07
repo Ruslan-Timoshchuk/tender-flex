@@ -82,7 +82,7 @@ public abstract class MapStructMapper {
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "documentName", source = "documentName")
-    public abstract ContractorOfferDetailsResponse offerToContractorOfferDetailsResponse(Offer offer);
+    public abstract OfferDetailsResponse offerToOfferDetailsResponse(Offer offer);
 
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "organizationName", source = "organization.name")
