@@ -25,6 +25,7 @@ public class SecurityConfig {
             .antMatchers("/**/tender/all_tenders").hasAuthority(String.valueOf(Role.BIDDER))
             .antMatchers("/**/tender/details_for_bidder/{id}").hasAuthority(String.valueOf(Role.BIDDER))
             .antMatchers("/**/offer/create").hasAuthority(String.valueOf(Role.BIDDER))
+            .antMatchers("/**/offer/my_offers").hasAuthority(String.valueOf(Role.BIDDER))
             .anyRequest()
             .authenticated();
         return http.build();

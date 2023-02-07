@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 
-public class ContractorOfferResponse {
+public class OfferResponse {
 
     private Integer offerId;
     private String organizationNameByBidder;
@@ -14,7 +14,7 @@ public class ContractorOfferResponse {
     private Currency currency;
     private Country country;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate receivedDate;
+    private LocalDate date;
     private String status;
 
     public Integer getOfferId() {
@@ -65,12 +65,12 @@ public class ContractorOfferResponse {
         this.country = country;
     }
 
-    public LocalDate getReceivedDate() {
-        return receivedDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setReceivedDate(LocalDate receivedDate) {
-        this.receivedDate = receivedDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public String getStatus() {

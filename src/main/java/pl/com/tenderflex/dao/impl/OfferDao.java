@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import pl.com.tenderflex.dao.OfferRepository;
+import pl.com.tenderflex.dao.mapper.OfferBidderMapper;
 import pl.com.tenderflex.dao.mapper.OfferContractorMapper;
 import pl.com.tenderflex.dao.mapper.OfferDetailsMapper;
 import pl.com.tenderflex.model.Offer;
@@ -16,28 +17,34 @@ import pl.com.tenderflex.model.Organization;
 public class OfferDao implements OfferRepository {
 
     public static final String ADD_NEW_OFFER_QUERY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
-            + "bid_price, currency, document_name, contractor_status, received_date, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "bid_price, currency, document_name, contractor_status, publication_date, bidder_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(o.id) AS offers_amount "
             + "FROM offers o WHERE tender_id = ?";
     public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT o.id, org.organization_name, t.cpv_code, o.bid_price, "
-            + "o.currency, org.country, received_date, o.contractor_status FROM offers o "
+            + "o.currency, org.country, o.publication_date, o.contractor_status FROM offers o "
             + "LEFT JOIN organizations org ON org.id = o.organization_id "
             + "LEFT JOIN tenders t ON t.id = o.tender_id WHERE t.contractor_id = ?";
     public static final String GET_OFFER_BY_ID_QUERY = "SELECT o.id, organization_name, national_registration_number, country, city, "
             + "first_name, last_name, phone, bid_price, currency, document_name FROM offers o LEFT JOIN organizations org ON org.id = o.id "
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id WHERE o.id = ?";
+    public static final String GET_OFFERS_BY_BIDDER_QUERY = "SELECT o.id, org.organization_name, t.cpv_code, o.bid_price, o.currency, "
+            + "org.country, o.publication_date, o.bidder_status FROM offers o LEFT JOIN organizations org ON org.id = o.organization_id "
+            + "LEFT JOIN tenders t ON t.id = o.tender_id WHERE bidder_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
     private final OfferContractorMapper offerContractorMapper;
     private final OfferDetailsMapper offerDetailsMapper;
+    private final OfferBidderMapper offerBidderMapper;
 
     public OfferDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao,
-            OfferContractorMapper offerContractorMapper, OfferDetailsMapper offerDetailsMapper) {
+            OfferContractorMapper offerContractorMapper, OfferDetailsMapper offerDetailsMapper,
+            OfferBidderMapper offerBidderMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.organizationDao = organizationDao;
         this.offerContractorMapper = offerContractorMapper;
         this.offerDetailsMapper = offerDetailsMapper;
+        this.offerBidderMapper = offerBidderMapper;
     }
 
     @Override
@@ -53,7 +60,7 @@ public class OfferDao implements OfferRepository {
             statement.setString(5, String.valueOf(offer.getCurrency()));
             statement.setString(6, offer.getDocumentName());
             statement.setString(7, offer.getContractorStatus());
-            statement.setObject(8, offer.getReceivedDate());
+            statement.setObject(8, offer.getPublicationDate());
             statement.setString(9, offer.getBidderStatus());
             return statement;
         }, keyHolder);
@@ -67,12 +74,17 @@ public class OfferDao implements OfferRepository {
     }
 
     @Override
-    public List<Offer> getOffersByContractor(Integer contractorId) {
+    public List<Offer> getByContractor(Integer contractorId) {
         return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerContractorMapper, contractorId);
     }
 
     @Override
     public Offer getById(Integer offerId) {
         return jdbcTemplate.queryForObject(GET_OFFER_BY_ID_QUERY, offerDetailsMapper, offerId);
+    }
+
+    @Override
+    public List<Offer> getByBidder(Integer bidderId) {
+        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerBidderMapper, bidderId);
     }
 }

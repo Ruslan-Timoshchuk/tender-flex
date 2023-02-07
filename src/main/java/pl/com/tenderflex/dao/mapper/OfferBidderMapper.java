@@ -12,7 +12,7 @@ import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
 @Component
-public class OfferContractorMapper implements RowMapper<Offer> {
+public class OfferBidderMapper implements RowMapper<Offer> {
 
     @Override
     public Offer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -28,7 +28,7 @@ public class OfferContractorMapper implements RowMapper<Offer> {
         organization.setCountry(Country.valueOf(resultSet.getString("country")));
         offer.setOrganization(organization);
         offer.setPublicationDate(resultSet.getObject("publication_date", LocalDate.class));
-        offer.setContractorStatus(resultSet.getString("contractor_status"));
+        offer.setContractorStatus(resultSet.getString("bidder_status"));
         return offer;
     }
 }

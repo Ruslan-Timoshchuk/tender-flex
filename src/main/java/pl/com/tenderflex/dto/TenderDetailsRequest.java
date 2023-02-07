@@ -22,14 +22,11 @@ public class TenderDetailsRequest {
     private Integer maxPrice;
     private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private final LocalDate publication;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
 
     public TenderDetailsRequest() {
-        this.publication = LocalDate.now();
         this.deadline = LocalDate.now().plusDays(1);
     }
 
@@ -143,10 +140,6 @@ public class TenderDetailsRequest {
 
     public void setDeadlineForSignedContract(LocalDate deadlineForSignedContract) {
         this.deadlineForSignedContract = deadlineForSignedContract;
-    }
-
-    public LocalDate getPublication() {
-        return publication;
     }
 
     public void setDeadline(LocalDate deadline) {

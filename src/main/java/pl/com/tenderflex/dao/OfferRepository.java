@@ -9,8 +9,10 @@ public interface OfferRepository {
 
     Integer countOffersByTender(Integer tenderId);
 
-    List<Offer> getOffersByContractor(Integer contractorId);
+    List<Offer> getByContractor(Integer contractorId);
 
     Offer getById(Integer offerId);
+
+    List<Offer> getByBidder(Integer bidderId);
 
 }

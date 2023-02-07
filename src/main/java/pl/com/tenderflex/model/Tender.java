@@ -105,6 +105,14 @@ public class Tender {
         this.currency = currency;
     }
 
+    public LocalDate getPublication() {
+        return publication;
+    }
+
+    public void setPublication(LocalDate publication) {
+        this.publication = publication;
+    }
+
     public LocalDate getDeadline() {
         return deadline;
     }
@@ -151,9 +159,5 @@ public class Tender {
 
     public void setRejectDecisionFileName(String rejectDecisionFileName) {
         this.rejectDecisionFileName = rejectDecisionFileName;
-    }
-
-    public LocalDate getPublication() {
-        return publication;
     }
 }

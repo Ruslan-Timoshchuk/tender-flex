@@ -12,7 +12,7 @@ public class Offer {
     private Currency currency;
     private String documentName;
     private String contractorStatus;
-    private LocalDate receivedDate;
+    private LocalDate publicationDate;
     private String bidderStatus;
 
     public Integer getBidderId() {
@@ -79,12 +79,12 @@ public class Offer {
         this.contractorStatus = contractorStatus;
     }
 
-    public LocalDate getReceivedDate() {
-        return receivedDate;
+    public LocalDate getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setReceivedDate(LocalDate receivedDate) {
-        this.receivedDate = receivedDate;
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public String getBidderStatus() {

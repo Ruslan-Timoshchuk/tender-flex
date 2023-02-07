@@ -1,6 +1,7 @@
 package pl.com.tenderflex.service.impl;
 
 import static java.util.Arrays.asList;
+import static java.time.LocalDate.*;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -46,6 +47,7 @@ public class TenderServiceImpl implements TenderService {
         MultipartFile awardDecisionDocument = attachment.getAwardDecisionDocument();
         MultipartFile rejectDecisionDocument = attachment.getRejectDecisionDocument();
         Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetails);
+        tender.setPublication(now());
         tender.setStatus(TENDER_IN_PROGRESS);
         tender.setContractFileName(contract.getOriginalFilename());
         tender.setAwardDecisionFileName(awardDecisionDocument.getOriginalFilename());

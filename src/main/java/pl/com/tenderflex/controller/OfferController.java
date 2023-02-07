@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.dto.ContractorOfferDetailsResponse;
-import pl.com.tenderflex.dto.ContractorOfferResponse;
+import pl.com.tenderflex.dto.OfferResponse;
 import pl.com.tenderflex.dto.OfferDetailsRequest;
 import pl.com.tenderflex.service.OfferService;
 
@@ -35,8 +35,7 @@ public class OfferController {
 
     @GetMapping("/received_offers")
     @ResponseStatus(HttpStatus.OK)
-    public List<ContractorOfferResponse> getAllByCondition(
-            @AuthenticationPrincipal(expression = "id") Integer contractorId) {
+    public List<OfferResponse> getAllByCondition(@AuthenticationPrincipal(expression = "id") Integer contractorId) {
         return offerService.getOffersByContractor(contractorId);
     }
 
@@ -44,5 +43,11 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public ContractorOfferDetailsResponse getById(@PathVariable("id") Integer offerId) {
         return offerService.getById(offerId);
+    }
+
+    @GetMapping("/my_offers")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId) {
+        return offerService.getOffersByBidder(bidderId);
     }
 }

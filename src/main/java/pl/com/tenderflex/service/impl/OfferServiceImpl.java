@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dto.ContractorOfferDetailsResponse;
-import pl.com.tenderflex.dto.ContractorOfferResponse;
+import pl.com.tenderflex.dto.OfferResponse;
 import pl.com.tenderflex.dto.MapStructMapper;
 import pl.com.tenderflex.dto.OfferDetailsRequest;
 import pl.com.tenderflex.exception.ServiceException;
@@ -40,7 +40,7 @@ public class OfferServiceImpl implements OfferService {
         offer.setDocumentName(document.getOriginalFilename());
         offer.setBidderId(bidderId);
         offer.setContractorStatus(OFFER_RECEIVED_STATUS);
-        offer.setReceivedDate(now());
+        offer.setPublicationDate(now());
         offer.setBidderStatus(OFFER_SENT_STATUS);
         try {
             Integer offerId = offerRepository.create(offer).getId();
@@ -51,10 +51,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<ContractorOfferResponse> getOffersByContractor(Integer contractorId) {
+    public List<OfferResponse> getOffersByContractor(Integer contractorId) {
         try {
-            return offerRepository.getOffersByContractor(contractorId).stream()
-                    .map(offerMapper::offerToContractorOfferResponse).toList();
+            return offerRepository.getByContractor(contractorId).stream().map(offerMapper::offerToOfferResponse)
+                    .toList();
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when getting offers by contractor", e);
         }
@@ -66,6 +66,15 @@ public class OfferServiceImpl implements OfferService {
             return offerMapper.offerToContractorOfferDetailsResponse(offerRepository.getById(offerId));
         } catch (DataAccessException e) {
             throw new ServiceException("Error occurred when getting offer by id", e);
+        }
+    }
+
+    @Override
+    public List<OfferResponse> getOffersByBidder(Integer bidderId) {
+        try {
+            return offerRepository.getByBidder(bidderId).stream().map(offerMapper::offerToOfferResponse).toList();
+        } catch (DataAccessException e) {
+            throw new ServiceException("Error occurred when getting offers by bidder", e);
         }
     }
 }
