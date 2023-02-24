@@ -5,11 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
 @Repository
+@RequiredArgsConstructor
 public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
@@ -19,11 +22,6 @@ public class TenderDao implements TenderRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final OrganizationDao organizationDao;
-
-    public TenderDao(JdbcTemplate jdbcTemplate, OrganizationDao organizationDao) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.organizationDao = organizationDao;
-    }
 
     @Override
     public Tender create(Tender tender, Integer contractorId) {

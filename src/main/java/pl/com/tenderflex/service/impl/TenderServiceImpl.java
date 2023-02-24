@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dto.Attachment;
-import pl.com.tenderflex.dto.TenderDetails;
+import pl.com.tenderflex.dto.TenderDetailsRequest;
 import pl.com.tenderflex.exception.ServiceException;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Organization;
@@ -31,7 +31,7 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     @Transactional
-    public void createTender(Attachment attachment, TenderDetails tenderDetails, Integer contractorId) {
+    public void createTender(Attachment attachment, TenderDetailsRequest tenderDetails, Integer contractorId) {
         MultipartFile contract = attachment.getContract();
         MultipartFile awardDecisionDocument = attachment.getAwardDecisionDocument();
         MultipartFile rejectDecisionDocument = attachment.getRejectDecisionDocument();
@@ -39,7 +39,8 @@ public class TenderServiceImpl implements TenderService {
         contactPerson.setFirstName(tenderDetails.getFirstName());
         contactPerson.setLastName(tenderDetails.getLastName());
         contactPerson.setPhone(tenderDetails.getPhone());
-        Organization organization = new Organization(contactPerson);
+        Organization organization = new Organization();
+        organization.setContactPerson(contactPerson);
         organization.setName(tenderDetails.getOrganizationName());
         organization.setNationalRegistrationNumber(tenderDetails.getNationalRegistrationNumber());
         organization.setCountry(tenderDetails.getCountry());
