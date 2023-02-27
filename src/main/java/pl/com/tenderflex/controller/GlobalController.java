@@ -7,18 +7,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.tenderflex.model.Country;
+import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dto.CountryResponse;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.TenderType;
+import pl.com.tenderflex.service.CountryService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/global")
 public class GlobalController {
 
+    private final CountryService countryService;
+    
     @GetMapping("/countries")
     @ResponseStatus(OK)
-    public List<Country> getCountries(){
-        return asList(Country.values());
+    public List<CountryResponse> getAllCountries(){
+        return countryService.getAllCountries();
     }
     
     @GetMapping("/tender-types")

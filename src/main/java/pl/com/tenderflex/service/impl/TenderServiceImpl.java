@@ -33,8 +33,8 @@ public class TenderServiceImpl implements TenderService {
     @Transactional
     public void createTender(Attachment attachment, TenderDetailsRequest tenderDetails, Integer contractorId) {
         MultipartFile contract = attachment.getContract();
-        MultipartFile awardDecisionDocument = attachment.getAwardDecisionDocument();
-        MultipartFile rejectDecisionDocument = attachment.getRejectDecisionDocument();
+        MultipartFile awardDecisionDocument = attachment.getAwardDecision();
+        MultipartFile rejectDecisionDocument = attachment.getRejectDecision();
         ContactPerson contactPerson = new ContactPerson();
         contactPerson.setFirstName(tenderDetails.getFirstName());
         contactPerson.setLastName(tenderDetails.getLastName());

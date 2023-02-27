@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Attachment {
 
     private MultipartFile contract;
-    private MultipartFile awardDecisionDocument;
-    private MultipartFile rejectDecisionDocument;
+    private MultipartFile awardDecision;
+    private MultipartFile rejectDecision;
 
 }
