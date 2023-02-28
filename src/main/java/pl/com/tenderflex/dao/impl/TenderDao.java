@@ -16,7 +16,7 @@ import pl.com.tenderflex.model.Tender;
 public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
-            + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency, publication_date, deadline, "
+            + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
             + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -36,7 +36,7 @@ public class TenderDao implements TenderRepository {
             statement.setString(5, tender.getDetails());
             statement.setLong(6, tender.getMinPrice());
             statement.setLong(7, tender.getMaxPrice());
-            statement.setString(8, String.valueOf(tender.getCurrency()));
+            statement.setInt(8, tender.getCurrency().getId());
             statement.setObject(9, tender.getPublication());
             statement.setObject(10, tender.getDeadline());
             statement.setObject(11, tender.getDeadlineForSignedContract());

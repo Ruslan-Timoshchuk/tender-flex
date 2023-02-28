@@ -1,6 +1,6 @@
 package pl.com.tenderflex.controller;
 
-import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,7 @@ public class TenderController {
     private final TenderService tenderService;
 
     @PostMapping(consumes = { "multipart/form-data" })
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(OK)
     public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
             @ModelAttribute Attachment attachment, @RequestPart("tender") TenderDetailsRequest tenderDetails) {
         tenderService.createTender(attachment, tenderDetails, contractorId);  

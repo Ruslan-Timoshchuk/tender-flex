@@ -15,7 +15,7 @@ import pl.com.tenderflex.model.Organization;
 public class OrganizationDao {
 
     public static final String ADD_NEW_ORGANIZATION_QUERY = "INSERT INTO "
-            + "organizations(organization_name, national_registration_number, country, city, contact_person_id) VALUES (?, ?, ?, ?, ?)";
+            + "organizations(organization_name, national_registration_number, country_id, city, contact_person_id) VALUES (?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final ContactPersonDao contactPersonDao;
@@ -28,7 +28,7 @@ public class OrganizationDao {
                     new String[] { "id" });
             statement.setString(1, organization.getName());
             statement.setString(2, organization.getNationalRegistrationNumber());
-            statement.setString(3, String.valueOf(organization.getCountry()));
+            statement.setInt(3, organization.getCountry().getId());
             statement.setString(4, organization.getCity());
             statement.setInt(5, contactPerson.getId());
             return statement;
