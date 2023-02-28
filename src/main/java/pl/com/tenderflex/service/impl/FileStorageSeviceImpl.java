@@ -11,10 +11,13 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+
+import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.exception.ServiceException;
 import pl.com.tenderflex.service.FileStorageService;
 
 @Service
+@RequiredArgsConstructor
 public class FileStorageSeviceImpl implements FileStorageService {
 
     public static final String SLASH_LINE = "/";
@@ -24,10 +27,6 @@ public class FileStorageSeviceImpl implements FileStorageService {
     @Value("${upload.path}")
     private String uploadPath;
     private final AmazonS3 amazonS3Client;
-
-    public FileStorageSeviceImpl(AmazonS3 amazonS3Client) {
-        this.amazonS3Client = amazonS3Client;
-    }
 
     @Override
     public void upload(List<MultipartFile> files, Integer contractorId, Integer tenderId) throws IOException {

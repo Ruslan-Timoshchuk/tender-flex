@@ -1,13 +1,13 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
-public class Currency {
+@NoArgsConstructor
+public class CurrencyResponse {
 
     private Integer id;
     private String currencyType;

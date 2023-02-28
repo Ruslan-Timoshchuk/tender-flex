@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dto.CountryResponse;
-import pl.com.tenderflex.model.Currency;
+import pl.com.tenderflex.dto.CurrencyResponse;
 import pl.com.tenderflex.model.TenderType;
 import pl.com.tenderflex.service.CountryService;
+import pl.com.tenderflex.service.CurrencyService;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,22 +20,23 @@ import pl.com.tenderflex.service.CountryService;
 public class GlobalController {
 
     private final CountryService countryService;
-    
+    private final CurrencyService currencyService;
+
     @GetMapping("/countries")
     @ResponseStatus(OK)
-    public List<CountryResponse> getAllCountries(){
+    public List<CountryResponse> getAllCountries() {
         return countryService.getAllCountries();
     }
-    
+
     @GetMapping("/tender-types")
     @ResponseStatus(OK)
-    public List<TenderType> getTenderTypes(){
+    public List<TenderType> getTenderTypes() {
         return asList(TenderType.values());
     }
-    
+
     @GetMapping("/currencies")
     @ResponseStatus(OK)
-    public List<Currency> getCurrencies(){
-        return asList(Currency.values());
+    public List<CurrencyResponse> getCurrencies() {
+        return currencyService.getAllCurrencies();
     }
 }

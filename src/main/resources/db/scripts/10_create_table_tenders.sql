@@ -7,7 +7,7 @@ CREATE TABLE tenders (
     details VARCHAR(250) NOT NULL,
     min_price BIGINT NOT NULL,
     max_price BIGINT NOT NULL,
-    currency VARCHAR NOT NULL,
+    currency_id INTEGER REFERENCES currencies(id),
     publication_date TIMESTAMP NOT NULL,
     deadline TIMESTAMP NOT NULL,
     deadline_for_signed_contract TIMESTAMP,
