@@ -16,7 +16,7 @@ public interface MapStructMapper {
 
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
-    @Mapping(target = "organization.country", source = "country")
+    @Mapping(target = "organization.country.id", source = "countryId")
     @Mapping(target = "organization.city", source = "city")
     @Mapping(target = "organization.contactPerson.firstName", source = "firstName")
     @Mapping(target = "organization.contactPerson.lastName", source = "lastName")
@@ -27,7 +27,7 @@ public interface MapStructMapper {
     @Mapping(target = "details", source = "details")
     @Mapping(target = "minPrice", source = "minPrice")
     @Mapping(target = "maxPrice", source = "maxPrice")
-    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);

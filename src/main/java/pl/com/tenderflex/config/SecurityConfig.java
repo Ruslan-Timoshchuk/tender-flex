@@ -41,6 +41,8 @@ public class SecurityConfig {
               .hasAuthority(String.valueOf(Role.CONTRACTOR))
             .antMatchers("/**/global/currencies")
               .hasAuthority(String.valueOf(Role.CONTRACTOR))
+            .antMatchers("/**/document/**")
+              .hasAuthority(String.valueOf(Role.CONTRACTOR)) 
             .anyRequest()
               .authenticated()
             .and()
