@@ -2,7 +2,6 @@ package pl.com.tenderflex.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Tender;
@@ -11,7 +10,7 @@ import pl.com.tenderflex.model.Tender;
 public interface MapStructMapper {
 
     CountryResponse countryToCountryResponse(Country country);
-    
+
     CurrencyResponse currencyToCurrencyResponce(Currency currency);
 
     @Mapping(target = "organization.name", source = "organizationName")
@@ -30,5 +29,8 @@ public interface MapStructMapper {
     @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "contractUrl", source = "contractUrl")
+    @Mapping(target = "awardDecisionUrl", source = "awardDecisionUrl")
+    @Mapping(target = "rejectDecisionUrl", source = "rejectDecisionUrl")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
 }

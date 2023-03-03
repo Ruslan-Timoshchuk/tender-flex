@@ -25,11 +25,14 @@ public class TenderDetailsRequest {
     private Integer minPrice;
     private Integer maxPrice;
     private Integer currencyId;
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate publication;
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadlineForSignedContract;
+    private String contractUrl;
+    private String awardDecisionUrl;
+    private String rejectDecisionUrl;
 
 }

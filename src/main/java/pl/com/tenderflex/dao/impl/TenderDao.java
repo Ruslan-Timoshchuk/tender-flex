@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Organization;
@@ -17,7 +16,7 @@ public class TenderDao implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
-            + "deadline_for_signed_contract, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
+            + "deadline_for_signed_contract, status, contract_url, award_decision_url, reject_decision_url) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
@@ -41,9 +40,9 @@ public class TenderDao implements TenderRepository {
             statement.setObject(10, tender.getDeadline());
             statement.setObject(11, tender.getDeadlineForSignedContract());
             statement.setString(12, tender.getStatus());
-            statement.setString(13, tender.getContractFileName());
-            statement.setString(14, tender.getAwardDecisionFileName());
-            statement.setString(15, tender.getRejectDecisionFileName());
+            statement.setString(13, tender.getContractUrl());
+            statement.setString(14, tender.getAwardDecisionUrl());
+            statement.setString(15, tender.getRejectDecisionUrl());
             return statement;
         }, keyHolder);
         tender.setId(keyHolder.getKeyAs(Integer.class));

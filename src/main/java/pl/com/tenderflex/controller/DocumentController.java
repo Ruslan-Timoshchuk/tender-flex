@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dto.MultipartFileResponse;
 import pl.com.tenderflex.exception.FileNotExistsException;
 import pl.com.tenderflex.service.FileStorageService;
 
@@ -19,14 +20,14 @@ import pl.com.tenderflex.service.FileStorageService;
 public class DocumentController {
 
     private final FileStorageService fileStorageService;
-    
+
     @PostMapping("/upload")
     @ResponseStatus(OK)
-    public String uploadDocument(@AuthenticationPrincipal(expression = "id") Integer userId,
+    public MultipartFileResponse uploadDocument(@AuthenticationPrincipal(expression = "id") Integer userId,
             @RequestParam MultipartFile document) throws IOException {
         if (document.getOriginalFilename() == null) {
             throw new FileNotExistsException("File is not exists");
         }
-        return fileStorageService.upload(document, userId).toString();  
+        return fileStorageService.upload(document, userId);
     }
 }

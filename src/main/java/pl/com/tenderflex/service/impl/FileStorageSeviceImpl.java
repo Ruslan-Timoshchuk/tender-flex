@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.net.URL;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dto.MultipartFileResponse;
 import pl.com.tenderflex.service.FileStorageService;
 
 @Service
@@ -25,7 +25,7 @@ public class FileStorageSeviceImpl implements FileStorageService {
     private final AmazonS3 amazonS3Client;
 
     @Override
-    public URL upload(MultipartFile document, Integer userId) throws IOException {
+    public MultipartFileResponse upload(MultipartFile document, Integer userId) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(document.getContentType());
         metadata.setContentLength(document.getSize());
@@ -37,6 +37,6 @@ public class FileStorageSeviceImpl implements FileStorageService {
         directoryKeyPrefix.append(LOW_LINE);
         directoryKeyPrefix.append(document.getOriginalFilename());
         amazonS3Client.putObject(bucketName, directoryKeyPrefix.toString(), document.getInputStream(), metadata);
-        return amazonS3Client.getUrl(bucketName, directoryKeyPrefix.toString());
+        return new MultipartFileResponse(amazonS3Client.getUrl(bucketName, directoryKeyPrefix.toString()));
     }
 }
