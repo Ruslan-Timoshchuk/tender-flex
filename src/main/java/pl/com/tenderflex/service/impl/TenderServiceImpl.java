@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.dto.MapStructMapper;
-import pl.com.tenderflex.dto.TenderDetailsRequest;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.payload.MapStructMapper;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.service.TenderService;
 
 @Service

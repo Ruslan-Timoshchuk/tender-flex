@@ -1,28 +1,38 @@
 package pl.com.tenderflex.config;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pl.com.tenderflex.model.Role;
+import pl.com.tenderflex.model.ERole;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.security.JwtAuthenticationFilter;
+import pl.com.tenderflex.security.impl.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationProvider authenticationProvider;
+    @Value("${allowed.origin.hosts}")
+    private String allowedOriginHosts;   
     private final JwtAuthenticationFilter jwtAuthFilter;
-       
+    private final UserDetailsService userDetailsService;
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,34 +40,57 @@ public class SecurityConfig {
             .and()
             .csrf()
             .disable()
+              .sessionManagement()
+              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
             .authorizeRequests()
             .antMatchers("/**/auth/**")
               .permitAll()
             .antMatchers("/**/tender/**")
-              .hasAuthority(String.valueOf(Role.CONTRACTOR))
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
             .antMatchers("/**/global/countries")
-              .hasAuthority(String.valueOf(Role.CONTRACTOR))
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
             .antMatchers("/**/global/tender-types")
-              .hasAuthority(String.valueOf(Role.CONTRACTOR))
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
             .antMatchers("/**/global/currencies")
-              .hasAuthority(String.valueOf(Role.CONTRACTOR))
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
             .antMatchers("/**/document/**")
-              .hasAuthority(String.valueOf(Role.CONTRACTOR)) 
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR)) 
             .anyRequest()
               .authenticated()
             .and()
-              .sessionManagement()
-              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-              .and()
-            .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); 
         return http.build();
+    }
+       
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+    
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
     
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedOrigins(List.of(allowedOriginHosts));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+        configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(List.of("Authorization"));  
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }

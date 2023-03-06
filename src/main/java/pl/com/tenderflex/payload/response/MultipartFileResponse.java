@@ -1,4 +1,4 @@
-package pl.com.tenderflex.dto;
+package pl.com.tenderflex.payload.response;
 
 import java.net.URL;
 import lombok.Getter;

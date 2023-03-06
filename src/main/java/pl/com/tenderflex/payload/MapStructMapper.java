@@ -1,10 +1,13 @@
-package pl.com.tenderflex.dto;
+package pl.com.tenderflex.payload;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.CountryResponse;
+import pl.com.tenderflex.payload.response.CurrencyResponse;
 
 @Mapper(componentModel = "spring")
 public interface MapStructMapper {

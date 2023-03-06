@@ -1,6 +1,6 @@
 package pl.com.tenderflex.service;
 
-import pl.com.tenderflex.dto.TenderDetailsRequest;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 
 public interface TenderService {
 

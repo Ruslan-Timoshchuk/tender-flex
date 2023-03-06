@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.CurrencyRepository;
-import pl.com.tenderflex.dto.CurrencyResponse;
-import pl.com.tenderflex.dto.MapStructMapper;
+import pl.com.tenderflex.payload.MapStructMapper;
+import pl.com.tenderflex.payload.response.CurrencyResponse;
 import pl.com.tenderflex.service.CurrencyService;
 
 @Component

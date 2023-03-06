@@ -1,4 +1,4 @@
-package pl.com.tenderflex.dto;
+package pl.com.tenderflex.payload.request;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;

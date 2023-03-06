@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.CountryRepository;
-import pl.com.tenderflex.dto.CountryResponse;
-import pl.com.tenderflex.dto.MapStructMapper;
+import pl.com.tenderflex.payload.MapStructMapper;
+import pl.com.tenderflex.payload.response.CountryResponse;
 import pl.com.tenderflex.service.CountryService;
 
 @Service

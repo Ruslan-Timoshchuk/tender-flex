@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dto.CountryResponse;
-import pl.com.tenderflex.dto.CurrencyResponse;
 import pl.com.tenderflex.model.TenderType;
+import pl.com.tenderflex.payload.response.CountryResponse;
+import pl.com.tenderflex.payload.response.CurrencyResponse;
 import pl.com.tenderflex.service.CountryService;
 import pl.com.tenderflex.service.CurrencyService;
 

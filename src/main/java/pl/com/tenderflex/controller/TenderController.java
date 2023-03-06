@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dto.TenderDetailsRequest;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.service.TenderService;
 
 @RestController
