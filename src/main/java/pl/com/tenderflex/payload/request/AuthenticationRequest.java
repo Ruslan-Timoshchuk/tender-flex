@@ -1,4 +1,4 @@
-package pl.com.tenderflex.dto;
+package pl.com.tenderflex.payload.request;
 
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;

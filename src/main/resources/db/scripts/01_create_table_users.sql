@@ -3,6 +3,5 @@ CREATE TABLE users (
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
-    password VARCHAR NOT NULL,
-    role VARCHAR NOT NULL
+    password VARCHAR NOT NULL
 );
