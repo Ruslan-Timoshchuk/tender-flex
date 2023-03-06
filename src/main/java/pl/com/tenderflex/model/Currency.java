@@ -1,7 +1,15 @@
 package pl.com.tenderflex.model;
 
-public enum Currency {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-    USD, EUR, NOK
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class Currency {
+
+    private Integer id;
+    private String currencyType;
     
 }

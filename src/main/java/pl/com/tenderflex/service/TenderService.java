@@ -1,15 +1,16 @@
 package pl.com.tenderflex.service;
 
-import pl.com.tenderflex.dto.Attachment;
-import pl.com.tenderflex.dto.BidderTenderResponse;
-import pl.com.tenderflex.dto.Page;
-import pl.com.tenderflex.dto.TenderDetailsRequest;
-import pl.com.tenderflex.dto.ContractorTenderResponse;
+import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 
 public interface TenderService {
+   
+    void createTender(TenderDetailsRequest tenderDetails, Integer contractorId);
 
-    void createTender(Attachment attachment, TenderDetailsRequest tenderDetails, Integer contractorId);
-
+    Integer getTendersAmountByContractor(Integer contractorId);
+    
     Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage);
 
     Page<BidderTenderResponse> getByCondition(Integer currentPage);

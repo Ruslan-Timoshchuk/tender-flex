@@ -1,60 +1,41 @@
 package pl.com.tenderflex.service.impl;
 
-import static java.util.Arrays.asList;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.dto.Attachment;
-import pl.com.tenderflex.dto.BidderTenderResponse;
-import pl.com.tenderflex.dto.MapStructMapper;
-import pl.com.tenderflex.dto.Page;
-import pl.com.tenderflex.dto.TenderDetailsRequest;
-import pl.com.tenderflex.dto.ContractorTenderResponse;
-import pl.com.tenderflex.exception.ServiceException;
 import pl.com.tenderflex.model.Tender;
-import pl.com.tenderflex.service.FileStorageService;
+import pl.com.tenderflex.payload.MapStructMapper;
+import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
+@RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
 
     public static final String TENDER_IN_PROGRESS = "IN PROGRESS";
 
     @Value("${tenders.per.page}")
     private Integer tendersPerPage;
-    private final TenderRepository tenderRepository;
-    private final FileStorageService storageSevice;
     private final MapStructMapper tenderMapper;
-
-    public TenderServiceImpl(TenderRepository tenderRepository, FileStorageService storageSevice,
-            MapStructMapper tenderMapper) {
-        this.tenderRepository = tenderRepository;
-        this.storageSevice = storageSevice;
-        this.tenderMapper = tenderMapper;
-    }
+    private final TenderRepository tenderRepository;
 
     @Override
     @Transactional
-    public void createTender(Attachment attachment, TenderDetailsRequest tenderDetails, Integer contractorId) {
-        MultipartFile contract = attachment.getContract();
-        MultipartFile awardDecisionDocument = attachment.getAwardDecisionDocument();
-        MultipartFile rejectDecisionDocument = attachment.getRejectDecisionDocument();
-        Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetails);
+    public void createTender(TenderDetailsRequest tenderDetailsRequest, Integer contractorId) {
+        Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
+        tender.setContractorId(contractorId);
         tender.setStatus(TENDER_IN_PROGRESS);
-        tender.setContractFileName(contract.getOriginalFilename());
-        tender.setAwardDecisionFileName(awardDecisionDocument.getOriginalFilename());
-        tender.setRejectDecisionFileName(rejectDecisionDocument.getOriginalFilename());
-        try {
-            Integer tenderId = tenderRepository.create(tender, contractorId).getId();
-            storageSevice.upload(asList(contract, awardDecisionDocument, rejectDecisionDocument), contractorId,
-                    tenderId);
-        } catch (DataAccessException | IOException e) {
-            throw new ServiceException("Error occurred when saving the tender", e);
-        }
+        tenderRepository.create(tender, contractorId);
+    }
+
+    @Override
+    public Integer getTendersAmountByContractor(Integer contractorId) {
+        return tenderRepository.countTendersByContractor(contractorId);
     }
 
     @Override
@@ -69,13 +50,9 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        try {
-            return new Page<>(currentPage, totalPages,
-                    tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
-                            .map(tenderMapper::tenderToContractorTenderResponse).toList());
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when searching tenders by contractor", e);
-        }
+        return new Page<>(currentPage, totalPages,
+                tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                        .map(tenderMapper::tenderToContractorTenderResponse).toList());
     }
 
     @Override
@@ -90,12 +67,7 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        try {
-            return new Page<>(currentPage, totalPages,
-                    tenderRepository.getByCondition(amountTenders, amountTendersToSkip).stream()
-                            .map(tenderMapper::tenderToBidderTenderResponse).toList());
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when searching tenders by bidder", e);
-        }
+        return new Page<>(currentPage, totalPages, tenderRepository.getByCondition(amountTenders, amountTendersToSkip)
+                .stream().map(tenderMapper::tenderToBidderTenderResponse).toList());
     }
 }

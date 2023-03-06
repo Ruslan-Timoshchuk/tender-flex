@@ -1,9 +1,15 @@
 package pl.com.tenderflex.model;
 
-public enum Country {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    AUSTRIA, BELGIUM, BULGARIA, CROATIA, CYPRUS, CZEHIA, DENMARK, ESTONIA, FINLAND, FRANCE, GERMANY, GREECE, HUNGARY,
-    IRELAND, ITALY, LATVIA, LITHUANIA, LUXEMBOURG, MALTA, NETHERLANDS, POLAND, PORTUGAL, ROMANIA, SLOVAKIA, SLOVENIA,
-    SPAIN, SWEDEN
+@Getter
+@Setter
+@NoArgsConstructor
+public class Country {
+
+    private Integer id;
+    private String countryName;
     
 }
