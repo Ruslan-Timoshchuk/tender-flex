@@ -1,5 +1,6 @@
 package pl.com.tenderflex.service;
 
+import java.util.List;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
@@ -11,7 +12,7 @@ public interface TenderService {
 
     Integer getTendersAmountByContractor(Integer contractorId);
     
-    Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage);
+    List<ContractorTenderResponse> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
 
     Page<BidderTenderResponse> getByCondition(Integer currentPage);
 

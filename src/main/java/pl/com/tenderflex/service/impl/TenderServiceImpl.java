@@ -1,5 +1,7 @@
 package pl.com.tenderflex.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,20 +41,9 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage) {
-        Integer amountTenders = currentPage * tendersPerPage;
-        Integer amountTendersToSkip = (currentPage - 1) * 5;
-        Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
-        Integer totalPages = 1;
-        if (allTendersAmount >= tendersPerPage) {
-            totalPages = allTendersAmount / tendersPerPage;
-            if (allTendersAmount % tendersPerPage > 0) {
-                totalPages++;
-            }
-        }
-        return new Page<>(currentPage, totalPages,
-                tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
-                        .map(tenderMapper::tenderToContractorTenderResponse).toList());
+    public List<ContractorTenderResponse> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {       
+        return tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                        .map(tenderMapper::tenderToContractorTenderResponse).toList();
     }
 
     @Override
