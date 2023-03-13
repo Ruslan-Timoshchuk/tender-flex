@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dao.mapper.OrganizationMapper;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Organization;
 
@@ -15,9 +16,11 @@ public class OrganizationDao {
 
     public static final String ADD_NEW_ORGANIZATION_QUERY = "INSERT INTO "
             + "organizations(organization_name, national_registration_number, country_id, city, contact_person_id) VALUES (?, ?, ?, ?, ?)";
-
+    public static final String GET_ORGANIZATION_BY_ID_QUERY = "SELECT * FROM organizations WHERE id = ?";
+    
     private final JdbcTemplate jdbcTemplate;
     private final ContactPersonDao contactPersonDao;
+    private final OrganizationMapper organizationMapper;
 
     public Organization create(Organization organization) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -34,5 +37,9 @@ public class OrganizationDao {
         }, keyHolder);
         organization.setId(keyHolder.getKeyAs(Integer.class));
         return organization;
+    }
+    
+    public Organization getById(Integer organizationId) {
+        return jdbcTemplate.queryForObject(GET_ORGANIZATION_BY_ID_QUERY, organizationMapper, organizationId);
     }
 }

@@ -6,10 +6,8 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.CountryRepository;
 import pl.com.tenderflex.dao.CurrencyRepository;
-import pl.com.tenderflex.model.ContactPerson;
-import pl.com.tenderflex.model.Organization;
+import pl.com.tenderflex.dao.impl.OrganizationDao;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderType;
 
@@ -17,37 +15,28 @@ import pl.com.tenderflex.model.TenderType;
 @RequiredArgsConstructor
 public class TenderMapper implements RowMapper<Tender> {
 
-    private final CountryRepository countryRepository;
+    private final OrganizationDao organizationDao;
     private final CurrencyRepository currencyRepository;
-   
+
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        ContactPerson contactPerson = new ContactPerson();
-        contactPerson.setFirstName(resultSet.getString("first_name"));
-        contactPerson.setLastName(resultSet.getString("last_name"));
-        contactPerson.setPhone(resultSet.getString("phone"));
-        Organization organization = new Organization();
-        organization.setName(resultSet.getString("organization_name"));
-        organization.setNationalRegistrationNumber(resultSet.getString("national_registration_number"));
-        organization.setCountry(countryRepository.getById(resultSet.getInt("country_id")));
-        organization.setCity(resultSet.getString("city"));
-        Tender tender = new Tender();
-        tender.setOrganization(organization);
-        tender.setPublication(resultSet.getObject("publication_date", LocalDate.class));
-        tender.setId(resultSet.getInt("id"));
-        tender.setContractorId(resultSet.getInt("contractor_id"));
-        tender.setCpvCode(resultSet.getString("cpv_code"));
-        tender.setType(TenderType.valueOf(resultSet.getString("tender_type")));
-        tender.setDetails(resultSet.getString("details"));
-        tender.setMinPrice(resultSet.getInt("min_price"));
-        tender.setMaxPrice(resultSet.getInt("max_price"));
-        tender.setCurrency(currencyRepository.getById(resultSet.getInt("currency_id")));
-        tender.setDeadline(resultSet.getObject("deadline", LocalDate.class));
-        tender.setDeadlineForSignedContract(resultSet.getObject("deadline_for_signed_contract", LocalDate.class));
-        tender.setStatus(resultSet.getString("status"));
-        tender.setContractUrl(resultSet.getString("contract_url"));
-        tender.setAwardDecisionUrl(resultSet.getString("award_decision_url"));
-        tender.setRejectDecisionUrl(resultSet.getString("reject_decision_url"));
-        return tender;
+        return Tender
+                .builder()
+                .id(resultSet.getInt("id"))
+                .contractorId(resultSet.getInt("contractor_id"))
+                .organization(organizationDao.getById(resultSet.getInt("organization_id")))
+                .cpvCode(resultSet.getString("cpv_code"))
+                .type(TenderType.valueOf(resultSet.getString("tender_type")))
+                .details(resultSet.getString("details"))
+                .minPrice(resultSet.getInt("min_price"))
+                .maxPrice(resultSet.getInt("max_price"))
+                .currency(currencyRepository.getById(resultSet.getInt("currency_id")))
+                .publication(resultSet.getObject("publication_date", LocalDate.class))
+                .deadline(resultSet.getObject("deadline", LocalDate.class))
+                .deadlineForSignedContract(resultSet.getObject("deadline_for_signed_contract", LocalDate.class))
+                .status(resultSet.getString("status"))
+                .contractUrl(resultSet.getString("contract_url"))
+                .awardDecisionUrl(resultSet.getString("award_decision_url"))
+                .rejectDecisionUrl(resultSet.getString("reject_decision_url")).build();
     }
 }
