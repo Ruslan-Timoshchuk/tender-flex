@@ -1,5 +1,10 @@
 package pl.com.tenderflex.model;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class ContactPerson {
 
     private Integer id;
@@ -7,35 +12,4 @@ public class ContactPerson {
     private String lastName;
     private String phone;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

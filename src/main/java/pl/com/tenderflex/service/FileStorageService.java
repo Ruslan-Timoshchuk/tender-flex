@@ -1,13 +1,11 @@
 package pl.com.tenderflex.service;
 
 import java.io.IOException;
-import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+import pl.com.tenderflex.payload.response.MultipartFileResponse;
 
 public interface FileStorageService {
 
-    void upload(List<MultipartFile> files, Integer contractorId, Integer tenderId) throws IOException;
-    
-    void upload(MultipartFile document, Integer bidderId, Integer offerId);
+    MultipartFileResponse upload(MultipartFile document, Integer userId) throws IOException;
 
 }

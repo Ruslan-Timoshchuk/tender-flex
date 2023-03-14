@@ -1,17 +1,20 @@
 package pl.com.tenderflex.service;
 
-import pl.com.tenderflex.dto.Attachment;
-import pl.com.tenderflex.dto.BidderTenderResponse;
-import pl.com.tenderflex.dto.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.dto.Page;
-import pl.com.tenderflex.dto.TenderDetailsRequest;
-import pl.com.tenderflex.dto.ContractorTenderResponse;
+import java.util.List;
+import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 
 public interface TenderService {
 
-    void createTender(Attachment attachment, TenderDetailsRequest tenderDetails, Integer contractorId);
+    void createTender(TenderDetailsRequest tenderDetails, Integer contractorId);
 
-    Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage);
+    Integer getTendersAmountByContractor(Integer contractorId);
+
+    List<ContractorTenderResponse> getByContractor(Integer contractorId, Integer amountTenders,
+            Integer amountTendersToSkip);
 
     Page<BidderTenderResponse> getByCondition(Integer currentPage);
 

@@ -11,11 +11,12 @@ public class ContactPersonMapper implements RowMapper<ContactPerson> {
 
     @Override
     public ContactPerson mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        ContactPerson contactPerson = new ContactPerson();
-        contactPerson.setId(resultSet.getInt("con_person_id"));
-        contactPerson.setFirstName(resultSet.getString("first_name"));
-        contactPerson.setLastName(resultSet.getString("last_name"));
-        contactPerson.setPhone(resultSet.getString("phone"));
-        return contactPerson;
+        return ContactPerson
+                .builder()
+                .id(resultSet.getInt("id"))
+                .firstName(resultSet.getString("first_name"))
+                .lastName(resultSet.getString("last_name"))
+                .phone(resultSet.getString("phone"))
+                .build();
     }
 }
