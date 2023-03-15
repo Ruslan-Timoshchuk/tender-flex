@@ -7,12 +7,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
 @Repository
 @RequiredArgsConstructor
-public class TenderDao implements TenderRepository {
+public class TenderRepositoryImpl implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
@@ -20,15 +19,13 @@ public class TenderDao implements TenderRepository {
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrganizationDao organizationDao;
-
+ 
     @Override
     public Tender create(Tender tender, Integer contractorId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Organization organization = organizationDao.create(tender.getOrganization());
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
-            statement.setInt(1, organization.getId());
+            statement.setInt(1, tender.getOrganization().getId());
             statement.setInt(2, contractorId);
             statement.setString(3, tender.getCpvCode());
             statement.setString(4, String.valueOf(tender.getType()));

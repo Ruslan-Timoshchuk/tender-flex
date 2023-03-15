@@ -9,12 +9,13 @@ import pl.com.tenderflex.model.Role;
 
 @Component
 public class RoleMapper implements RowMapper<Role> {
-    
+
     @Override
     public Role mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Role role = new Role();
-        role.setId(resultSet.getInt("id"));
-        role.setName(ERole.valueOf(resultSet.getString("name")));
-        return role;
+        return Role
+                .builder()
+                .id(resultSet.getInt("id"))
+                .name(ERole.valueOf(resultSet.getString("name")))
+                .build();
     }
 }

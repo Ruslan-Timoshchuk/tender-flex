@@ -1,12 +1,10 @@
 package pl.com.tenderflex.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Builder
 public class ContactPerson {
 
     private Integer id;

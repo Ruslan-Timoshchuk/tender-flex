@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.CountryRepository;
-import pl.com.tenderflex.payload.MapStructMapper;
+import pl.com.tenderflex.payload.mapstract.CountryMapper;
 import pl.com.tenderflex.payload.response.CountryResponse;
 import pl.com.tenderflex.service.CountryService;
 
@@ -13,7 +13,7 @@ import pl.com.tenderflex.service.CountryService;
 public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
-    private final MapStructMapper countryMapper;
+    private final CountryMapper countryMapper;
 
     public List<CountryResponse> getAllCountries() {
         return countryRepository.getAll().stream().map(countryMapper::countryToCountryResponse).toList();

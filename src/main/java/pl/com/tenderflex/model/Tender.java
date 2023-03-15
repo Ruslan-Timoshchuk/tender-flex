@@ -2,13 +2,11 @@ package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Builder
 public class Tender {
 
     private Integer id;

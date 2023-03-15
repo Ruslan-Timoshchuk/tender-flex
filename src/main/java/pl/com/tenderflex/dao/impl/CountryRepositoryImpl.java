@@ -10,7 +10,7 @@ import pl.com.tenderflex.model.Country;
 
 @Repository
 @RequiredArgsConstructor
-public class CountryDao implements CountryRepository {
+public class CountryRepositoryImpl implements CountryRepository {
 
     public static final String GET_ALL_COUNTRIES_QUERY = "SELECT * FROM countries";
     

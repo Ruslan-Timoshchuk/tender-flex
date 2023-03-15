@@ -10,7 +10,7 @@ import pl.com.tenderflex.model.Currency;
 
 @Repository
 @RequiredArgsConstructor
-public class CurrencyDao implements CurrencyRepository {
+public class CurrencyRepositoryImpl implements CurrencyRepository {
 
     public static final String GET_ALL_CURRENCIES_QUERY = "SELECT * FROM currencies";
 

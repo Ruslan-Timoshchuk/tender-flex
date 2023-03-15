@@ -6,17 +6,19 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dao.ContactPersonRepository;
 import pl.com.tenderflex.model.ContactPerson;
 
 @Repository
 @RequiredArgsConstructor
-public class ContactPersonDao {
+public class ContactPersonRepositoryImpl implements ContactPersonRepository {
 
     public static final String ADD_NEW_CONTACT_PERSON_QUERY = "INSERT INTO "
             + "contact_persons(first_name, last_name, phone) VALUES (?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
+    @Override
     public ContactPerson create(ContactPerson contactPerson) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
