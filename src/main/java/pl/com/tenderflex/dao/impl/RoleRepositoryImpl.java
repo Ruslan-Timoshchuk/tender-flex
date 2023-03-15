@@ -10,7 +10,7 @@ import pl.com.tenderflex.model.Role;
 
 @Repository
 @RequiredArgsConstructor
-public class RoleDao implements RoleRepository {
+public class RoleRepositoryImpl implements RoleRepository {
 
     public static final String GET_ROLES_BY_USER_QUERY = "SELECT id, name FROM roles "
             + "LEFT JOIN user_roles ur ON ur.role_id = id WHERE user_id = ?";
