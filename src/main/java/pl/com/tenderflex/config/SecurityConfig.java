@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.com.tenderflex.model.ERole;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.security.impl.JwtAuthenticationFilter;
 
@@ -45,6 +46,16 @@ public class SecurityConfig {
             .authorizeRequests()
             .antMatchers("/**/auth/**")
               .permitAll()
+            .antMatchers("/**/tender/**")
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
+            .antMatchers("/**/global/countries")
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
+            .antMatchers("/**/global/tender-types")
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
+            .antMatchers("/**/global/currencies")
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR))
+            .antMatchers("/**/document/**")
+              .hasAuthority(String.valueOf(ERole.CONTRACTOR)) 
             .anyRequest()
               .authenticated()
             .and()

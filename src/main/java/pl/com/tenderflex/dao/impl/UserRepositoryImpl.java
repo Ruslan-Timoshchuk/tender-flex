@@ -17,6 +17,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
 
+    @Override
     public User getByEmail(String email) {
         return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL_QUERY, userMapper, email);
     }
