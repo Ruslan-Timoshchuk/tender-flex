@@ -17,6 +17,5 @@ public class RoleMapper implements RowMapper<Role> {
                 .id(resultSet.getInt("id"))
                 .name(ERole.valueOf(resultSet.getString("name")))
                 .build();
-
     }
 }

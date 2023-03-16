@@ -1,13 +1,9 @@
 package pl.com.tenderflex.payload;
 
 import org.springframework.http.ResponseCookie;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class AuthenticationDetails {
 
     private final Integer userId;

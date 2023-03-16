@@ -10,10 +10,9 @@ import pl.com.tenderflex.model.Currency;
 
 @Repository
 @RequiredArgsConstructor
-public class CurrencyDao implements CurrencyRepository {
+public class CurrencyRepositoryImpl implements CurrencyRepository {
 
-    public static final String GET_ALL_CURRENCIES_QUERY = "SELECT * FROM currencies";
-    public static final String GET_CURRENCY_BY_ID_QUERY = "SELECT * FROM currencies WHERE id = ?";
+    public static final String GET_ALL_CURRENCIES_QUERY = "SELECT id, currency_type FROM currencies";
 
     private final JdbcTemplate jdbcTemplate;
     private final CurrencyMapper currencyMapper;
@@ -21,10 +20,5 @@ public class CurrencyDao implements CurrencyRepository {
     @Override
     public List<Currency> getAll() {
         return jdbcTemplate.query(GET_ALL_CURRENCIES_QUERY, currencyMapper);
-    }
-    
-    @Override
-    public Currency getById(Integer currencyId) {
-        return jdbcTemplate.queryForObject(GET_CURRENCY_BY_ID_QUERY, currencyMapper, currencyId);
     }
 }

@@ -1,15 +1,17 @@
 package pl.com.tenderflex.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dao.ContactPersonRepository;
+import pl.com.tenderflex.dao.OrganizationRepository;
 import pl.com.tenderflex.dao.TenderRepository;
+import pl.com.tenderflex.model.ContactPerson;
+import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
-import pl.com.tenderflex.payload.MapStructMapper;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
@@ -23,13 +25,20 @@ public class TenderServiceImpl implements TenderService {
 
     @Value("${tenders.per.page}")
     private Integer tendersPerPage;
-    private final MapStructMapper tenderMapper;
+    private final TenderMapper tenderMapper;
+    private final ContactPersonRepository contactPersonRepository;
+    private final OrganizationRepository organizationRepository;
     private final TenderRepository tenderRepository;
 
     @Override
     @Transactional
     public void createTender(TenderDetailsRequest tenderDetailsRequest, Integer contractorId) {
-        Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
+        Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest); 
+        Organization organization = tender.getOrganization();
+        ContactPerson contactPerson = contactPersonRepository.create(organization.getContactPerson());  
+        organization.setContactPerson(contactPerson);
+        organization = organizationRepository.create(organization);
+        tender.setOrganization(organization);  
         tender.setContractorId(contractorId);
         tender.setStatus(TENDER_IN_PROGRESS);
         tenderRepository.create(tender, contractorId);
@@ -41,9 +50,20 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public List<ContractorTenderResponse> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {       
-        return tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
-                        .map(tenderMapper::tenderToContractorTenderResponse).toList();
+    public Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage) {
+        Integer amountTenders = currentPage * tendersPerPage;
+        Integer amountTendersToSkip = (currentPage - 1) * 5;
+        Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
+        Integer totalPages = 1;
+        if (allTendersAmount >= tendersPerPage) {
+            totalPages = allTendersAmount / tendersPerPage;
+            if (allTendersAmount % tendersPerPage > 0) {
+                totalPages++;
+            }
+        }
+            return new Page<>(currentPage, totalPages,
+                    tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                            .map(tenderMapper::tenderToContractorTenderResponse).toList());
     }
 
     @Override
@@ -58,7 +78,7 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        return new Page<>(currentPage, totalPages, tenderRepository.getByCondition(amountTenders, amountTendersToSkip)
+        return new Page<>(currentPage, totalPages, tenderRepository.getAll(amountTenders, amountTendersToSkip)
                 .stream().map(tenderMapper::tenderToBidderTenderResponse).toList());
     }
 }

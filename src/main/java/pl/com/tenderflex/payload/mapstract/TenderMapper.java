@@ -1,22 +1,14 @@
-package pl.com.tenderflex.payload;
+package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.tenderflex.model.Country;
-import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.payload.response.CountryResponse;
-import pl.com.tenderflex.payload.response.CurrencyResponse;
 
 @Mapper(componentModel = "spring")
-public interface MapStructMapper {
-
-    CountryResponse countryToCountryResponse(Country country);
-
-    CurrencyResponse currencyToCurrencyResponce(Currency currency);
+public interface TenderMapper {
 
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
@@ -52,4 +44,5 @@ public interface MapStructMapper {
     @Mapping(target = "tenderStatus", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
+    
 }

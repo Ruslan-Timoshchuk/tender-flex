@@ -8,35 +8,37 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.dao.mapper.TenderMapper;
-import pl.com.tenderflex.model.Organization;
+import pl.com.tenderflex.dao.mapper.TenderBidderMapperList;
+import pl.com.tenderflex.dao.mapper.TenderContractorMapperList;
 import pl.com.tenderflex.model.Tender;
 
 @Repository
 @RequiredArgsConstructor
-public class TenderDao implements TenderRepository {
+public class TenderRepositoryImpl implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
             + "deadline_for_signed_contract, status, contract_url, award_decision_url, reject_decision_url) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT * FROM tenders "
-            + "WHERE contractor_id = ? ORDER BY publication_date ASC LIMIT ? OFFSET ?";
+    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline "
+            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id WHERE ten.contractor_id = ? "
+            + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
-    public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT * FROM tenders ORDER BY publication_date ASC LIMIT ? OFFSET ?";
+    public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline "
+            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
-
+    
     private final JdbcTemplate jdbcTemplate;
-    private final OrganizationDao organizationDao;
-    private final TenderMapper tenderMapper;
-
+    private final TenderContractorMapperList tenderContractorMapperList;
+    private final TenderBidderMapperList tenderBidderMapperList;
+ 
     @Override
     public Tender create(Tender tender, Integer contractorId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Organization organization = organizationDao.create(tender.getOrganization());
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
-            statement.setInt(1, organization.getId());
+            statement.setInt(1, tender.getOrganization().getId());
             statement.setInt(2, contractorId);
             statement.setString(3, tender.getCpvCode());
             statement.setString(4, String.valueOf(tender.getType()));
@@ -56,21 +58,21 @@ public class TenderDao implements TenderRepository {
         tender.setId(keyHolder.getKeyAs(Integer.class));
         return tender;
     }
-
+    
     @Override
     public List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {
-        return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderMapper, contractorId, amountTenders,
+        return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderContractorMapperList, contractorId, amountTenders,
                 amountTendersToSkip);
     }
-
+    
     @Override
     public Integer countTendersByContractor(Integer contractorId) {
         return jdbcTemplate.queryForObject(COUNT_TENDERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
     }
-
+    
     @Override
-    public List<Tender> getByCondition(Integer amountTenders, Integer amountTendersToSkip) {
-        return jdbcTemplate.query(GET_TENDERS_BY_CONDITION_QUERY, tenderMapper, amountTenders, amountTendersToSkip);
+    public List<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip) {
+        return jdbcTemplate.query(GET_TENDERS_BY_CONDITION_QUERY, tenderBidderMapperList, amountTenders, amountTendersToSkip);
     }
 
     @Override

@@ -28,5 +28,7 @@ public class Tender {
     private String contractUrl;
     private String awardDecisionUrl;
     private String rejectDecisionUrl;
+    private Integer offersAmount;
+    private String offerStatus;
 
 }

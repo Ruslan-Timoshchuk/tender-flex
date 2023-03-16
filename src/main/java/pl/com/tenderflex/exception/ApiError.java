@@ -3,10 +3,10 @@ package pl.com.tenderflex.exception;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-@Getter
+@Data
 @RequiredArgsConstructor
 public class ApiError {
 
