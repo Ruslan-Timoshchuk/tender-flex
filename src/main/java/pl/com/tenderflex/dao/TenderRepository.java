@@ -10,9 +10,9 @@ public interface TenderRepository {
     List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
 
     Integer countTendersByContractor(Integer contractorId);
-
-    List<Tender> getByCondition(Integer amountTenders, Integer amountTendersToSkip);
-
+    
+    List<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip);
+    
     Integer countAllTenders();
 
     Tender getById(Integer tenderId);

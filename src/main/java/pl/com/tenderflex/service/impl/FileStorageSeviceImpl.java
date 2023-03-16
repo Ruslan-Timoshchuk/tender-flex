@@ -20,8 +20,6 @@ public class FileStorageSeviceImpl implements FileStorageService {
 
     @Value("${bucket.name}")
     private String bucketName;
-    @Value("${upload.path}")
-    private String uploadPath;
     private final AmazonS3 amazonS3Client;
 
     @Override

@@ -1,23 +1,15 @@
-package pl.com.tenderflex.payload;
+package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.tenderflex.model.Country;
-import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.payload.response.CountryResponse;
-import pl.com.tenderflex.payload.response.CurrencyResponse;
 
 @Mapper(componentModel = "spring")
-public interface MapStructMapper {
-
-    CountryResponse countryToCountryResponse(Country country);
-
-    CurrencyResponse currencyToCurrencyResponce(Currency currency);
+public interface TenderMapper {
 
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
@@ -53,7 +45,7 @@ public interface MapStructMapper {
     @Mapping(target = "tenderStatus", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
-
+    
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "organizationName", source = "organization.name")
     @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
@@ -62,6 +54,8 @@ public interface MapStructMapper {
     @Mapping(target = "firstName", source = "organization.contactPerson.firstName")
     @Mapping(target = "lastName", source = "organization.contactPerson.lastName")
     @Mapping(target = "phone", source = "organization.contactPerson.phone")
+    @Mapping(target = "procedure", source = "organization.name")
+    @Mapping(target = "language", constant = "ENGLISH")
     @Mapping(target = "cpvCode", source = "cpvCode")
     @Mapping(target = "type", source = "type")
     @Mapping(target = "description", source = "details")
@@ -74,4 +68,5 @@ public interface MapStructMapper {
     @Mapping(target = "awardDecisionFileUrl", source = "awardDecisionUrl")
     @Mapping(target = "rejectDecisionFileUrl", source = "rejectDecisionUrl")
     ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender);
+    
 }

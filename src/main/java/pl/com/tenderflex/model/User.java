@@ -2,10 +2,10 @@ package pl.com.tenderflex.model;
 
 import java.util.List;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
 @Data
-@NoArgsConstructor
+@Builder
 public class User {
 
     private Integer id;

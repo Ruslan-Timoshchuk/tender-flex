@@ -7,6 +7,4 @@ public interface CountryRepository {
 
     List<Country> getAll();
     
-    Country getById(Integer countryId);
-    
 }

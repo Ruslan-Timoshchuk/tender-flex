@@ -2,14 +2,10 @@ package pl.com.tenderflex.payload.request;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import pl.com.tenderflex.model.TenderType;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class TenderDetailsRequest {
 
     private String organizationName;

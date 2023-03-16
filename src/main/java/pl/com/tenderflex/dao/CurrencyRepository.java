@@ -7,6 +7,4 @@ public interface CurrencyRepository {
 
     List<Currency> getAll();
     
-    Currency getById(Integer currencyId);
-    
 }

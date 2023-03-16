@@ -1,8 +1,6 @@
 package pl.com.tenderflex.controller;
 
-import static org.springframework.http.HttpStatus.*;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
@@ -28,36 +24,34 @@ public class TenderController {
 
     private final TenderService tenderService;
 
-    @PostMapping("/create")
-    @ResponseStatus(OK)
+    @Secured("CONTRACTOR")
+    @PostMapping
     public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
             @RequestBody TenderDetailsRequest tender) {
         tenderService.createTender(tender, contractorId);
     }
 
-    @GetMapping("/amount_tenders_by_contractor")
-    @ResponseStatus(OK)
+    @Secured("CONTRACTOR")
+    @GetMapping("/contractor/total")
     public Integer getAmountTendersByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId) {
         return tenderService.getTendersAmountByContractor(contractorId);
     }
 
-    @GetMapping("/tenders_by_contractor/{amount_tenders}/{amount_tenders_to_skip}")
-    @ResponseStatus(OK)
-    public List<ContractorTenderResponse> getAllByContractor(
-            @PathVariable("amount_tenders") Optional<Integer> amountTenders,
-            @PathVariable("amount_tenders_to_skip") Optional<Integer> amountTendersToSkip,
+    @Secured("CONTRACTOR")
+    @GetMapping("/contractor/list")
+    public Page<ContractorTenderResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
             @AuthenticationPrincipal(expression = "id") Integer contractorId) {
-        return tenderService.getByContractor(contractorId, amountTenders.orElse(5), amountTendersToSkip.orElse(0));
+        return tenderService.getByContractor(contractorId, currentPage);
     }
 
-    @GetMapping("/all_tenders")
-    @ResponseStatus(OK)
+    @Secured("BIDDER")
+    @GetMapping("/bidder/list")
     public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage) {
         return tenderService.getByCondition(currentPage);
     }
 
+    @Secured("CONTRACTOR")
     @GetMapping("/details/{id}")
-    @ResponseStatus(OK)
     public ContractorTenderDetailsResponse getTenderById(@PathVariable("id") Integer tenderId) {
         return tenderService.getById(tenderId);
     }

@@ -9,13 +9,15 @@ import pl.com.tenderflex.model.User;
 
 @Repository
 @RequiredArgsConstructor
-public class UserDao implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
-    public static final String GET_USER_BY_EMAIL_QUERY = "SELECT * FROM users WHERE email = ?";
+    public static final String GET_USER_BY_EMAIL_QUERY = "SELECT id, first_name, last_name, email, password "
+            + "FROM users WHERE email = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
 
+    @Override
     public User getByEmail(String email) {
         return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL_QUERY, userMapper, email);
     }

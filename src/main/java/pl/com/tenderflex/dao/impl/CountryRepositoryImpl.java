@@ -10,10 +10,9 @@ import pl.com.tenderflex.model.Country;
 
 @Repository
 @RequiredArgsConstructor
-public class CountryDao implements CountryRepository {
+public class CountryRepositoryImpl implements CountryRepository {
 
-    public static final String GET_ALL_COUNTRIES_QUERY = "SELECT * FROM countries";
-    public static final String GET_COUNTRY_BY_ID_QUERY = "SELECT * FROM countries WHERE id = ?";
+    public static final String GET_ALL_COUNTRIES_QUERY = "SELECT id, country_name FROM countries";
     
     private final JdbcTemplate jdbcTemplate;
     private final CountryMapper countryMapper;
@@ -21,10 +20,5 @@ public class CountryDao implements CountryRepository {
     @Override
     public List<Country> getAll(){
         return jdbcTemplate.query(GET_ALL_COUNTRIES_QUERY, countryMapper);
-    }
-    
-    @Override
-    public Country getById(Integer countryId) {
-        return jdbcTemplate.queryForObject(GET_COUNTRY_BY_ID_QUERY, countryMapper, countryId);
     }
 }
