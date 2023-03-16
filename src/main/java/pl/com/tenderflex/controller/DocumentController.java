@@ -1,6 +1,7 @@
 package pl.com.tenderflex.controller;
 
 import java.io.IOException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class DocumentController {
 
     private final FileStorageService fileStorageService;
 
+    @Secured("CONTRACTOR")
     @PostMapping("/upload")
     public MultipartFileResponse uploadDocument(@AuthenticationPrincipal(expression = "id") Integer userId,
             @RequestParam MultipartFile document) throws IOException {
