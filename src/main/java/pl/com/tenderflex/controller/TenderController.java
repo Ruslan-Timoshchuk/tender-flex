@@ -3,6 +3,7 @@ package pl.com.tenderflex.controller;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
@@ -46,5 +48,11 @@ public class TenderController {
     @GetMapping("/bidder/list")
     public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage) {
         return tenderService.getByCondition(currentPage);
+    }
+
+    @Secured("CONTRACTOR")
+    @GetMapping("/details/{id}")
+    public ContractorTenderDetailsResponse getTenderById(@PathVariable("id") Integer tenderId) {
+        return tenderService.getById(tenderId);
     }
 }

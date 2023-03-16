@@ -14,5 +14,7 @@ public interface TenderRepository {
     List<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip);
     
     Integer countAllTenders();
-    
+
+    Tender getById(Integer tenderId);
+
 }

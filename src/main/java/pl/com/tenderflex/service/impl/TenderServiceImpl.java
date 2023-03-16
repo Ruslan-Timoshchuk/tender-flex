@@ -14,6 +14,7 @@ import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 import pl.com.tenderflex.service.TenderService;
 
@@ -80,5 +81,10 @@ public class TenderServiceImpl implements TenderService {
         }
         return new Page<>(currentPage, totalPages, tenderRepository.getAll(amountTenders, amountTendersToSkip)
                 .stream().map(tenderMapper::tenderToBidderTenderResponse).toList());
+    }
+
+    @Override
+    public ContractorTenderDetailsResponse getById(Integer tenderId) {
+        return tenderMapper.tenderToContractorTenderDetailsResponse(tenderRepository.getById(tenderId));
     }
 }

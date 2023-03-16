@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dao.mapper.TenderBidderMapperList;
 import pl.com.tenderflex.dao.mapper.TenderContractorMapperList;
+import pl.com.tenderflex.dao.mapper.TenderMapper;
 import pl.com.tenderflex.model.Tender;
 
 @Repository
@@ -28,10 +29,21 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "
             + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
+    public static final String GET_TENDER_BY_ID_QUERY = "SELECT ten.id, ten.contractor_id, ten.organization_id, org.organization_name, "
+            + "org.national_registration_number, org.country_id, co.country_name, org.city, org.contact_person_id, cp.first_name, cp.last_name, "
+            + "cp.phone, ten.cpv_code, ten.tender_type, ten.details, ten.min_price, ten.currency_id, cur.currency_type, ten.publication_date, "
+            + "ten.deadline, ten.deadline_for_signed_contract, ten.contract_url, ten.award_decision_url, ten.reject_decision_url "
+            + "FROM tenders ten "
+            + "LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "LEFT JOIN countries co ON co.id = org.country_id "
+            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
+            + "LEFT JOIN currencies cur ON cur.id = ten.currency_id "
+            + "WHERE ten.id = ?";
     
     private final JdbcTemplate jdbcTemplate;
     private final TenderContractorMapperList tenderContractorMapperList;
     private final TenderBidderMapperList tenderBidderMapperList;
+    private final TenderMapper tenderMapper;
  
     @Override
     public Tender create(Tender tender, Integer contractorId) {
@@ -78,5 +90,10 @@ public class TenderRepositoryImpl implements TenderRepository {
     @Override
     public Integer countAllTenders() {
         return jdbcTemplate.queryForObject(COUNT_ALL_TENDERS_QUERY, Integer.class);
+    }
+    
+    @Override
+    public Tender getById(Integer tenderId) {
+        return jdbcTemplate.queryForObject(GET_TENDER_BY_ID_QUERY, tenderMapper, tenderId);
     }
 }
