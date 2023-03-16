@@ -1,6 +1,7 @@
 package pl.com.tenderflex.controller;
 
 import java.util.List;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ public class CurrencyController {
 
     private final CurrencyService currencyService;
 
+    @Secured("CONTRACTOR")
     @GetMapping("/list")
     public List<CurrencyResponse> getCurrencies() {
         return currencyService.getAllCurrencies();

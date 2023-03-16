@@ -12,11 +12,12 @@ import pl.com.tenderflex.model.Currency;
 @RequiredArgsConstructor
 public class CurrencyRepositoryImpl implements CurrencyRepository {
 
-    public static final String GET_ALL_CURRENCIES_QUERY = "SELECT * FROM currencies";
+    public static final String GET_ALL_CURRENCIES_QUERY = "SELECT id, currency_type FROM currencies";
 
     private final JdbcTemplate jdbcTemplate;
     private final CurrencyMapper currencyMapper;
 
+    @Override
     public List<Currency> getAll() {
         return jdbcTemplate.query(GET_ALL_CURRENCIES_QUERY, currencyMapper);
     }

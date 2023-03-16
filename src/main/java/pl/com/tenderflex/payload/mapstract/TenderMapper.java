@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderResponse;
 
 @Mapper(componentModel = "spring")
 public interface TenderMapper {
@@ -28,5 +30,19 @@ public interface TenderMapper {
     @Mapping(target = "awardDecisionUrl", source = "awardDecisionUrl")
     @Mapping(target = "rejectDecisionUrl", source = "rejectDecisionUrl")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
+    
+    @Mapping(target = "tenderId", source = "id")
+    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "organizationName", source = "tender.organization.name")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
+
+    @Mapping(target = "tenderId", source = "id")
+    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "organizationName", source = "tender.organization.name")
+    @Mapping(target = "tenderStatus", source = "status")
+    @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
     
 }

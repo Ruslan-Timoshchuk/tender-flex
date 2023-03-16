@@ -1,8 +1,8 @@
 package pl.com.tenderflex.model;
 
 import java.util.List;
-import lombok.Builder;
 import lombok.Data;
+import lombok.Builder;
 
 @Data
 @Builder

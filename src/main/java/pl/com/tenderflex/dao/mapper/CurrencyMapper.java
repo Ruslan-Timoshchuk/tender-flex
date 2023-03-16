@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.Currency;
 
 @Component
-public class CurrencyMapper implements RowMapper<Currency>{
+public class CurrencyMapper implements RowMapper<Currency> {
 
     @Override
     public Currency mapRow(ResultSet resultSet, int rowNum) throws SQLException {
