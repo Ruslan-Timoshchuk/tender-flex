@@ -7,5 +7,6 @@ CREATE TABLE offers (
     currency_id INTEGER REFERENCES currencies(id),
     contractor_status VARCHAR NOT NULL,
     bidder_status VARCHAR NOT NULL,
+    publication_date TIMESTAMP NOT NULL,
     document_url VARCHAR NOT NULL
 );

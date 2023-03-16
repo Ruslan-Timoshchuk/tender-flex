@@ -4,11 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
+import pl.com.tenderflex.payload.response.OfferResponse;
 
 @Mapper(componentModel = "spring")
 public interface OfferMapper {
 
-    @Mapping(target = "tenderId", source = "tenderId")
+    @Mapping(target = "tender.id", source = "tenderId")
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
     @Mapping(target = "organization.country.id", source = "countryId")
@@ -20,5 +21,14 @@ public interface OfferMapper {
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "documentUrl", source = "documentUrl")
     Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
+    
+    @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "organizationNameByBidder", source = "organization.name")
+    @Mapping(target = "spvCode", source = "tender.cpvCode")
+    @Mapping(target = "price", source = "bidPrice")
+    @Mapping(target = "country", source = "organization.country.countryName")
+    @Mapping(target = "date", source = "publicationDate")
+    @Mapping(target = "status", source = "bidderStatus")
+    OfferResponse offerToOfferResponse(Offer offer);
     
 }
