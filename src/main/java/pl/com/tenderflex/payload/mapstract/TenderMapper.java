@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
@@ -69,4 +70,24 @@ public interface TenderMapper {
     @Mapping(target = "rejectDecisionFileUrl", source = "rejectDecisionUrl")
     ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender);
     
+    @Mapping(target = "tenderId", source = "id")
+    @Mapping(target = "organizationName", source = "organization.name")
+    @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
+    @Mapping(target = "country", source = "organization.country.countryName")
+    @Mapping(target = "city", source = "organization.city")
+    @Mapping(target = "firstName", source = "organization.contactPerson.firstName")
+    @Mapping(target = "lastName", source = "organization.contactPerson.lastName")
+    @Mapping(target = "phone", source = "organization.contactPerson.phone")
+    @Mapping(target = "procedure", source = "organization.name")
+    @Mapping(target = "language", constant = "ENGLISH")
+    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "description", source = "details")
+    @Mapping(target = "minTenderValue", source = "minPrice")
+    @Mapping(target = "currency", source = "currency.currencyType")
+    @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "deadlineForSignedContractSubmission", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "contractFileUrl", source = "contractUrl")
+    BidderTenderDetailsResponse tenderToBidderTenderDetailsResponse(Tender tender);
 }

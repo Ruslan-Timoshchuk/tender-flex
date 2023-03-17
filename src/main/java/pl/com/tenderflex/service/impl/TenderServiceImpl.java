@@ -91,6 +91,6 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId) {
-        return null;
+        return tenderMapper.tenderToBidderTenderDetailsResponse(tenderRepository.getById(tenderId));
     }
 }
