@@ -1,19 +1,16 @@
 package pl.com.tenderflex.service;
 
-import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
-import pl.com.tenderflex.dto.OfferDetailsResponse;
-import pl.com.tenderflex.dto.OfferResponse;
-import pl.com.tenderflex.dto.OfferDetailsRequest;
+import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.OfferDetailsRequest;
+import pl.com.tenderflex.payload.response.OfferDetailsResponse;
+import pl.com.tenderflex.payload.response.OfferResponse;
 
 public interface OfferService {
 
-    void createOffer(MultipartFile document, OfferDetailsRequest offerDetailsRequest, Integer bidderId);
-
-    List<OfferResponse> getOffersByContractor(Integer contractorId);
+    void createOffer(OfferDetailsRequest offer, Integer bidderId);
 
     OfferDetailsResponse getById(Integer offerId);
 
-    List<OfferResponse> getOffersByBidder(Integer bidderId);
+    Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage);
 
 }

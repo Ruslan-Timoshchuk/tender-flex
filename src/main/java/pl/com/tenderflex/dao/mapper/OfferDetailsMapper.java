@@ -15,22 +15,36 @@ public class OfferDetailsMapper implements RowMapper<Offer> {
 
     @Override
     public Offer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Offer offer = new Offer();
-        offer.setId(resultSet.getInt("id"));
-        Organization organization = new Organization();
-        organization.setName(resultSet.getString("organization_name"));
-        organization.setNationalRegistrationNumber(resultSet.getString("national_registration_number"));
-        organization.setCountry(Country.valueOf(resultSet.getString("country")));
-        organization.setCity(resultSet.getString("city"));
-        ContactPerson contactPerson = new ContactPerson();
-        contactPerson.setFirstName(resultSet.getString("first_name"));
-        contactPerson.setLastName(resultSet.getString("last_name"));
-        contactPerson.setPhone(resultSet.getString("phone"));
-        organization.setContactPerson(contactPerson);
-        offer.setOrganization(organization);
-        offer.setBidPrice(resultSet.getInt("bid_price"));
-        offer.setCurrency(Currency.valueOf(resultSet.getString("currency")));
-        offer.setDocumentName(resultSet.getString("document_name"));
-        return offer;
+        return Offer
+        .builder()
+        .id(resultSet.getInt("id"))
+        .bidderId(resultSet.getInt("bidder_id"))
+        .organization(Organization
+                .builder()
+                .id(resultSet.getInt("organization_id"))
+                .name(resultSet.getString("organization_name"))
+                .nationalRegistrationNumber(resultSet.getString("national_registration_number"))
+                .country(Country
+                        .builder()
+                        .id(resultSet.getInt("country_id"))
+                        .countryName(resultSet.getString("country_name"))
+                        .build())
+                .city(resultSet.getString("city"))
+                .contactPerson(ContactPerson
+                        .builder()
+                        .id(resultSet.getInt("contact_person_id"))
+                        .firstName(resultSet.getString("first_name"))
+                        .lastName(resultSet.getString("last_name"))
+                        .phone(resultSet.getString("phone"))
+                        .build())
+                .build())
+        .bidPrice(resultSet.getInt("bid_price"))
+        .currency(Currency
+                .builder()
+                .id(resultSet.getInt("currency_id"))
+                .currencyType(resultSet.getString("currency_type"))
+                .build())
+        .documentUrl(resultSet.getString("document_url"))
+        .build();
     }
 }

@@ -1,40 +1,39 @@
 package pl.com.tenderflex.controller;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.tenderflex.dto.AuthenticationRequest;
-import pl.com.tenderflex.exception.AuthenticationControllerException;
+import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.payload.AuthenticationDetails;
+import pl.com.tenderflex.payload.request.AuthenticationRequest;
+import pl.com.tenderflex.payload.response.AuthenticationResponse;
+import pl.com.tenderflex.security.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationProvider authenticationProvider;
-    
-    public AuthenticationController(AuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
-    
-    @GetMapping("/login")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void performAuthenticate(@RequestBody @Valid AuthenticationRequest reguest,  BindingResult bindingResult) {
+    private final AuthenticationService authenticationService;
+
+    @PostMapping("/signin")
+    public AuthenticationResponse performAuthenticate(@RequestBody @Valid AuthenticationRequest request,
+            HttpServletResponse response, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new AuthenticationControllerException("Email and password should not be empty");
+            throw new BadCredentialsException("Email and password should not be empty");
         }
-        Authentication authenticatedUser = authenticationProvider
-                .authenticate(new UsernamePasswordAuthenticationToken(reguest.getEmail(), reguest.getPassword()));
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authenticatedUser);
+        AuthenticationDetails authenticationDetails = authenticationService.authenticate(request);
+        ResponseCookie jwtCookie = authenticationDetails.getJwtCookie();
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(authenticationDetails.getUserId(),
+                authenticationDetails.getRole());        
+        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+        return authenticationResponse;
     }
 }

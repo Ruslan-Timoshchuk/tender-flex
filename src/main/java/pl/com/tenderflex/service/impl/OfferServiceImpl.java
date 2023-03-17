@@ -1,80 +1,74 @@
 package pl.com.tenderflex.service.impl;
 
 import static java.time.LocalDate.*;
-import java.util.List;
-import org.springframework.dao.DataAccessException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dao.ContactPersonRepository;
 import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dto.OfferDetailsResponse;
-import pl.com.tenderflex.dto.OfferResponse;
-import pl.com.tenderflex.dto.MapStructMapper;
-import pl.com.tenderflex.dto.OfferDetailsRequest;
-import pl.com.tenderflex.exception.ServiceException;
+import pl.com.tenderflex.dao.OrganizationRepository;
+import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Offer;
-import pl.com.tenderflex.service.FileStorageService;
+import pl.com.tenderflex.model.Organization;
+import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.mapstract.OfferMapper;
+import pl.com.tenderflex.payload.request.OfferDetailsRequest;
+import pl.com.tenderflex.payload.response.OfferDetailsResponse;
+import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.service.OfferService;
 
 @Service
+@RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
 
     public static final String OFFER_RECEIVED_STATUS = "OFFER RECEIVED";
     public static final String OFFER_SENT_STATUS = "OFFER SENT";
-
-    private final FileStorageService fileStorageService;
-    private final MapStructMapper offerMapper;
+    
+    @Value("${offers.contractor.per.page}")
+    private Integer offersContractorPerPage;
+    @Value("${offers.bidder.per.page}")
+    private Integer offersBidderPerPage;
+    private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
-
-    public OfferServiceImpl(FileStorageService fileStorageService, MapStructMapper offerMapper,
-            OfferRepository offerRepository) {
-        this.fileStorageService = fileStorageService;
-        this.offerMapper = offerMapper;
-        this.offerRepository = offerRepository;
-    }
-
+    private final ContactPersonRepository contactPersonRepository;
+    private final OrganizationRepository organizationRepository;
+  
     @Override
     @Transactional
-    public void createOffer(MultipartFile document, OfferDetailsRequest offerDetailsRequest, Integer bidderId) {
+    public void createOffer(OfferDetailsRequest offerDetailsRequest, Integer bidderId) {
         Offer offer = offerMapper.offerDetailsRequestToOffer(offerDetailsRequest);
-        offer.setDocumentName(document.getOriginalFilename());
+        Organization organization = offer.getOrganization();
+        ContactPerson contactPerson = contactPersonRepository.create(organization.getContactPerson());  
+        organization.setContactPerson(contactPerson);
+        organization = organizationRepository.create(organization);
+        offer.setOrganization(organization);
         offer.setBidderId(bidderId);
         offer.setContractorStatus(OFFER_RECEIVED_STATUS);
-        offer.setPublicationDate(now());
         offer.setBidderStatus(OFFER_SENT_STATUS);
-        try {
-            Integer offerId = offerRepository.create(offer).getId();
-            fileStorageService.upload(document, bidderId, offerId);
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when saving the offer", e);
-        }
+        offer.setPublicationDate(now());
+        offerRepository.create(offer, bidderId);
     }
-
+        
     @Override
-    public List<OfferResponse> getOffersByContractor(Integer contractorId) {
-        try {
-            return offerRepository.getByContractor(contractorId).stream().map(offerMapper::offerToOfferResponse)
-                    .toList();
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when getting offers by contractor", e);
+    public Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage) {
+        Integer amountOffers = currentPage * offersBidderPerPage;
+        Integer amountOffersToSkip = (currentPage - 1) * 5;
+        Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
+        Integer totalPages = 1;
+        if (allOffersAmount >= offersContractorPerPage) {
+            totalPages = allOffersAmount / offersContractorPerPage;
+            if (allOffersAmount % offersContractorPerPage > 0) {
+                totalPages++;
+            }
         }
+            return new Page<>(currentPage, totalPages,
+                    offerRepository.getByBidder(bidderId, amountOffers, amountOffersToSkip).stream()
+                            .map(offerMapper::offerToOfferResponse).toList());
     }
 
     @Override
     public OfferDetailsResponse getById(Integer offerId) {
-        try {
             return offerMapper.offerToOfferDetailsResponse(offerRepository.getById(offerId));
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when getting offer by id", e);
-        }
-    }
-
-    @Override
-    public List<OfferResponse> getOffersByBidder(Integer bidderId) {
-        try {
-            return offerRepository.getByBidder(bidderId).stream().map(offerMapper::offerToOfferResponse).toList();
-        } catch (DataAccessException e) {
-            throw new ServiceException("Error occurred when getting offers by bidder", e);
-        }
-    }
+    } 
 }

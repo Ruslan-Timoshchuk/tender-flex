@@ -1,7 +1,13 @@
 package pl.com.tenderflex.model;
 
-public enum Role {
+import lombok.Builder;
+import lombok.Data;
 
-    BIDDER, CONTRACTOR, ADMINISTRATOR
+@Data
+@Builder
+public class Role {
+
+    private Integer id;
+    private ERole name;
     
 }
