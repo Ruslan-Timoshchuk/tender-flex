@@ -21,9 +21,14 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "tenders(organization_id, contractor_id, cpv_code, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
             + "deadline_for_signed_contract, status, contract_url, award_decision_url, reject_decision_url) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline "
-            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id WHERE ten.contractor_id = ? "
-            + "ORDER BY publication_date ASC LIMIT ? OFFSET ?";
+    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, "
+            + "ten.deadline, count(os.id) AS offers_total "
+            + "FROM tenders ten "
+            + "LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "LEFT JOIN offers os ON os.tender_id = ten.id "
+            + "WHERE ten.contractor_id = ? "
+            + "GROUP BY ten.id, org.organization_name "
+            + "ORDER BY ten.publication_date ASC LIMIT ? OFFSET ?";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
     public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline "
             + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id "

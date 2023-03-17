@@ -26,7 +26,7 @@ public class TenderContractorMapperList implements RowMapper<Tender> {
                         .build())
                 .status(resultSet.getString("status"))
                 .deadline(resultSet.getObject("deadline", LocalDate.class))
-                .offersAmount(0)
+                .offersAmount(resultSet.getInt("offers_total"))
                 .build();
     }
 }
