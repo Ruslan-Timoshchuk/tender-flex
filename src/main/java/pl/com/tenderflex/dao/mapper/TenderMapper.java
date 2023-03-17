@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
@@ -14,7 +13,6 @@ import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderType;
 
 @Component
-@RequiredArgsConstructor
 public class TenderMapper implements RowMapper<Tender> {
    
     @Override

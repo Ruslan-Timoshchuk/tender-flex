@@ -12,11 +12,13 @@ import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
+import pl.com.tenderflex.payload.mapstract.TotalMapper;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.payload.response.TotalResponse;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
@@ -31,6 +33,7 @@ public class TenderServiceImpl implements TenderService {
     private final ContactPersonRepository contactPersonRepository;
     private final OrganizationRepository organizationRepository;
     private final TenderRepository tenderRepository;
+    private final TotalMapper totalMapper;
 
     @Override
     @Transactional
@@ -47,8 +50,8 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Integer getTendersAmountByContractor(Integer contractorId) {
-        return tenderRepository.countTendersByContractor(contractorId);
+    public TotalResponse getTotalTendersAndOffersByContractor(Integer contractorId) {
+        return totalMapper.totalToTotalResponse(tenderRepository.getTotalTendersAndOffersByContractor(contractorId));
     }
 
     @Override

@@ -11,7 +11,9 @@ import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.dao.mapper.TenderBidderMapperList;
 import pl.com.tenderflex.dao.mapper.TenderContractorMapperList;
 import pl.com.tenderflex.dao.mapper.TenderMapper;
+import pl.com.tenderflex.dao.mapper.TotalMapper;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.Total;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,11 +46,14 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
             + "LEFT JOIN currencies cur ON cur.id = ten.currency_id "
             + "WHERE ten.id = ?";
+    public static final String GET_TOTAL_BY_CONTRACTOR_QUERY = "SELECT COUNT(DISTINCT ten.id) AS tenders, COUNT(os.id) AS offers "
+            + "FROM tenders ten LEFT JOIN offers os ON os.tender_id = ten.id WHERE contractor_id = ?";
     
     private final JdbcTemplate jdbcTemplate;
     private final TenderContractorMapperList tenderContractorMapperList;
     private final TenderBidderMapperList tenderBidderMapperList;
     private final TenderMapper tenderMapper;
+    private final TotalMapper totalMapper;
  
     @Override
     public Tender create(Tender tender, Integer contractorId) {
@@ -100,5 +105,10 @@ public class TenderRepositoryImpl implements TenderRepository {
     @Override
     public Tender getById(Integer tenderId) {
         return jdbcTemplate.queryForObject(GET_TENDER_BY_ID_QUERY, tenderMapper, tenderId);
+    }
+    
+    @Override
+    public Total getTotalTendersAndOffersByContractor(Integer contractorId) {
+        return jdbcTemplate.queryForObject(GET_TOTAL_BY_CONTRACTOR_QUERY, totalMapper, contractorId);
     }
 }
