@@ -36,7 +36,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
     public static final String GET_TENDER_BY_ID_QUERY = "SELECT ten.id, ten.contractor_id, ten.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, co.country_name, org.city, org.contact_person_id, cp.first_name, cp.last_name, "
-            + "cp.phone, ten.cpv_code, ten.tender_type, ten.details, ten.min_price, ten.currency_id, cur.currency_type, ten.publication_date, "
+            + "cp.phone, ten.cpv_code, ten.tender_type, ten.details, ten.min_price, ten.max_price, ten.currency_id, cur.currency_type, ten.publication_date, "
             + "ten.deadline, ten.deadline_for_signed_contract, ten.contract_url, ten.award_decision_url, ten.reject_decision_url "
             + "FROM tenders ten "
             + "LEFT JOIN organizations org ON org.id = ten.organization_id "

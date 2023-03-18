@@ -22,6 +22,7 @@ public class ContractorTenderDetailsResponse {
     private TenderType type;
     private String description;
     private Integer minTenderValue;
+    private Integer maxTenderValue;
     private String currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate tenderPublicationDate;

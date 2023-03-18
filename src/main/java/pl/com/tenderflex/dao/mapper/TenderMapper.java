@@ -44,6 +44,7 @@ public class TenderMapper implements RowMapper<Tender> {
                 .type(TenderType.valueOf(resultSet.getString("tender_type")))
                 .details(resultSet.getString("details"))
                 .minPrice(resultSet.getInt("min_price"))
+                .maxPrice(resultSet.getInt("max_price"))
                 .currency(Currency
                         .builder()
                         .id(resultSet.getInt("currency_id"))

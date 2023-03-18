@@ -61,6 +61,7 @@ public interface TenderMapper {
     @Mapping(target = "type", source = "type")
     @Mapping(target = "description", source = "details")
     @Mapping(target = "minTenderValue", source = "minPrice")
+    @Mapping(target = "maxTenderValue", source = "maxPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
     @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd-MM-yyyy")
