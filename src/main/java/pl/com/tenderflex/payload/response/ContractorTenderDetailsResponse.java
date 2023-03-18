@@ -1,7 +1,5 @@
 package pl.com.tenderflex.payload.response;
 
-import java.time.LocalDate;
-import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 import pl.com.tenderflex.model.TenderType;
 
@@ -24,12 +22,9 @@ public class ContractorTenderDetailsResponse {
     private Integer minTenderValue;
     private Integer maxTenderValue;
     private String currency;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate tenderPublicationDate;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate deadlineForOfferSubmission;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate deadlineForSignedContractSubmission;
+    private String tenderPublicationDate;
+    private String deadlineForOfferSubmission;
+    private String deadlineForSignedContractSubmission;
     private String contractFileUrl;
     private String awardDecisionFileUrl;
     private String rejectDecisionFileUrl;
