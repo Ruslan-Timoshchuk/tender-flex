@@ -14,9 +14,9 @@ public interface TenderService {
 
     TotalResponse getTotalTendersAndOffersByContractor(Integer contractorId);
     
-    Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage);
+    Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage);
 
-    Page<BidderTenderResponse> getByCondition(Integer currentPage);
+    Page<BidderTenderResponse> getByCondition(Integer currentPage, Integer tendersPerPage);
 
     ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
     

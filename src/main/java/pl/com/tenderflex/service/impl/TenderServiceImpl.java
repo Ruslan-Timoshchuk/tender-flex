@@ -1,6 +1,5 @@
 package pl.com.tenderflex.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,6 @@ public class TenderServiceImpl implements TenderService {
 
     public static final String TENDER_IN_PROGRESS = "IN PROGRESS";
 
-    @Value("${tenders.per.page}")
-    private Integer tendersPerPage;
     private final TenderMapper tenderMapper;
     private final ContactPersonRepository contactPersonRepository;
     private final OrganizationRepository organizationRepository;
@@ -55,9 +52,8 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage) {
-        Integer amountTenders = currentPage * tendersPerPage;
-        Integer amountTendersToSkip = (currentPage - 1) * 5;
+    public Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage) {
+        Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
         Integer totalPages = 1;
         if (allTendersAmount >= tendersPerPage) {
@@ -67,14 +63,13 @@ public class TenderServiceImpl implements TenderService {
             }
         }
         return new Page<>(currentPage, totalPages,
-                tenderRepository.getByContractor(contractorId, amountTenders, amountTendersToSkip).stream()
+                tenderRepository.getByContractor(contractorId, tendersPerPage, amountTendersToSkip).stream()
                         .map(tenderMapper::tenderToContractorTenderResponse).toList());
     }
 
     @Override
-    public Page<BidderTenderResponse> getByCondition(Integer currentPage) {
-        Integer amountTenders = currentPage * tendersPerPage;
-        Integer amountTendersToSkip = (currentPage - 1) * 5;
+    public Page<BidderTenderResponse> getByCondition(Integer currentPage, Integer tendersPerPage) {
+        Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countAllTenders();
         Integer totalPages = 1;
         if (allTendersAmount >= tendersPerPage) {
@@ -83,7 +78,7 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        return new Page<>(currentPage, totalPages, tenderRepository.getAll(amountTenders, amountTendersToSkip).stream()
+        return new Page<>(currentPage, totalPages, tenderRepository.getAll(tendersPerPage, amountTendersToSkip).stream()
                 .map(tenderMapper::tenderToBidderTenderResponse).toList());
     }
 
