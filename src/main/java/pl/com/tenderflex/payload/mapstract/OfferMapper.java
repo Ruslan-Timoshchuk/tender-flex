@@ -51,7 +51,7 @@ public interface OfferMapper {
     @Mapping(target = "phone", source = "organization.contactPerson.phone")
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "documentName", source = "documentUrl")
+    @Mapping(target = "documentUrl", source = "documentUrl")
     OfferDetailsResponse offerToOfferDetailsResponse(Offer offer);
     
 }
