@@ -35,7 +35,8 @@ public class TenderController {
 
     @Secured("CONTRACTOR")
     @GetMapping("/contractor/total")
-    public TotalResponse getAmountTendersByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId) {
+    public TotalResponse getAmountTendersByContractor(
+            @AuthenticationPrincipal(expression = "id") Integer contractorId) {
         return tenderService.getTotalTendersAndOffersByContractor(contractorId);
     }
 
@@ -49,7 +50,7 @@ public class TenderController {
 
     @Secured("BIDDER")
     @GetMapping("/bidder/list")
-    public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage, 
+    public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
         return tenderService.getByCondition(currentPage, tendersPerPage);
     }

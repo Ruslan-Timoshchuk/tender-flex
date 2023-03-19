@@ -25,8 +25,6 @@ public class OfferServiceImpl implements OfferService {
     public static final String OFFER_RECEIVED_STATUS = "OFFER RECEIVED";
     public static final String OFFER_SENT_STATUS = "OFFER SENT";
     
-    @Value("${offers.contractor.per.page}")
-    private Integer offersContractorPerPage;
     @Value("${offers.bidder.per.page}")
     private Integer offersBidderPerPage;
     private final OfferMapper offerMapper;
@@ -56,15 +54,31 @@ public class OfferServiceImpl implements OfferService {
         Integer amountOffersToSkip = (currentPage - 1) * 5;
         Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
         Integer totalPages = 1;
-        if (allOffersAmount >= offersContractorPerPage) {
-            totalPages = allOffersAmount / offersContractorPerPage;
-            if (allOffersAmount % offersContractorPerPage > 0) {
+        if (allOffersAmount >= offersBidderPerPage) {
+            totalPages = allOffersAmount / offersBidderPerPage;
+            if (allOffersAmount % offersBidderPerPage > 0) {
                 totalPages++;
             }
         }
             return new Page<>(currentPage, totalPages,
                     offerRepository.getByBidder(bidderId, amountOffers, amountOffersToSkip).stream()
                             .map(offerMapper::offerToOfferResponse).toList());
+    }
+    
+    @Override
+    public Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage) {
+        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
+        Integer allOffersAmount = offerRepository.countOffersByTender(tenderId);
+        Integer totalPages = 1;
+        if (allOffersAmount >= offersPerPage) {
+            totalPages = allOffersAmount / offersPerPage;
+            if (allOffersAmount % offersPerPage > 0) {
+                totalPages++;
+            }
+        }
+            return new Page<>(currentPage, totalPages,
+                    offerRepository.getByTender(tenderId, offersPerPage, amountOffersToSkip).stream()
+                            .map(offerMapper::offerToOfferTenderResponse).toList());
     }
 
     @Override

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.mapper.OfferBidderMapperList;
 import pl.com.tenderflex.dao.mapper.OfferDetailsMapper;
+import pl.com.tenderflex.dao.mapper.OfferTenderMapperList;
 import pl.com.tenderflex.model.Offer;
 
 @Repository
@@ -25,7 +26,14 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN organizations org ON org.id = os.organization_id "
             + "LEFT JOIN countries co ON co.id = org.country_id "
             + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE bidder_id = ? LIMIT ? OFFSET ?";
+    public static final String GET_OFFERS_BY_TENDER_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
+            + "org.country_id, co.country_name, os.tender_id, ten.cpv_code, os.bid_price, os.publication_date, os.contractor_status "
+            + "FROM offers os "
+            + "LEFT JOIN organizations org ON org.id = os.organization_id "
+            + "LEFT JOIN countries co ON co.id = org.country_id "
+            + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE tender_id = ? LIMIT ? OFFSET ?";
     public static final String COUNT_OFFERS_BY_BIDDER = "SELECT count(id) FROM offers WHERE bidder_id = ?";
+    public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ?";
     public static final String GET_OFFER_BY_ID_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, cs.country_name, org.city, org.contact_person_id, cp.first_name, "
             + "cp.last_name, cp.phone, os.bid_price, os.currency_id, cur.currency_type, os.document_url "
@@ -38,6 +46,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     
     private final JdbcTemplate jdbcTemplate;
     private final OfferBidderMapperList offerBidderMapperList;
+    private final OfferTenderMapperList offerTenderMapperList;
     private final OfferDetailsMapper offerDetailsMapper;
     
     @Override
@@ -65,10 +74,21 @@ public class OfferRepositoryImpl implements OfferRepository {
         return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerBidderMapperList, bidderId, amountOffers,
                 amountOffersToSkip);
     }
+    
+    @Override
+    public List<Offer> getByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
+        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerTenderMapperList, tenderId, amountOffers,
+                amountOffersToSkip);
+    }
 
     @Override
     public Integer countOffersByBidder(Integer bidderId) {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_BIDDER, Integer.class, bidderId);
+    }
+    
+    @Override
+    public Integer countOffersByTender(Integer tenderId) {
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER, Integer.class, tenderId);
     }
     
     @Override

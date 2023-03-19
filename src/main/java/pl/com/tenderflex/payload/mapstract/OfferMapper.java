@@ -34,6 +34,15 @@ public interface OfferMapper {
     
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")
+    @Mapping(target = "spvCode", source = "tender.cpvCode")
+    @Mapping(target = "price", source = "bidPrice")
+    @Mapping(target = "country", source = "organization.country.countryName")
+    @Mapping(target = "date", source = "publicationDate")
+    @Mapping(target = "status", source = "contractorStatus")
+    OfferResponse offerToOfferTenderResponse(Offer offer);
+    
+    @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "organizationNameByBidder", source = "organization.name")
     @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "city", source = "organization.city")

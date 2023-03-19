@@ -25,21 +25,29 @@ public class OfferController {
 
     @Secured("BIDDER")
     @PostMapping
-    public void createOffer(@AuthenticationPrincipal(expression = "id") Integer bidderId, 
+    public void createOffer(@AuthenticationPrincipal(expression = "id") Integer bidderId,
             @RequestBody OfferDetailsRequest offer) {
         offerService.createOffer(offer, bidderId);
     }
 
     @Secured("BIDDER")
     @GetMapping("/details/{id}")
-    public OfferDetailsResponse getForBidderById(@PathVariable("id") Integer offerId) {
+    public OfferDetailsResponse getOfferDetailsById(@PathVariable("id") Integer offerId) {
         return offerService.getById(offerId);
     }
-    
+
     @Secured("BIDDER")
     @GetMapping("/bidder/list")
     public Page<OfferResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId,
             @RequestParam(defaultValue = "1") Integer currentPage) {
         return offerService.getOffersByBidder(bidderId, currentPage);
+    }
+
+    @Secured("CONTRACTOR")
+    @GetMapping("/list/{tender_id}")
+    public Page<OfferResponse> getAllByTender(@PathVariable("tender_id") Integer tenderId,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+        return offerService.getOffersByTender(tenderId, currentPage, offersPerPage);
     }
 }

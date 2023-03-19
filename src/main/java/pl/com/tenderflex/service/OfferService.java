@@ -13,4 +13,6 @@ public interface OfferService {
 
     Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage);
 
+    Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
+    
 }
