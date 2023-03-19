@@ -62,7 +62,23 @@ public class OfferServiceImpl implements OfferService {
         }
             return new Page<>(currentPage, totalPages,
                     offerRepository.getByBidder(bidderId, amountOffers, amountOffersToSkip).stream()
-                            .map(offerMapper::offerToOfferResponse).toList());
+                            .map(offerMapper::offerToOfferBidderResponse).toList());
+    }
+    
+    @Override
+    public Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
+        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
+        Integer allOffersAmount = offerRepository.countOffersByContractor(contractorId);
+        Integer totalPages = 1;
+        if (allOffersAmount >= offersPerPage) {
+            totalPages = allOffersAmount / offersPerPage;
+            if (allOffersAmount % offersPerPage > 0) {
+                totalPages++;
+            }
+        }
+            return new Page<>(currentPage, totalPages,
+                    offerRepository.getByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
+                            .map(offerMapper::offerToOfferContractorResponse).toList());
     }
     
     @Override
@@ -78,7 +94,7 @@ public class OfferServiceImpl implements OfferService {
         }
             return new Page<>(currentPage, totalPages,
                     offerRepository.getByTender(tenderId, offersPerPage, amountOffersToSkip).stream()
-                            .map(offerMapper::offerToOfferTenderResponse).toList());
+                            .map(offerMapper::offerToOfferContractorResponse).toList());
     }
 
     @Override

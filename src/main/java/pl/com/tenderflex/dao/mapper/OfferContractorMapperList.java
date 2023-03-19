@@ -11,7 +11,7 @@ import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 
 @Component
-public class OfferTenderMapperList implements RowMapper<Offer> {
+public class OfferContractorMapperList implements RowMapper<Offer> {
 
     @Override
     public Offer mapRow(ResultSet resultSet, int rowNum) throws SQLException {

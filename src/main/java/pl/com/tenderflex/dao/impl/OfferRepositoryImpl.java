@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.mapper.OfferBidderMapperList;
 import pl.com.tenderflex.dao.mapper.OfferDetailsMapper;
-import pl.com.tenderflex.dao.mapper.OfferTenderMapperList;
+import pl.com.tenderflex.dao.mapper.OfferContractorMapperList;
 import pl.com.tenderflex.model.Offer;
 
 @Repository
@@ -26,6 +26,12 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN organizations org ON org.id = os.organization_id "
             + "LEFT JOIN countries co ON co.id = org.country_id "
             + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE bidder_id = ? LIMIT ? OFFSET ?";
+    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
+            + "org.country_id, co.country_name, os.tender_id, ten.cpv_code, os.bid_price, os.publication_date, os.contractor_status "
+            + "FROM offers os "
+            + "LEFT JOIN organizations org ON org.id = os.organization_id "
+            + "LEFT JOIN countries co ON co.id = org.country_id "
+            + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String GET_OFFERS_BY_TENDER_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
             + "org.country_id, co.country_name, os.tender_id, ten.cpv_code, os.bid_price, os.publication_date, os.contractor_status "
             + "FROM offers os "
@@ -33,6 +39,8 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN countries co ON co.id = org.country_id "
             + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE tender_id = ? LIMIT ? OFFSET ?";
     public static final String COUNT_OFFERS_BY_BIDDER = "SELECT count(id) FROM offers WHERE bidder_id = ?";
+    public static final String COUNT_OFFERS_BY_CONTRACTOR = "SELECT count(os.id) FROM offers os "
+            + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE contractor_id = ?";
     public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ?";
     public static final String GET_OFFER_BY_ID_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, cs.country_name, org.city, org.contact_person_id, cp.first_name, "
@@ -46,7 +54,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     
     private final JdbcTemplate jdbcTemplate;
     private final OfferBidderMapperList offerBidderMapperList;
-    private final OfferTenderMapperList offerTenderMapperList;
+    private final OfferContractorMapperList offerContractorMapperList;
     private final OfferDetailsMapper offerDetailsMapper;
     
     @Override
@@ -76,14 +84,25 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
     
     @Override
+    public List<Offer> getByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip) {
+        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerContractorMapperList, contractorId, amountOffers,
+                amountOffersToSkip);
+    }
+    
+    @Override
     public List<Offer> getByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerTenderMapperList, tenderId, amountOffers,
+        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerContractorMapperList, tenderId, amountOffers,
                 amountOffersToSkip);
     }
 
     @Override
     public Integer countOffersByBidder(Integer bidderId) {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_BIDDER, Integer.class, bidderId);
+    }
+    
+    @Override
+    public Integer countOffersByContractor(Integer contractorId) {
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_CONTRACTOR, Integer.class, contractorId);
     }
     
     @Override

@@ -30,7 +30,7 @@ public interface OfferMapper {
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "date", source = "publicationDate")
     @Mapping(target = "status", source = "bidderStatus")
-    OfferResponse offerToOfferResponse(Offer offer);
+    OfferResponse offerToOfferBidderResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")
@@ -39,7 +39,7 @@ public interface OfferMapper {
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "date", source = "publicationDate")
     @Mapping(target = "status", source = "contractorStatus")
-    OfferResponse offerToOfferTenderResponse(Offer offer);
+    OfferResponse offerToOfferContractorResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")

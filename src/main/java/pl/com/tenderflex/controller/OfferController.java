@@ -44,6 +44,14 @@ public class OfferController {
     }
 
     @Secured("CONTRACTOR")
+    @GetMapping("/contractor/list")
+    public Page<OfferResponse> getAllByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+        return offerService.getOffersByContractor(contractorId, currentPage, offersPerPage);
+    }
+    
+    @Secured("CONTRACTOR")
     @GetMapping("/list/{tender_id}")
     public Page<OfferResponse> getAllByTender(@PathVariable("tender_id") Integer tenderId,
             @RequestParam(defaultValue = "1") Integer currentPage,

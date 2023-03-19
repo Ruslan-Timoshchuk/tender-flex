@@ -12,7 +12,9 @@ public interface OfferService {
     OfferDetailsResponse getById(Integer offerId);
 
     Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage);
+    
+    Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
 
     Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
-    
+
 }
