@@ -30,7 +30,7 @@ public class OfferController {
         offerService.createOffer(offer, bidderId);
     }
 
-    @Secured("BIDDER")
+    @Secured({ "BIDDER", "CONTRACTOR" })
     @GetMapping("/details/{id}")
     public OfferDetailsResponse getOfferDetailsById(@PathVariable("id") Integer offerId) {
         return offerService.getById(offerId);
