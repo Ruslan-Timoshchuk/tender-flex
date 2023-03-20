@@ -25,8 +25,8 @@ public class ContractorTenderDetailsResponse {
     private String tenderPublicationDate;
     private String deadlineForOfferSubmission;
     private String deadlineForSignedContractSubmission;
-    private String contractFileUrl;
-    private String awardDecisionFileUrl;
-    private String rejectDecisionFileUrl;
+    private String contractFileName;
+    private String awardDecisionFileName;
+    private String rejectDecisionFileName;
     
 }

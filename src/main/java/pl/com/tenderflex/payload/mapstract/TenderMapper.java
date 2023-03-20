@@ -28,9 +28,9 @@ public interface TenderMapper {
     @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContract", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "contractUrl", source = "contractUrl")
-    @Mapping(target = "awardDecisionUrl", source = "awardDecisionUrl")
-    @Mapping(target = "rejectDecisionUrl", source = "rejectDecisionUrl")
+    @Mapping(target = "contractFileName", source = "contractFileName")
+    @Mapping(target = "awardDecisionFileName", source = "awardDecisionFileName")
+    @Mapping(target = "rejectDecisionFileName", source = "rejectDecisionFileName")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
     
     @Mapping(target = "tenderId", source = "id")
@@ -66,9 +66,9 @@ public interface TenderMapper {
     @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "deadlineForSignedContractSubmission", source = "deadlineForSignedContract", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "contractFileUrl", source = "contractUrl")
-    @Mapping(target = "awardDecisionFileUrl", source = "awardDecisionUrl")
-    @Mapping(target = "rejectDecisionFileUrl", source = "rejectDecisionUrl")
+    @Mapping(target = "contractFileName", source = "contractFileName")
+    @Mapping(target = "awardDecisionFileName", source = "awardDecisionFileName")
+    @Mapping(target = "rejectDecisionFileName", source = "rejectDecisionFileName")
     ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender);
     
     @Mapping(target = "tenderId", source = "id")
@@ -89,6 +89,6 @@ public interface TenderMapper {
     @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "deadlineForSignedContractSubmission", source = "deadlineForSignedContract", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "contractFileUrl", source = "contractUrl")
+    @Mapping(target = "contractFileName", source = "contractFileName")
     BidderTenderDetailsResponse tenderToBidderTenderDetailsResponse(Tender tender);
 }

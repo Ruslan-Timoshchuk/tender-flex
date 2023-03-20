@@ -7,5 +7,7 @@ import pl.com.tenderflex.payload.response.MultipartFileResponse;
 public interface FileStorageService {
 
     MultipartFileResponse upload(MultipartFile document, Integer userId) throws IOException;
+    
+    MultipartFileResponse getPresignedUrl(String fileName);
 
 }

@@ -53,9 +53,9 @@ public class TenderMapper implements RowMapper<Tender> {
                 .publication(resultSet.getObject("publication_date", LocalDate.class))
                 .deadline(resultSet.getObject("deadline", LocalDate.class))
                 .deadlineForSignedContract(resultSet.getObject("deadline_for_signed_contract", LocalDate.class))
-                .contractUrl(resultSet.getString("contract_url"))
-                .awardDecisionUrl(resultSet.getString("award_decision_url"))
-                .rejectDecisionUrl(resultSet.getString("reject_decision_url"))
+                .contractFileName(resultSet.getString("contract_file_name"))
+                .awardDecisionFileName(resultSet.getString("award_decision_file_name"))
+                .rejectDecisionFileName(resultSet.getString("reject_decision_file_name"))
                 .build();
     }
 }

@@ -12,7 +12,7 @@ CREATE TABLE tenders (
     deadline TIMESTAMP NOT NULL,
     deadline_for_signed_contract TIMESTAMP,
     status VARCHAR NOT NULL,
-    contract_url VARCHAR NOT NULL,
-    award_decision_url VARCHAR NOT NULL,
-    reject_decision_url VARCHAR NOT NULL
+    contract_file_name VARCHAR NOT NULL,
+    award_decision_file_name VARCHAR NOT NULL,
+    reject_decision_file_name VARCHAR NOT NULL
 );

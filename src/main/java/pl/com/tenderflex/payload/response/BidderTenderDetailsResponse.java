@@ -29,6 +29,6 @@ public class BidderTenderDetailsResponse {
     private LocalDate deadlineForOfferSubmission;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContractSubmission;
-    private String contractFileUrl;
+    private String contractFileName;
 
 }

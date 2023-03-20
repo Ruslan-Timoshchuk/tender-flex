@@ -25,9 +25,9 @@ public class Tender {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
     private String status;
-    private String contractUrl;
-    private String awardDecisionUrl;
-    private String rejectDecisionUrl;
+    private String contractFileName;
+    private String awardDecisionFileName;
+    private String rejectDecisionFileName;
     private Integer offersAmount;
     private String offerStatus;
 
