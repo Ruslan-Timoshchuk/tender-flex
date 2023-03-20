@@ -15,7 +15,6 @@ import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.payload.response.TotalResponse;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
 
@@ -31,13 +30,6 @@ public class TenderController {
     public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
             @RequestBody TenderDetailsRequest tender) {
         tenderService.createTender(tender, contractorId);
-    }
-
-    @Secured("CONTRACTOR")
-    @GetMapping("/contractor/total")
-    public TotalResponse getAmountTendersByContractor(
-            @AuthenticationPrincipal(expression = "id") Integer contractorId) {
-        return tenderService.getTotalTendersAndOffersByContractor(contractorId);
     }
 
     @Secured("CONTRACTOR")

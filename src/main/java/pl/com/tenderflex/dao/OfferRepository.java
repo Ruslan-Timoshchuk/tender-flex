@@ -2,6 +2,7 @@ package pl.com.tenderflex.dao;
 
 import java.util.List;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.Total;
 
 public interface OfferRepository {
 
@@ -20,5 +21,7 @@ public interface OfferRepository {
     Integer countOffersByTender(Integer tenderId);
     
     Offer getById(Integer offerId);
+
+    Total getTotalTendersAndOffersByBidder(Integer bidderId);
 
 }

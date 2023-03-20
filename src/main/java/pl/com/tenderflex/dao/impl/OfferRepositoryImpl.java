@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.mapper.OfferBidderMapperList;
 import pl.com.tenderflex.dao.mapper.OfferDetailsMapper;
+import pl.com.tenderflex.dao.mapper.TotalMapper;
 import pl.com.tenderflex.dao.mapper.OfferContractorMapperList;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.Total;
 
 @Repository
 @RequiredArgsConstructor
@@ -51,11 +53,14 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
             + "LEFT JOIN currencies cur ON cur.id = os.currency_id "
             + "WHERE os.id = ?";
+    public static final String GET_TOTAL_BY_BIDDER_QUERY = "SELECT (SELECT COUNT(id) FROM tenders) as tenders, "
+            + "(SELECT COUNT(id) from offers WHERE bidder_id = ?) as offers";
     
     private final JdbcTemplate jdbcTemplate;
     private final OfferBidderMapperList offerBidderMapperList;
     private final OfferContractorMapperList offerContractorMapperList;
     private final OfferDetailsMapper offerDetailsMapper;
+    private final TotalMapper totalMapper;
     
     @Override
     public Offer create(Offer offer, Integer bidderId) {
@@ -113,5 +118,10 @@ public class OfferRepositoryImpl implements OfferRepository {
     @Override
     public Offer getById(Integer offerId) {
         return jdbcTemplate.queryForObject(GET_OFFER_BY_ID_QUERY, offerDetailsMapper, offerId);
+    }
+
+    @Override
+    public Total getTotalTendersAndOffersByBidder(Integer bidderId) {
+        return jdbcTemplate.queryForObject(GET_TOTAL_BY_BIDDER_QUERY, totalMapper, bidderId);
     }
 }
