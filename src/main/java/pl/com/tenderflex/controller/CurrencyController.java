@@ -16,7 +16,7 @@ public class CurrencyController {
 
     private final CurrencyService currencyService;
 
-    @Secured("CONTRACTOR")
+    @Secured({ "CONTRACTOR", "BIDDER" })
     @GetMapping("/list")
     public List<CurrencyResponse> getCurrencies() {
         return currencyService.getAllCurrencies();

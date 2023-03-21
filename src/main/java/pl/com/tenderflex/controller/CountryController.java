@@ -16,7 +16,7 @@ public class CountryController {
 
     private final CountryService countryService;
     
-    @Secured("CONTRACTOR")
+    @Secured({ "CONTRACTOR", "BIDDER" })
     @GetMapping("/list")
     public List<CountryResponse> getAllCountries() {
         return countryService.getAllCountries();
