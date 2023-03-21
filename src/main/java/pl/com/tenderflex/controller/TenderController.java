@@ -33,7 +33,7 @@ public class TenderController {
     }
 
     @Secured("CONTRACTOR")
-    @GetMapping("/contractor/list")
+    @GetMapping("/list/contractor")
     public Page<ContractorTenderResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage,
             @AuthenticationPrincipal(expression = "id") Integer contractorId) {
@@ -41,20 +41,20 @@ public class TenderController {
     }
 
     @Secured("BIDDER")
-    @GetMapping("/bidder/list")
+    @GetMapping("/list/bidder")
     public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
         return tenderService.getByCondition(currentPage, tendersPerPage);
     }
 
     @Secured("CONTRACTOR")
-    @GetMapping("/contractor/details/{id}")
+    @GetMapping("/details/contractor/{id}")
     public ContractorTenderDetailsResponse getTenderByIdForContractor(@PathVariable("id") Integer tenderId) {
         return tenderService.getByIdForContractor(tenderId);
     }
 
     @Secured("BIDDER")
-    @GetMapping("/bidder/details/{id}")
+    @GetMapping("/details/bidder/{id}")
     public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId) {
         return tenderService.getByIdForBidder(tenderId);
     }
