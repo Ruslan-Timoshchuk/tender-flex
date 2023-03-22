@@ -8,5 +8,5 @@ CREATE TABLE offers (
     contractor_status VARCHAR NOT NULL,
     bidder_status VARCHAR NOT NULL,
     publication_date TIMESTAMP NOT NULL,
-    document_url VARCHAR NOT NULL
+    document_name VARCHAR NOT NULL
 );

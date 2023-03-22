@@ -19,6 +19,6 @@ public class Offer {
     private String bidderStatus;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate publicationDate;
-    private String documentUrl;
+    private String documentName;
 
 }

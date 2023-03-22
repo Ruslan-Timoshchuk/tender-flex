@@ -22,7 +22,7 @@ public class DocumentController {
 
     private final FileStorageService fileStorageService;
 
-    @Secured("CONTRACTOR")
+    @Secured({ "BIDDER", "CONTRACTOR" })
     @PostMapping("/upload")
     public MultipartFileResponse uploadDocument(@AuthenticationPrincipal(expression = "id") Integer userId,
             @RequestParam MultipartFile document) throws IOException {

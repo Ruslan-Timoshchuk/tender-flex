@@ -15,6 +15,6 @@ public class OfferDetailsRequest {
     private String phone;
     private Integer bidPrice;
     private Integer currencyId;
-    private String documentUrl;
+    private String documentName;
     
 }

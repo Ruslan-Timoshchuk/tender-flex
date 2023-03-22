@@ -44,7 +44,7 @@ public class OfferDetailsMapper implements RowMapper<Offer> {
                 .id(resultSet.getInt("currency_id"))
                 .currencyType(resultSet.getString("currency_type"))
                 .build())
-        .documentUrl(resultSet.getString("document_url"))
+        .documentName(resultSet.getString("document_name"))
         .build();
     }
 }

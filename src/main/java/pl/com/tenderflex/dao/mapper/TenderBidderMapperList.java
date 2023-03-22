@@ -26,7 +26,7 @@ public class TenderBidderMapperList implements RowMapper<Tender> {
                         .build())
                 .status(resultSet.getString("status"))
                 .deadline(resultSet.getObject("deadline", LocalDate.class))
-                .offerStatus("")
+                .offerStatus(resultSet.getString("bidder_status"))
                 .build();
     }
 }

@@ -20,7 +20,7 @@ import pl.com.tenderflex.model.Total;
 public class OfferRepositoryImpl implements OfferRepository {
 
     public static final String ADD_NEW_OFFER_QURY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
-            + "bid_price, currency_id, contractor_status, bidder_status, publication_date, document_url) "
+            + "bid_price, currency_id, contractor_status, bidder_status, publication_date, document_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_OFFERS_BY_BIDDER_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
             + "org.country_id, co.country_name, os.tender_id, ten.cpv_code, os.bid_price, os.publication_date, os.bidder_status "
@@ -75,7 +75,7 @@ public class OfferRepositoryImpl implements OfferRepository {
             statement.setString(6, offer.getContractorStatus());
             statement.setString(7, offer.getBidderStatus());
             statement.setObject(8, offer.getPublicationDate());
-            statement.setString(9, offer.getDocumentUrl());
+            statement.setString(9, offer.getDocumentName());
             return statement;
         }, keyHolder);
         offer.setId(keyHolder.getKeyAs(Integer.class));

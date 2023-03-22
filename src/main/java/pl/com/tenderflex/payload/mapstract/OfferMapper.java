@@ -20,7 +20,7 @@ public interface OfferMapper {
     @Mapping(target = "organization.contactPerson.phone", source = "phone")
     @Mapping(target = "currency.id", source = "currencyId")
     @Mapping(target = "bidPrice", source = "bidPrice")
-    @Mapping(target = "documentUrl", source = "documentUrl")
+    @Mapping(target = "documentName", source = "documentName")
     Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
     
     @Mapping(target = "offerId", source = "id")
@@ -51,7 +51,7 @@ public interface OfferMapper {
     @Mapping(target = "phone", source = "organization.contactPerson.phone")
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "documentUrl", source = "documentUrl")
+    @Mapping(target = "documentName", source = "documentName")
     OfferDetailsResponse offerToOfferDetailsResponse(Offer offer);
     
 }

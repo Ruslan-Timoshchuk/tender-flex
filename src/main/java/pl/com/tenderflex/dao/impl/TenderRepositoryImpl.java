@@ -31,8 +31,10 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "WHERE ten.contractor_id = ? "
             + "GROUP BY ten.id, org.organization_name LIMIT ? OFFSET ?";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
-    public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline "
-            + "FROM tenders ten LEFT JOIN organizations org ON org.id = ten.organization_id LIMIT ? OFFSET ?";
+    public static final String GET_TENDERS_BY_CONDITION_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_code, organization_name, ten.status, ten.deadline, "
+            + "COALESCE(os.bidder_status, 'OFFER HASN`T SENT') AS bidder_status FROM tenders ten "
+            + "LEFT JOIN organizations org ON org.id = ten.organization_id "
+            + "LEFT JOIN offers os ON os.tender_id = ten.id LIMIT ? OFFSET ?";
     public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
     public static final String GET_TENDER_BY_ID_QUERY = "SELECT ten.id, ten.contractor_id, ten.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, co.country_name, org.city, org.contact_person_id, cp.first_name, cp.last_name, "
