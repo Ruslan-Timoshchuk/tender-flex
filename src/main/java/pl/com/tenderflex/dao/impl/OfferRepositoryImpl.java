@@ -46,7 +46,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ?";
     public static final String GET_OFFER_BY_ID_QUERY = "SELECT os.id, os.bidder_id, os.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, cs.country_name, org.city, org.contact_person_id, cp.first_name, "
-            + "cp.last_name, cp.phone, os.bid_price, os.currency_id, cur.currency_type, os.document_url "
+            + "cp.last_name, cp.phone, os.bid_price, os.currency_id, cur.currency_type, os.document_name "
             + "FROM offers os "
             + "LEFT JOIN organizations org ON org.id = os.organization_id "
             + "LEFT JOIN countries cs ON cs.id = org.country_id "
