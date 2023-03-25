@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import pl.com.tenderflex.model.CPV;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
@@ -20,7 +22,7 @@ public class TenderMapper implements RowMapper<Tender> {
         return Tender
                 .builder()
                 .id(resultSet.getInt("id"))
-                .contractorId(resultSet.getInt("contractor_id"))
+                .userId(resultSet.getInt("contractor_id"))
                 .organization(Organization
                         .builder()
                         .id(resultSet.getInt("organization_id"))
@@ -40,7 +42,11 @@ public class TenderMapper implements RowMapper<Tender> {
                                 .phone(resultSet.getString("phone"))
                                 .build())
                         .build())                
-                .cpvCode(resultSet.getString("cpv_code"))
+                .cpv(CPV.builder()
+                        .id(resultSet.getInt("cpv_id"))
+                        .code(resultSet.getString("code"))
+                        .description(resultSet.getString("description"))
+                        .build())
                 .type(TenderType.valueOf(resultSet.getString("tender_type")))
                 .details(resultSet.getString("details"))
                 .minPrice(resultSet.getInt("min_price"))

@@ -17,6 +17,7 @@ public class ContractorTenderDetailsResponse {
     private String procedure;
     private String language;
     private String cpvCode;
+    private String cpvDescription;
     private TenderType type;
     private String description;
     private Integer minTenderValue;

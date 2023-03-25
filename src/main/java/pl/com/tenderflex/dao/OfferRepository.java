@@ -22,6 +22,12 @@ public interface OfferRepository {
     
     Offer getById(Integer offerId);
 
+    boolean isExistsOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
+    
     Total getTotalTendersAndOffersByBidder(Integer bidderId);
+
+    void addAwardDecision(String awardDecision, Integer stageStatus, Integer offerId);
+
+    void addRejectDecision(String rejectDecision, Integer stageStatus, Integer offerId);
 
 }

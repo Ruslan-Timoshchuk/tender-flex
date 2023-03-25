@@ -20,7 +20,7 @@ public interface TenderMapper {
     @Mapping(target = "organization.contactPerson.lastName", source = "lastName")
     @Mapping(target = "organization.contactPerson.phone", source = "phone")
     @Mapping(target = "publication", source = "publication")
-    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "cpv.id", source = "cpvId")
     @Mapping(target = "type", source = "type")
     @Mapping(target = "details", source = "details")
     @Mapping(target = "minPrice", source = "minPrice")
@@ -34,17 +34,19 @@ public interface TenderMapper {
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
     
     @Mapping(target = "tenderId", source = "id")
-    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "cpvDescription", source = "cpv.description")
     @Mapping(target = "organizationName", source = "tender.organization.name")
-    @Mapping(target = "status", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "status", source = "status.status")
     ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
 
     @Mapping(target = "tenderId", source = "id")
-    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "cpvDescription", source = "cpv.description")
     @Mapping(target = "organizationName", source = "tender.organization.name")
-    @Mapping(target = "tenderStatus", source = "status")
     @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "tenderStatus", source = "status.status")
     BidderTenderResponse tenderToBidderTenderResponse(Tender tender);
     
     @Mapping(target = "tenderId", source = "id")
@@ -57,7 +59,8 @@ public interface TenderMapper {
     @Mapping(target = "phone", source = "organization.contactPerson.phone")
     @Mapping(target = "procedure", source = "organization.name")
     @Mapping(target = "language", constant = "ENGLISH")
-    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "cpvDescription", source = "cpv.description")
     @Mapping(target = "type", source = "type")
     @Mapping(target = "description", source = "details")
     @Mapping(target = "minTenderValue", source = "minPrice")
@@ -81,7 +84,8 @@ public interface TenderMapper {
     @Mapping(target = "phone", source = "organization.contactPerson.phone")
     @Mapping(target = "procedure", source = "organization.name")
     @Mapping(target = "language", constant = "ENGLISH")
-    @Mapping(target = "cpvCode", source = "cpvCode")
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "cpvDescription", source = "cpv.description")
     @Mapping(target = "type", source = "type")
     @Mapping(target = "description", source = "details")
     @Mapping(target = "minTenderValue", source = "minPrice")

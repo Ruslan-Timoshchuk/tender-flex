@@ -6,8 +6,10 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.CPV;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.TenderStatus;
 
 @Component
 @RequiredArgsConstructor
@@ -18,15 +20,22 @@ public class TenderBidderMapperList implements RowMapper<Tender> {
         return Tender
                 .builder()
                 .id(resultSet.getInt("id"))
-                .contractorId(resultSet.getInt("contractor_id"))
-                .cpvCode(resultSet.getString("cpv_code"))
+                .userId(resultSet.getInt("contractor_id"))
                 .organization(Organization
                         .builder()
                         .name(resultSet.getString("organization_name"))
                         .build())
-                .status(resultSet.getString("status"))
+                .cpv(CPV.builder()
+                        .id(resultSet.getInt("cpv_id"))
+                        .code(resultSet.getString("code"))
+                        .description(resultSet.getString("description"))
+                        .build())
+                .status(TenderStatus
+                        .builder()
+                        .id(resultSet.getInt("status_id"))
+                        .status(resultSet.getString("status"))
+                        .build())
                 .deadline(resultSet.getObject("deadline", LocalDate.class))
-                .offerStatus(resultSet.getString("bidder_status"))
                 .build();
     }
 }

@@ -20,4 +20,6 @@ public interface TenderRepository {
 
     Total getTotalTendersAndOffersByContractor(Integer contractorId);
 
+    Tender getByOfferId(Integer offerId);
+
 }

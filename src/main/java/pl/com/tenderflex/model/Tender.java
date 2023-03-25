@@ -10,10 +10,11 @@ import lombok.Data;
 public class Tender {
 
     private Integer id;
-    private Integer contractorId;
+    private Integer userId;
     private Organization organization;
-    private String cpvCode;
+    private CPV cpv;
     private TenderType type;
+    private TenderStatus status;
     private String details;
     private Integer minPrice;
     private Integer maxPrice;
@@ -24,11 +25,9 @@ public class Tender {
     private LocalDate deadline;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContract;
-    private String status;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
     private Integer offersAmount;
-    private String offerStatus;
 
 }

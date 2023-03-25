@@ -9,11 +9,12 @@ public class OfferResponse {
 
     private Integer offerId;
     private String organizationNameByBidder;
-    private String spvCode;
+    private String fieldOfTheTender;
     private Integer price;
     private String country;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;
-    private String status;
+    private String contractorSt;
+    private String bidderSt;
 
 }

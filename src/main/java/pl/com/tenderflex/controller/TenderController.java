@@ -42,9 +42,10 @@ public class TenderController {
 
     @Secured("BIDDER")
     @GetMapping("/list/bidder")
-    public Page<BidderTenderResponse> getAllByCondition(@RequestParam(defaultValue = "1") Integer currentPage,
+    public Page<BidderTenderResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId, 
+            @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
-        return tenderService.getByCondition(currentPage, tendersPerPage);
+        return tenderService.getByBidder(bidderId, currentPage, tendersPerPage);
     }
 
     @Secured("CONTRACTOR")
@@ -52,7 +53,13 @@ public class TenderController {
     public ContractorTenderDetailsResponse getTenderByIdForContractor(@PathVariable("id") Integer tenderId) {
         return tenderService.getByIdForContractor(tenderId);
     }
-
+    
+    @Secured("BIDDER")
+    @GetMapping("/details/offer/{id}")
+    public BidderTenderDetailsResponse getTenderByOfferId(@PathVariable("id") Integer offerId) {
+        return tenderService.getTenderByOfferId(offerId);
+    }
+     
     @Secured("BIDDER")
     @GetMapping("/details/bidder/{id}")
     public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId) {

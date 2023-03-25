@@ -13,10 +13,12 @@ public interface TenderService {
     
     Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage);
 
-    Page<BidderTenderResponse> getByCondition(Integer currentPage, Integer tendersPerPage);
+    Page<BidderTenderResponse> getByBidder(Integer bidderId, Integer currentPage, Integer tendersPerPage);
 
     ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
     
     BidderTenderDetailsResponse getByIdForBidder(Integer tenderId);
+
+    BidderTenderDetailsResponse getTenderByOfferId(Integer offerId);
 
 }

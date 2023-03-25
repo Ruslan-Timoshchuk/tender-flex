@@ -2,18 +2,14 @@ package pl.com.tenderflex.payload.response;
 
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class ContractorTenderResponse {
 
     private Integer tenderId;
     private String cpvCode;
+    private String cpvDescription;
     private String organizationName;
     private String status;
     @DateTimeFormat(pattern = "dd.MM.yyyy")

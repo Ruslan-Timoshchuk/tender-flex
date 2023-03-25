@@ -7,11 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.OfferStatus;
 import pl.com.tenderflex.model.Organization;
-import pl.com.tenderflex.model.Tender;
 
 @Component
-public class OfferBidderMapperList implements RowMapper<Offer> {
+public class OfferMapperList implements RowMapper<Offer> {
 
     @Override
     public Offer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -19,6 +19,11 @@ public class OfferBidderMapperList implements RowMapper<Offer> {
         .builder()
         .id(resultSet.getInt("id"))
         .bidderId(resultSet.getInt("bidder_id"))
+        .status(OfferStatus.builder()
+                .id(resultSet.getInt("status_id"))
+                .contractor(resultSet.getString("contractor"))
+                .bidder(resultSet.getString("bidder"))
+                .build())
         .organization(Organization
                 .builder()
                 .id(resultSet.getInt("organization_id"))
@@ -29,14 +34,12 @@ public class OfferBidderMapperList implements RowMapper<Offer> {
                         .countryName(resultSet.getString("country_name"))
                         .build())
                 .build())
-        .tender(Tender
-                .builder()
-                .id(resultSet.getInt("tender_id"))
-                .cpvCode(resultSet.getString("cpv_code"))
-                .build())
+        .tenderId(resultSet.getInt("tender_id"))
+        .fieldOfTheTender(resultSet.getString("description"))
         .bidPrice(resultSet.getInt("bid_price"))
         .publicationDate(resultSet.getObject("publication_date", LocalDate.class))
-        .bidderStatus(resultSet.getString("bidder_status"))
+        .awardDecision(resultSet.getString("award_decision_name"))
+        .rejectDecision(resultSet.getString("reject_decision_name"))
         .build();
     }
 }

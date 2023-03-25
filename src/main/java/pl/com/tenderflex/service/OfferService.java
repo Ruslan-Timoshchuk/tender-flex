@@ -1,7 +1,9 @@
 package pl.com.tenderflex.service;
 
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
+import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 
@@ -11,10 +13,14 @@ public interface OfferService {
 
     OfferDetailsResponse getById(Integer offerId);
 
-    Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage);
+    Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
     Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
 
     Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
+
+    void addAwardDecision(AwardDecisionRequest award);
+
+    void addRejectDecision(RejectDecisionRequest reject);
 
 }

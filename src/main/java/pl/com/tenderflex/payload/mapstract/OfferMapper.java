@@ -10,7 +10,7 @@ import pl.com.tenderflex.payload.response.OfferResponse;
 @Mapper(componentModel = "spring")
 public interface OfferMapper {
 
-    @Mapping(target = "tender.id", source = "tenderId")
+    @Mapping(target = "tenderId", source = "tenderId")
     @Mapping(target = "organization.name", source = "organizationName")
     @Mapping(target = "organization.nationalRegistrationNumber", source = "nationalRegistrationNumber")
     @Mapping(target = "organization.country.id", source = "countryId")
@@ -22,24 +22,16 @@ public interface OfferMapper {
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "documentName", source = "documentName")
     Offer offerDetailsRequestToOffer(OfferDetailsRequest offerDetailsRequest);
-    
+        
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")
-    @Mapping(target = "spvCode", source = "tender.cpvCode")
+    @Mapping(target = "fieldOfTheTender", source = "fieldOfTheTender")
     @Mapping(target = "price", source = "bidPrice")
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "date", source = "publicationDate")
-    @Mapping(target = "status", source = "bidderStatus")
-    OfferResponse offerToOfferBidderResponse(Offer offer);
-    
-    @Mapping(target = "offerId", source = "id")
-    @Mapping(target = "organizationNameByBidder", source = "organization.name")
-    @Mapping(target = "spvCode", source = "tender.cpvCode")
-    @Mapping(target = "price", source = "bidPrice")
-    @Mapping(target = "country", source = "organization.country.countryName")
-    @Mapping(target = "date", source = "publicationDate")
-    @Mapping(target = "status", source = "contractorStatus")
-    OfferResponse offerToOfferContractorResponse(Offer offer);
+    @Mapping(target = "contractorSt", source = "status.contractor")
+    @Mapping(target = "bidderSt", source = "status.bidder")
+    OfferResponse offerToOfferResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")

@@ -15,7 +15,7 @@ public class TenderDetailsRequest {
     private String firstName;
     private String lastName;
     private String phone;
-    private String cpvCode;
+    private Integer cpvId;
     private TenderType type;
     private String details;
     private Integer minPrice;

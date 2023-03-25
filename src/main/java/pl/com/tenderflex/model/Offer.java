@@ -11,14 +11,16 @@ public class Offer {
 
     private Integer id;
     private Integer bidderId;
-    private Tender tender;
+    private Integer tenderId;
+    private String fieldOfTheTender;
+    private OfferStatus status;
     private Organization organization;
     private Integer bidPrice;
     private Currency currency;
-    private String contractorStatus;
-    private String bidderStatus;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate publicationDate;
     private String documentName;
+    private String awardDecision;
+    private String rejectDecision;
 
 }
