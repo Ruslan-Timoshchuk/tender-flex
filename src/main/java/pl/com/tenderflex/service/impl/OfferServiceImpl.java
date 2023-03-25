@@ -122,7 +122,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void saveDeclineDecision(DecisionRequest decision) {
-        if (offerRepository.countOffersByTender(decision.getTenderId()) == 1) {
+        Integer activeOfferStatus = 2;
+        if (offerRepository.countActiveOffersByTender(decision.getTenderId(),  activeOfferStatus) == 1) {
             Integer statusId = 2;
             tenderRepository.updateTenderStatus(statusId, decision.getTenderId());
         }

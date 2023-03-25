@@ -16,6 +16,7 @@ public class OfferStatusMapper implements RowMapper<OfferStatus> {
                         .id(resultSet.getInt("id"))
                         .contractor(resultSet.getString("contractor"))
                         .bidder(resultSet.getString("bidder"))
+                        .tender(resultSet.getString("tender"))
                         .build();
             }
         }

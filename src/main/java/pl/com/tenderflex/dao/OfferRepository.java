@@ -20,6 +20,8 @@ public interface OfferRepository {
     
     Integer countOffersByTender(Integer tenderId);
     
+    Integer countActiveOffersByTender(Integer tenderId, Integer activeOfferStatusId);
+    
     Offer getById(Integer offerId);
 
     boolean isExistsOfferByTenderAndBidder(Integer tenderId, Integer bidderId);

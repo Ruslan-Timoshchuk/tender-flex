@@ -11,7 +11,7 @@ import pl.com.tenderflex.model.OfferStatus;
 @RequiredArgsConstructor
 public class OfferStatusRepositoryImpl implements OfferStatusRepository {
 
-    public static final String GET_OFFER_STATUS_BY_TENDER_AND_BIDDER = "SELECT os.id, os.bidder, os.contractor "
+    public static final String GET_OFFER_STATUS_BY_TENDER_AND_BIDDER = "SELECT os.id, os.bidder, os.contractor, os.tender "
             + "FROM offer_statuses os "
             + "LEFT JOIN offers ofs ON ofs.status_id = os.id "
             + "WHERE tender_id = ? AND bidder_id = ?"; 

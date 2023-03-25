@@ -11,6 +11,7 @@ import pl.com.tenderflex.dao.OfferStatusRepository;
 import pl.com.tenderflex.dao.OrganizationRepository;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.ContactPerson;
+import pl.com.tenderflex.model.OfferStatus;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.Page;
@@ -81,8 +82,9 @@ public class TenderServiceImpl implements TenderService {
             if (!offerRepository.isExistsOfferByTenderAndBidder(tender.getId(), bidderId)) {
                 tenderResponse.setOfferStatus("Offer hasn't sent");
             } else {
-                tenderResponse.setOfferStatus(
-                        offerStatusRepository.getByTenderAndBidder(tender.getId(), bidderId).getBidder());
+                OfferStatus status = offerStatusRepository.getByTenderAndBidder(tender.getId(), bidderId);
+                tenderResponse.setOfferStatus(status.getBidder());
+                tenderResponse.setTenderStatus(status.getTender());
             }
             tenders.add(tenderResponse);
         });

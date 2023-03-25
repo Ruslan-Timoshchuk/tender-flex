@@ -60,6 +60,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String COUNT_OFFERS_BY_CONTRACTOR = "SELECT count(os.id) FROM offers os "
             + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE contractor_id = ?";
     public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ?";
+    public static final String COUNT_ACTIVE_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ? AND status_id <= ?";
     public static final String GET_OFFER_BY_ID_QUERY = "SELECT os.id, os.bidder_id, os.status_id, ost.contractor, ost.bidder, "
             + "os.organization_id, org.organization_name, org.national_registration_number, org.country_id, cs.country_name, "
             + "org.city, org.contact_person_id, cp.first_name, cp.last_name, cp.phone, os.bid_price, os.currency_id, cur.currency_type, "
@@ -134,6 +135,11 @@ public class OfferRepositoryImpl implements OfferRepository {
     @Override
     public Integer countOffersByTender(Integer tenderId) {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER, Integer.class, tenderId);
+    }
+    
+    @Override
+    public Integer countActiveOffersByTender(Integer tenderId, Integer activeOfferStatusId) {
+        return jdbcTemplate.queryForObject(COUNT_ACTIVE_OFFERS_BY_TENDER, Integer.class, tenderId, activeOfferStatusId);
     }
     
     @Override

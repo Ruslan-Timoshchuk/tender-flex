@@ -10,5 +10,6 @@ public class OfferStatus {
     private final Integer id;
     private final String contractor;
     private final String bidder;
+    private final String tender;
     
 }
