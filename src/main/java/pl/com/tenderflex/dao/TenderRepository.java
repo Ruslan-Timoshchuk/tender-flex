@@ -24,4 +24,6 @@ public interface TenderRepository {
 
     void updateTenderStatus(Integer statusId, Integer tenderId);
 
+    String getRejectDecisionFileNameByTender(Integer tenderId);
+
 }

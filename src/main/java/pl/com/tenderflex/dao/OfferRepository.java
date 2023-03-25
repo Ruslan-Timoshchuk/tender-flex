@@ -34,6 +34,7 @@ public interface OfferRepository {
 
     void updateOfferStatus(Integer stageStatus, Integer offerId);
 
-    void updateOffersStatus(Integer statusId, Integer tenderId, Integer offerId);
+    void  updateOffersStatus(Integer statusId, String rejectDecisionName, Integer tenderId,
+            Integer statusOfActiveOffers, Integer offerId);
 
 }

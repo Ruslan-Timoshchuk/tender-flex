@@ -112,10 +112,13 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void saveApproveDecision(DecisionRequest decision) {
+        String rejectDecisionFileName = tenderRepository.getRejectDecisionFileNameByTender(decision.getTenderId());
         Integer tenderStatus = 2;
         tenderRepository.updateTenderStatus(tenderStatus, decision.getTenderId());
         Integer otherOffersStatus = 5;
-        offerRepository.updateOffersStatus(otherOffersStatus, decision.getTenderId(), decision.getOfferId());
+        Integer statusOfActiveOffers = 2;
+        offerRepository.updateOffersStatus(otherOffersStatus, rejectDecisionFileName, decision.getTenderId(),
+                statusOfActiveOffers, decision.getOfferId());
         Integer offerStatus = 3;
         offerRepository.updateOfferStatus(offerStatus, decision.getOfferId());
     }
@@ -123,7 +126,7 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public void saveDeclineDecision(DecisionRequest decision) {
         Integer activeOfferStatus = 2;
-        if (offerRepository.countActiveOffersByTender(decision.getTenderId(),  activeOfferStatus) == 1) {
+        if (offerRepository.countActiveOffersByTender(decision.getTenderId(), activeOfferStatus) == 1) {
             Integer statusId = 2;
             tenderRepository.updateTenderStatus(statusId, decision.getTenderId());
         }
