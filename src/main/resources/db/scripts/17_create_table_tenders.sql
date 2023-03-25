@@ -2,7 +2,7 @@ CREATE TABLE tenders (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     contractor_id INTEGER REFERENCES users(id),
     organization_id INTEGER REFERENCES organizations(id),
-    cpv_code VARCHAR NOT NULL,
+    cpv_id INTEGER REFERENCES cpvs(id),
     tender_type VARCHAR NOT NULL,
     details VARCHAR(250) NOT NULL,
     min_price BIGINT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE tenders (
     publication_date TIMESTAMP NOT NULL,
     deadline TIMESTAMP NOT NULL,
     deadline_for_signed_contract TIMESTAMP,
-    status VARCHAR NOT NULL,
+    status_id INTEGER REFERENCES tender_statuses(id) DEFAULT 1,
     contract_file_name VARCHAR NOT NULL,
     award_decision_file_name VARCHAR NOT NULL,
     reject_decision_file_name VARCHAR NOT NULL
