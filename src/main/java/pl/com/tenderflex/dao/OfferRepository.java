@@ -32,4 +32,6 @@ public interface OfferRepository {
 
     void updateOfferStatus(Integer stageStatus, Integer offerId);
 
+    void updateOffersStatus(Integer statusId, Integer tenderId, Integer offerId);
+
 }

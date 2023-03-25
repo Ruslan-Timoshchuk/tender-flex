@@ -22,4 +22,6 @@ public interface TenderRepository {
 
     Tender getByOfferId(Integer offerId);
 
+    void updateTenderStatus(Integer statusId, Integer tenderId);
+
 }

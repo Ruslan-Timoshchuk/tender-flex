@@ -66,6 +66,7 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "WHERE ofs.id = ?";
     public static final String GET_TOTAL_BY_CONTRACTOR_QUERY = "SELECT COUNT(DISTINCT ten.id) AS tenders, COUNT(os.id) AS offers "
             + "FROM tenders ten LEFT JOIN offers os ON os.tender_id = ten.id WHERE contractor_id = ?";
+    public static final String UPDATE_TENDER_STATUS_QUERY = "UPDATE tenders SET status_id = ? WHERE id = ?";
     
     private final JdbcTemplate jdbcTemplate;
     private final TenderContractorMapperList tenderContractorMapperList;
@@ -132,5 +133,10 @@ public class TenderRepositoryImpl implements TenderRepository {
     @Override
     public Total getTotalTendersAndOffersByContractor(Integer contractorId) {
         return jdbcTemplate.queryForObject(GET_TOTAL_BY_CONTRACTOR_QUERY, totalMapper, contractorId);
+    }
+    
+    @Override
+    public void updateTenderStatus(Integer statusId, Integer tenderId) {
+        jdbcTemplate.update(UPDATE_TENDER_STATUS_QUERY, statusId, tenderId);
     }
 }

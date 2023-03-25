@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.ContactPersonRepository;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.OrganizationRepository;
+import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Organization;
@@ -26,6 +27,7 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
+    private final TenderRepository tenderRepository;
     private final ContactPersonRepository contactPersonRepository;
     private final OrganizationRepository organizationRepository;
 
@@ -107,16 +109,24 @@ public class OfferServiceImpl implements OfferService {
         Integer stageStatus = 5;
         offerRepository.addRejectDecision(reject.getRejectDecisionFileName(), stageStatus, reject.getOfferId());
     }
-    
+
     @Override
     public void saveApproveDecision(DecisionRequest decision) {
-        Integer stageStatus = 3;
-        offerRepository.updateOfferStatus(stageStatus, decision.getOfferId());
+        Integer tenderStatus = 2;
+        tenderRepository.updateTenderStatus(tenderStatus, decision.getTenderId());
+        Integer otherOffersStatus = 5;
+        offerRepository.updateOffersStatus(otherOffersStatus, decision.getTenderId(), decision.getOfferId());
+        Integer offerStatus = 3;
+        offerRepository.updateOfferStatus(offerStatus, decision.getOfferId());
     }
 
     @Override
     public void saveDeclineDecision(DecisionRequest decision) {
-        Integer stageStatus = 4;
-        offerRepository.updateOfferStatus(stageStatus, decision.getOfferId());
+        if (offerRepository.countOffersByTender(decision.getTenderId()) == 1) {
+            Integer statusId = 2;
+            tenderRepository.updateTenderStatus(statusId, decision.getTenderId());
+        }
+        Integer statusId = 4;
+        offerRepository.updateOfferStatus(statusId, decision.getOfferId());
     }
 }
