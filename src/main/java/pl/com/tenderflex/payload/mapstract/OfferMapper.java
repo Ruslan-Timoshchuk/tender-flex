@@ -34,6 +34,8 @@ public interface OfferMapper {
     OfferResponse offerToOfferResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "contractorSt", source = "status.contractor")
+    @Mapping(target = "bidderSt", source = "status.bidder")
     @Mapping(target = "organizationNameByBidder", source = "organization.name")
     @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
     @Mapping(target = "country", source = "organization.country.countryName")
@@ -44,6 +46,8 @@ public interface OfferMapper {
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
     @Mapping(target = "documentName", source = "documentName")
+    @Mapping(target = "awardDecision", source = "awardDecision")
+    @Mapping(target = "rejectDecision", source = "rejectDecision")
     OfferDetailsResponse offerToOfferDetailsResponse(Offer offer);
     
 }

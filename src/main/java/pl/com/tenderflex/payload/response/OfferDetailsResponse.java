@@ -6,6 +6,8 @@ import lombok.Data;
 public class OfferDetailsResponse {
 
     private Integer offerId;
+    private String contractorSt;
+    private String bidderSt;
     private String organizationNameByBidder;
     private String nationalRegistrationNumber;
     private String country;
@@ -16,5 +18,7 @@ public class OfferDetailsResponse {
     private String bidPrice;
     private String currency;
     private String documentName;
+    private String awardDecision;
+    private String rejectDecision;
 
 }

@@ -8,6 +8,7 @@ import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.OfferStatus;
 import pl.com.tenderflex.model.Organization;
 
 @Component
@@ -19,6 +20,11 @@ public class OfferDetailsMapper implements RowMapper<Offer> {
         .builder()
         .id(resultSet.getInt("id"))
         .bidderId(resultSet.getInt("bidder_id"))
+        .status(OfferStatus.builder()
+                .id(resultSet.getInt("status_id"))
+                .contractor(resultSet.getString("contractor"))
+                .bidder(resultSet.getString("bidder"))
+                .build())
         .organization(Organization
                 .builder()
                 .id(resultSet.getInt("organization_id"))
@@ -45,6 +51,8 @@ public class OfferDetailsMapper implements RowMapper<Offer> {
                 .currencyType(resultSet.getString("currency_type"))
                 .build())
         .documentName(resultSet.getString("document_name"))
+        .awardDecision(resultSet.getString("award_decision_name"))
+        .rejectDecision(resultSet.getString("reject_decision_name"))
         .build();
     }
 }
