@@ -2,6 +2,7 @@ package pl.com.tenderflex.service;
 
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
+import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
@@ -19,8 +20,12 @@ public interface OfferService {
 
     Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
 
-    void addAwardDecision(AwardDecisionRequest award);
+    void addAwardDecisionFile(AwardDecisionRequest award);
 
-    void addRejectDecision(RejectDecisionRequest reject);
+    void addRejectDecisionFile(RejectDecisionRequest reject);
+
+    void saveApproveDecision(DecisionRequest decision);
+
+    void saveDeclineDecision(DecisionRequest decision);
 
 }

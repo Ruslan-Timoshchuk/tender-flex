@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
+import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
@@ -63,14 +64,26 @@ public class OfferController {
     }
 
     @Secured("CONTRACTOR")
-    @PostMapping("/award_decision")
-    public void saveAwardDecisionForOffer(@RequestBody AwardDecisionRequest award) {
-        offerService.addAwardDecision(award);
+    @PostMapping("/decision/award")
+    public void saveAwardDecisionDocumentForOffer(@RequestBody AwardDecisionRequest award) {
+        offerService.addAwardDecisionFile(award);
     }
 
     @Secured("CONTRACTOR")
-    @PostMapping("/reject_decision")
-    public void saveRejectDecisionForOffer(@RequestBody RejectDecisionRequest reject) {
-        offerService.addRejectDecision(reject);
+    @PostMapping("/decision/reject")
+    public void saveRejectDecisionDocumentForOffer(@RequestBody RejectDecisionRequest reject) {
+        offerService.addRejectDecisionFile(reject);
+    }
+
+    @Secured("BIDDER")
+    @PostMapping("/decision/approve")
+    public void saveApproveDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
+        offerService.saveApproveDecision(decision);
+    }
+
+    @Secured("BIDDER")
+    @PostMapping("/decision/decline")
+    public void saveDeclineDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
+        offerService.saveDeclineDecision(decision);
     }
 }

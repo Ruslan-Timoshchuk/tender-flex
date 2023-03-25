@@ -77,6 +77,7 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "(SELECT COUNT(id) from offers WHERE bidder_id = ?) as offers";
     public static final String ADD_AWARD_DECISION_QUERY = "UPDATE offers SET award_decision_name = ?, status_id = ? WHERE id = ?";
     public static final String ADD_REJECT_DECISION_QUERY = "UPDATE offers SET reject_decision_name = ?, status_id = ? WHERE id = ?";
+    public static final String UPDATE_OFFER_STATUS_QUERY = "UPDATE offers SET status_id = ? WHERE id = ?";
     
     private final JdbcTemplate jdbcTemplate;
     private final OfferMapperList offerMapperList;
@@ -157,5 +158,10 @@ public class OfferRepositoryImpl implements OfferRepository {
     @Override
     public void addRejectDecision(String rejectDecision, Integer stageStatus, Integer offerId) {
         jdbcTemplate.update(ADD_REJECT_DECISION_QUERY, rejectDecision, stageStatus, offerId);
+    }
+
+    @Override
+    public void updateOfferStatus(Integer stageStatus, Integer offerId) {
+        jdbcTemplate.update(UPDATE_OFFER_STATUS_QUERY, stageStatus, offerId); 
     }
 }

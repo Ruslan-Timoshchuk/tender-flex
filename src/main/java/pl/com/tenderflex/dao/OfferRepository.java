@@ -30,4 +30,6 @@ public interface OfferRepository {
 
     void addRejectDecision(String rejectDecision, Integer stageStatus, Integer offerId);
 
+    void updateOfferStatus(Integer stageStatus, Integer offerId);
+
 }

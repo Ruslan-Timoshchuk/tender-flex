@@ -13,6 +13,7 @@ import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
+import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
@@ -96,14 +97,26 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void addAwardDecision(AwardDecisionRequest award) {
+    public void addAwardDecisionFile(AwardDecisionRequest award) {
         Integer stageStatus = 2;
         offerRepository.addAwardDecision(award.getAwardDecisionFileName(), stageStatus, award.getOfferId());
     }
 
     @Override
-    public void addRejectDecision(RejectDecisionRequest reject) {
+    public void addRejectDecisionFile(RejectDecisionRequest reject) {
         Integer stageStatus = 5;
         offerRepository.addRejectDecision(reject.getRejectDecisionFileName(), stageStatus, reject.getOfferId());
+    }
+    
+    @Override
+    public void saveApproveDecision(DecisionRequest decision) {
+        Integer stageStatus = 3;
+        offerRepository.updateOfferStatus(stageStatus, decision.getOfferId());
+    }
+
+    @Override
+    public void saveDeclineDecision(DecisionRequest decision) {
+        Integer stageStatus = 4;
+        offerRepository.updateOfferStatus(stageStatus, decision.getOfferId());
     }
 }
