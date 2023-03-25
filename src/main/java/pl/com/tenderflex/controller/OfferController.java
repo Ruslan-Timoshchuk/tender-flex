@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
+import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.service.OfferService;
@@ -39,8 +41,9 @@ public class OfferController {
     @Secured("BIDDER")
     @GetMapping("/list/bidder")
     public Page<OfferResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId,
-            @RequestParam(defaultValue = "1") Integer currentPage) {
-        return offerService.getOffersByBidder(bidderId, currentPage);
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+        return offerService.getOffersByBidder(bidderId, currentPage, offersPerPage);
     }
 
     @Secured("CONTRACTOR")
@@ -50,12 +53,24 @@ public class OfferController {
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return offerService.getOffersByContractor(contractorId, currentPage, offersPerPage);
     }
-    
+
     @Secured("CONTRACTOR")
     @GetMapping("/list/{tender_id}")
     public Page<OfferResponse> getAllByTender(@PathVariable("tender_id") Integer tenderId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return offerService.getOffersByTender(tenderId, currentPage, offersPerPage);
+    }
+
+    @Secured("CONTRACTOR")
+    @PostMapping("/award_decision")
+    public void saveAwardDecisionForOffer(@RequestBody AwardDecisionRequest award) {
+        offerService.addAwardDecision(award);
+    }
+
+    @Secured("CONTRACTOR")
+    @PostMapping("/reject_decision")
+    public void saveRejectDecisionForOffer(@RequestBody RejectDecisionRequest reject) {
+        offerService.addRejectDecision(reject);
     }
 }
