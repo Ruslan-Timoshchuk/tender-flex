@@ -27,6 +27,8 @@ import pl.com.tenderflex.service.TenderService;
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
 
+    public static final String OFFER_HAS_NOT_SENT = "Offer has not sent";
+    
     private final TenderMapper tenderMapper;
     private final ContactPersonRepository contactPersonRepository;
     private final OrganizationRepository organizationRepository;
@@ -80,7 +82,7 @@ public class TenderServiceImpl implements TenderService {
         tenderRepository.getAll(tendersPerPage, amountTendersToSkip).forEach(tender -> {
             BidderTenderResponse tenderResponse = tenderMapper.tenderToBidderTenderResponse(tender);
             if (!offerRepository.isExistsOfferByTenderAndBidder(tender.getId(), bidderId)) {
-                tenderResponse.setOfferStatus("Offer hasn't sent");
+                tenderResponse.setOfferStatus(OFFER_HAS_NOT_SENT);
             } else {
                 OfferStatus status = offerStatusRepository.getByTenderAndBidder(tender.getId(), bidderId);
                 tenderResponse.setOfferStatus(status.getBidder());
@@ -102,7 +104,15 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId) {
-        return tenderMapper.tenderToBidderTenderDetailsResponse(tenderRepository.getById(tenderId));
+    public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId, Integer bidderId) {
+        BidderTenderDetailsResponse tender = tenderMapper.tenderToBidderTenderDetailsResponse(tenderRepository.getById(tenderId));
+        if (!offerRepository.isExistsOfferByTenderAndBidder(tenderId, bidderId)) {
+            tender.setOfferStatus(OFFER_HAS_NOT_SENT);
+        } else {
+            OfferStatus status = offerStatusRepository.getByTenderAndBidder(tenderId, bidderId);
+            tender.setOfferStatus(status.getBidder());
+            tender.setTenderStatus(status.getTender());
+        }
+        return tender;
     }
 }

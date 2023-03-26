@@ -11,6 +11,7 @@ public class OfferResponse {
     private String organizationNameByBidder;
     private String fieldOfTheTender;
     private Integer price;
+    private String currency;
     private String country;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;

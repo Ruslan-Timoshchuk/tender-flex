@@ -27,6 +27,7 @@ public interface OfferMapper {
     @Mapping(target = "organizationNameByBidder", source = "organization.name")
     @Mapping(target = "fieldOfTheTender", source = "fieldOfTheTender")
     @Mapping(target = "price", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency.currencyType")
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "date", source = "publicationDate")
     @Mapping(target = "contractorSt", source = "status.contractor")

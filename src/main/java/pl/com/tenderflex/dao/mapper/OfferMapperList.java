@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.Country;
+import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.OfferStatus;
 import pl.com.tenderflex.model.Organization;
@@ -37,6 +38,10 @@ public class OfferMapperList implements RowMapper<Offer> {
         .tenderId(resultSet.getInt("tender_id"))
         .fieldOfTheTender(resultSet.getString("description"))
         .bidPrice(resultSet.getInt("bid_price"))
+        .currency(Currency.builder()
+                .id(resultSet.getInt("currency_id"))
+                .currencyType(resultSet.getString("currency_type"))
+                .build())
         .publicationDate(resultSet.getObject("publication_date", LocalDate.class))
         .awardDecision(resultSet.getString("award_decision_name"))
         .rejectDecision(resultSet.getString("reject_decision_name"))

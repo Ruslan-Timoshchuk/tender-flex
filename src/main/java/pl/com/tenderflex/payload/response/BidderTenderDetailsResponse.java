@@ -11,6 +11,8 @@ public class BidderTenderDetailsResponse {
     private Integer tenderId;
     private String organizationName;
     private String nationalRegistrationNumber;
+    private String tenderStatus;
+    private String offerStatus;
     private String country;
     private String city;
     private String firstName;
@@ -31,5 +33,5 @@ public class BidderTenderDetailsResponse {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate deadlineForSignedContractSubmission;
     private String contractFileName;
-
+    
 }

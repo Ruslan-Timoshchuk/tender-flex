@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import pl.com.tenderflex.model.CPV;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.TenderStatus;
 import pl.com.tenderflex.model.TenderType;
 
 @Component
@@ -48,6 +48,10 @@ public class TenderMapper implements RowMapper<Tender> {
                         .description(resultSet.getString("description"))
                         .build())
                 .type(TenderType.valueOf(resultSet.getString("tender_type")))
+                .status(TenderStatus.builder()
+                        .id(resultSet.getInt("id"))
+                        .status(resultSet.getString("status"))
+                        .build())
                 .details(resultSet.getString("details"))
                 .minPrice(resultSet.getInt("min_price"))
                 .maxPrice(resultSet.getInt("max_price"))

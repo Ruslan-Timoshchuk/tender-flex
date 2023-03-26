@@ -62,7 +62,8 @@ public class TenderController {
      
     @Secured("BIDDER")
     @GetMapping("/details/bidder/{id}")
-    public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId) {
-        return tenderService.getByIdForBidder(tenderId);
+    public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId, 
+            @AuthenticationPrincipal(expression = "id") Integer bidderId) {
+        return tenderService.getByIdForBidder(tenderId, bidderId);
     }
 }

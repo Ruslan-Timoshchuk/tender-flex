@@ -17,7 +17,7 @@ public interface TenderService {
 
     ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
     
-    BidderTenderDetailsResponse getByIdForBidder(Integer tenderId);
+    BidderTenderDetailsResponse getByIdForBidder(Integer tenderId, Integer bidderId);
 
     BidderTenderDetailsResponse getTenderByOfferId(Integer offerId);
 

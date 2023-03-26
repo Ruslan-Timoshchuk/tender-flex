@@ -77,6 +77,7 @@ public interface TenderMapper {
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "organizationName", source = "organization.name")
     @Mapping(target = "nationalRegistrationNumber", source = "organization.nationalRegistrationNumber")
+    @Mapping(target = "tenderStatus", source = "tender.status.status")
     @Mapping(target = "country", source = "organization.country.countryName")
     @Mapping(target = "city", source = "organization.city")
     @Mapping(target = "firstName", source = "organization.contactPerson.firstName")
