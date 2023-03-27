@@ -17,6 +17,7 @@ import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
+import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.service.OfferService;
@@ -111,7 +112,8 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void saveApproveDecision(DecisionRequest decision) {
+    @Transactional
+    public DecisionResponse saveApproveDecision(DecisionRequest decision) {
         String rejectDecisionFileName = tenderRepository.getRejectDecisionFileNameByTender(decision.getTenderId());
         Integer tenderStatus = 2;
         tenderRepository.updateTenderStatus(tenderStatus, decision.getTenderId());
@@ -121,10 +123,11 @@ public class OfferServiceImpl implements OfferService {
                 statusOfActiveOffers, decision.getOfferId());
         Integer offerStatus = 3;
         offerRepository.updateOfferStatus(offerStatus, decision.getOfferId());
+        return new DecisionResponse(decision.getOfferId(), "Contract approved by Bidder");
     }
 
     @Override
-    public void saveDeclineDecision(DecisionRequest decision) {
+    public DecisionResponse saveDeclineDecision(DecisionRequest decision) {
         Integer activeOfferStatus = 2;
         if (offerRepository.countActiveOffersByTender(decision.getTenderId(), activeOfferStatus) == 1) {
             Integer statusId = 2;
@@ -132,5 +135,6 @@ public class OfferServiceImpl implements OfferService {
         }
         Integer statusId = 4;
         offerRepository.updateOfferStatus(statusId, decision.getOfferId());
+        return new DecisionResponse(decision.getOfferId(), "Contract declined by Bidder");
     }
 }

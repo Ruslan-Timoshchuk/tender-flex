@@ -5,6 +5,7 @@ import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
+import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 
@@ -24,8 +25,8 @@ public interface OfferService {
 
     void addRejectDecisionFile(RejectDecisionRequest reject);
 
-    void saveApproveDecision(DecisionRequest decision);
+    DecisionResponse saveApproveDecision(DecisionRequest decision);
 
-    void saveDeclineDecision(DecisionRequest decision);
+    DecisionResponse saveDeclineDecision(DecisionRequest decision);
 
 }

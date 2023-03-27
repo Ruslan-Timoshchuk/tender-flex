@@ -15,6 +15,7 @@ import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
+import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.service.OfferService;
@@ -77,13 +78,13 @@ public class OfferController {
 
     @Secured("BIDDER")
     @PostMapping("/decision/approve")
-    public void saveApproveDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
-        offerService.saveApproveDecision(decision);
+    public DecisionResponse saveApproveDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
+        return offerService.saveApproveDecision(decision);
     }
 
     @Secured("BIDDER")
     @PostMapping("/decision/decline")
-    public void saveDeclineDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
-        offerService.saveDeclineDecision(decision);
+    public DecisionResponse saveDeclineDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
+        return offerService.saveDeclineDecision(decision);
     }
 }
