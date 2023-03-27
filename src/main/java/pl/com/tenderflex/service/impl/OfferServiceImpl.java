@@ -47,7 +47,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
-        Integer amountOffersToSkip = (currentPage - 1) * 5;
+        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
         Integer totalPages = 1;
         if (allOffersAmount >= offersPerPage) {
