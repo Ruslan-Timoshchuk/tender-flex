@@ -3,7 +3,7 @@ CREATE TABLE tenders (
     contractor_id INTEGER REFERENCES users(id),
     organization_id INTEGER REFERENCES organizations(id),
     cpv_id INTEGER REFERENCES cpvs(id),
-    tender_type VARCHAR NOT NULL,
+    type_of_tender INTEGER REFERENCES types_of_tender(id),
     details VARCHAR(250) NOT NULL,
     min_price BIGINT NOT NULL,
     max_price BIGINT NOT NULL,

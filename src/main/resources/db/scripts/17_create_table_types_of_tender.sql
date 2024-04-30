@@ -1,0 +1,4 @@
+CREATE TABLE types_of_tender (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title VARCHAR
+);
