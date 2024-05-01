@@ -3,7 +3,6 @@ package pl.com.tenderflex.payload.request;
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import pl.com.tenderflex.model.TypeOfTender;
 
 @Data
 public class TenderDetailsRequest {
@@ -16,7 +15,7 @@ public class TenderDetailsRequest {
     private String lastName;
     private String phone;
     private Integer cpvId;
-    private TypeOfTender type;
+    private Integer typeOfTenderId;
     private String details;
     private Integer minPrice;
     private Integer maxPrice;
