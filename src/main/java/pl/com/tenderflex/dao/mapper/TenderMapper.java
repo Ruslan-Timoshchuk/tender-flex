@@ -12,7 +12,7 @@ import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderStatus;
-import pl.com.tenderflex.model.TenderType;
+import pl.com.tenderflex.model.TypeOfTender;
 
 @Component
 public class TenderMapper implements RowMapper<Tender> {
@@ -47,7 +47,11 @@ public class TenderMapper implements RowMapper<Tender> {
                         .code(resultSet.getString("code"))
                         .description(resultSet.getString("description"))
                         .build())
-                .type(TenderType.valueOf(resultSet.getString("tender_type")))
+                .type(TypeOfTender
+                        .builder()
+                        .id(resultSet.getInt("id"))
+                        .title(resultSet.getString("title"))
+                        .build())
                 .status(TenderStatus.builder()
                         .id(resultSet.getInt("id"))
                         .status(resultSet.getString("status"))

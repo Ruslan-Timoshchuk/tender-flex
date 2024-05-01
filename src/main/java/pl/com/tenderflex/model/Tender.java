@@ -13,7 +13,7 @@ public class Tender {
     private Integer userId;
     private Organization organization;
     private CPV cpv;
-    private TenderType type;
+    private TypeOfTender type;
     private TenderStatus status;
     private String details;
     private Integer minPrice;

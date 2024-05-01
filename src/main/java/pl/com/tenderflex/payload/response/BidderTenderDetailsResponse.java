@@ -3,7 +3,7 @@ package pl.com.tenderflex.payload.response;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
-import pl.com.tenderflex.model.TenderType;
+import pl.com.tenderflex.model.TypeOfTender;
 
 @Data
 public class BidderTenderDetailsResponse {
@@ -22,7 +22,7 @@ public class BidderTenderDetailsResponse {
     private String language;
     private String cpvCode;
     private String cpvDescription;
-    private TenderType type;
+    private TypeOfTender type;
     private String description;
     private Integer minTenderValue;
     private String currency;

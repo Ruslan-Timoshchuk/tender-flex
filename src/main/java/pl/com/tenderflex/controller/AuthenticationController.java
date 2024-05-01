@@ -23,7 +23,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public AuthenticationResponse performAuthenticate(@RequestBody @Valid AuthenticationRequest request,
             HttpServletResponse response, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
