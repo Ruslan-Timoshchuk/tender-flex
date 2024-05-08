@@ -15,6 +15,5 @@ public class ExceptionHandlerResponse {
     private final Integer code;
     private final HttpStatus status;
     private final String message;
-    private final String cause;
            
 }

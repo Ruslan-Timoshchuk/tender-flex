@@ -21,7 +21,7 @@ public interface TenderMapper {
     @Mapping(target = "organization.contactPerson.phone", source = "phone")
     @Mapping(target = "publication", source = "publication")
     @Mapping(target = "cpv.id", source = "cpvId")
-    @Mapping(target = "type", source = "type")
+    @Mapping(target = "type.id", source = "typeOfTenderId")
     @Mapping(target = "details", source = "details")
     @Mapping(target = "minPrice", source = "minPrice")
     @Mapping(target = "maxPrice", source = "maxPrice")

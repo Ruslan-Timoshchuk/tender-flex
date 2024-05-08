@@ -20,56 +20,50 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(UNAUTHORIZED)
     public ExceptionHandlerResponse handleBadCredentialsException(BadCredentialsException exception) {
         return new ExceptionHandlerResponse(now(), UNAUTHORIZED.value(), UNAUTHORIZED,
-                "You entered an incorrect password", "Incorrect authentication data");
+                "You entered an incorrect password");
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(UNAUTHORIZED)
     public ExceptionHandlerResponse handleEmptyResultDataAccessException(EmptyResultDataAccessException exception) {
         return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST,
-                "The user with that email is not exists", "Resource is not exists");
+                "The user with that email is not exists");
     }
 
     @ExceptionHandler(DataAccessException.class)
     @ResponseStatus(BAD_REQUEST)
     public ExceptionHandlerResponse handleDataAccessException(DataAccessException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage(),
-                "Dao error occured");
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(CookiesNotPresentException.class)
     @ResponseStatus(UNAUTHORIZED)
     public ExceptionHandlerResponse handleCookiesNotPresentException(CookiesNotPresentException exception) {
-        return new ExceptionHandlerResponse(now(), UNAUTHORIZED.value(), UNAUTHORIZED, exception.getMessage(),
-                "Cookies error occured");
+        return new ExceptionHandlerResponse(now(), UNAUTHORIZED.value(), UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler(FileNotExistsException.class)
     @ResponseStatus(BAD_REQUEST)
     public ExceptionHandlerResponse handleFileNotExistsException(FileNotExistsException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage(),
-                "Error occurred when uploading the file");
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(IOException.class)
     @ResponseStatus(BAD_REQUEST)
     public ExceptionHandlerResponse handleIOException(IOException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage(),
-                "Error occurred when uploading the document");
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(AmazonServiceException.class)
     @ResponseStatus(BAD_REQUEST)
     public ExceptionHandlerResponse handleAmazonServiceException(AmazonServiceException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage(),
-                "Error occurred when uploading the document to the backet");
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(MissingServletRequestPartException.class)
     @ResponseStatus(BAD_REQUEST)
     public ExceptionHandlerResponse handleMissingServletRequestPartException(
             MissingServletRequestPartException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage(),
-                "Requested file-part is doesn't present");
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 }
