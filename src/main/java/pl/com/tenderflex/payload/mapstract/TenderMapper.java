@@ -61,7 +61,7 @@ public interface TenderMapper {
     @Mapping(target = "language", constant = "ENGLISH")
     @Mapping(target = "cpvCode", source = "cpv.code")
     @Mapping(target = "cpvDescription", source = "cpv.description")
-    @Mapping(target = "type", source = "type")
+    @Mapping(target = "type", source = "type.title")
     @Mapping(target = "description", source = "details")
     @Mapping(target = "minTenderValue", source = "minPrice")
     @Mapping(target = "maxTenderValue", source = "maxPrice")

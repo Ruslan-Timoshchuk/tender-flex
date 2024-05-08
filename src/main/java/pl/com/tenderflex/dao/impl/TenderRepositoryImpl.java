@@ -20,7 +20,7 @@ import pl.com.tenderflex.model.Total;
 public class TenderRepositoryImpl implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
-            + "tenders(organization_id, contractor_id, cpv_id, tender_type, details, min_price, max_price, currency_id, publication_date, deadline, "
+            + "tenders(organization_id, contractor_id, cpv_id, type_of_tender_id, details, min_price, max_price, currency_id, publication_date, deadline, "
             + "deadline_for_signed_contract, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_id, cp.code, cp.description, organization_name, "
@@ -86,7 +86,7 @@ public class TenderRepositoryImpl implements TenderRepository {
             statement.setInt(1, tender.getOrganization().getId());
             statement.setInt(2, contractorId);
             statement.setInt(3, tender.getCpv().getId());
-            statement.setString(4, String.valueOf(tender.getType()));
+            statement.setInt(4, tender.getType().getId());
             statement.setString(5, tender.getDetails());
             statement.setLong(6, tender.getMinPrice());
             statement.setLong(7, tender.getMaxPrice());

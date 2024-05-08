@@ -49,7 +49,7 @@ public class TenderMapper implements RowMapper<Tender> {
                         .build())
                 .type(TypeOfTender
                         .builder()
-                        .id(resultSet.getInt("id"))
+                        .id(resultSet.getInt("type_of_tender_id"))
                         .title(resultSet.getString("title"))
                         .build())
                 .status(TenderStatus.builder()

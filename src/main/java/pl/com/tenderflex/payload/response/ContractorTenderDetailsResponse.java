@@ -1,7 +1,6 @@
 package pl.com.tenderflex.payload.response;
 
 import lombok.Data;
-import pl.com.tenderflex.model.TypeOfTender;
 
 @Data
 public class ContractorTenderDetailsResponse {
@@ -18,7 +17,7 @@ public class ContractorTenderDetailsResponse {
     private String language;
     private String cpvCode;
     private String cpvDescription;
-    private TypeOfTender type;
+    private String type;
     private String description;
     private Integer minTenderValue;
     private Integer maxTenderValue;
