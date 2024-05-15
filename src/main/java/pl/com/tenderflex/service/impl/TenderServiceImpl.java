@@ -5,14 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.ContactPersonRepository;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.OfferStatusRepository;
-import pl.com.tenderflex.dao.OrganizationRepository;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.OfferStatus;
-import pl.com.tenderflex.model.Organization;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
@@ -30,8 +26,6 @@ public class TenderServiceImpl implements TenderService {
     public static final String OFFER_HAS_NOT_SENT = "Offer has not sent";
     
     private final TenderMapper tenderMapper;
-    private final ContactPersonRepository contactPersonRepository;
-    private final OrganizationRepository organizationRepository;
     private final TenderRepository tenderRepository;
     private final OfferRepository offerRepository;
     private final OfferStatusRepository offerStatusRepository;
@@ -40,12 +34,7 @@ public class TenderServiceImpl implements TenderService {
     @Transactional
     public void createTender(TenderDetailsRequest tenderDetailsRequest, Integer contractorId) {
         Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
-        Organization organization = tender.getOrganization();
-        ContactPerson contactPerson = contactPersonRepository.create(organization.getContactPerson());
-        organization.setContactPerson(contactPerson);
-        organization = organizationRepository.create(organization);
-        tender.setOrganization(organization);
-        tender.setUserId(contractorId);
+        tender.setContractorId(contractorId);
         tenderRepository.create(tender, contractorId);
     }
 

@@ -9,7 +9,7 @@ import pl.com.tenderflex.model.CPV;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
-import pl.com.tenderflex.model.Organization;
+import pl.com.tenderflex.model.CompanyDetails;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.TenderStatus;
 import pl.com.tenderflex.model.TypeOfTender;
@@ -22,26 +22,24 @@ public class TenderMapper implements RowMapper<Tender> {
         return Tender
                 .builder()
                 .id(resultSet.getInt("id"))
-                .userId(resultSet.getInt("contractor_id"))
-                .organization(Organization
+                .contractorId(resultSet.getInt("contractor_id"))
+                .contractor(CompanyDetails
                         .builder()
-                        .id(resultSet.getInt("organization_id"))
-                        .name(resultSet.getString("organization_name"))
-                        .nationalRegistrationNumber(resultSet.getString("national_registration_number"))
+                        .officialName("official_name")
+                        .registrationNumber(resultSet.getString("registration_number"))
                         .country(Country
                                 .builder()
                                 .id(resultSet.getInt("country_id"))
                                 .countryName(resultSet.getString("country_name"))
                                 .build())
                         .city(resultSet.getString("city"))
-                        .contactPerson(ContactPerson
-                                .builder()
-                                .id(resultSet.getInt("contact_person_id"))
-                                .firstName(resultSet.getString("first_name"))
-                                .lastName(resultSet.getString("last_name"))
-                                .phone(resultSet.getString("phone"))
-                                .build())
-                        .build())                
+                        .build())
+                .contactPerson(ContactPerson
+                            .builder()
+                            .firstName(resultSet.getString("first_name"))
+                            .lastName(resultSet.getString("last_name"))
+                            .phoneNumber(resultSet.getString("phone_number"))
+                            .build())               
                 .cpv(CPV.builder()
                         .id(resultSet.getInt("cpv_id"))
                         .code(resultSet.getString("code"))
