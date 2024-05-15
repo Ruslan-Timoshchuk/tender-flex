@@ -20,9 +20,10 @@ import pl.com.tenderflex.model.Total;
 public class TenderRepositoryImpl implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
-            + "tenders(organization_id, contractor_id, cpv_id, type_of_tender_id, details, min_price, max_price, currency_id, publication_date, deadline, "
+            + "tenders(contractor_id, official_name, registration_number, country_id, city, first_name, last_name, phone_number, "
+            + "cpv_id, type_of_tender_id, details, min_price, max_price, currency_id, publication_date, deadline, "
             + "deadline_for_signed_contract, contract_file_name, award_decision_file_name, reject_decision_file_name) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_id, cp.code, cp.description, organization_name, "
             + "ten.status_id, ts.status, ten.deadline, count(os.id) AS offers_total "
             + "FROM tenders ten "
@@ -84,20 +85,26 @@ public class TenderRepositoryImpl implements TenderRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
-            statement.setInt(1, tender.getOrganization().getId());
-            statement.setInt(2, contractorId);
-            statement.setInt(3, tender.getCpv().getId());
-            statement.setInt(4, tender.getType().getId());
-            statement.setString(5, tender.getDetails());
-            statement.setLong(6, tender.getMinPrice());
-            statement.setLong(7, tender.getMaxPrice());
-            statement.setInt(8, tender.getCurrency().getId());
-            statement.setObject(9, tender.getPublication());
-            statement.setObject(10, tender.getDeadline());
-            statement.setObject(11, tender.getDeadlineForSignedContract());
-            statement.setString(12, tender.getContractFileName());
-            statement.setString(13, tender.getAwardDecisionFileName());
-            statement.setString(14, tender.getRejectDecisionFileName());
+            statement.setInt(1, contractorId);
+            statement.setString(2, tender.getContractor().getOfficialName());
+            statement.setString(3, tender.getContractor().getRegistrationNumber());
+            statement.setInt(4, tender.getContractor().getCountry().getId());
+            statement.setString(5, tender.getContractor().getCity());
+            statement.setString(6, tender.getContactPerson().getFirstName());
+            statement.setString(7, tender.getContactPerson().getLastName());
+            statement.setString(8, tender.getContactPerson().getPhoneNumber());
+            statement.setInt(9, tender.getCpv().getId());
+            statement.setInt(10, tender.getType().getId());
+            statement.setString(11, tender.getDetails());
+            statement.setLong(12, tender.getMinPrice());
+            statement.setLong(13, tender.getMaxPrice());
+            statement.setInt(14, tender.getCurrency().getId());
+            statement.setObject(15, tender.getPublication());
+            statement.setObject(16, tender.getDeadline());
+            statement.setObject(17, tender.getDeadlineForSignedContract());
+            statement.setString(18, tender.getContractFileName());
+            statement.setString(19, tender.getAwardDecisionFileName());
+            statement.setString(20, tender.getRejectDecisionFileName());
             return statement;
         }, keyHolder);
         tender.setId(keyHolder.getKeyAs(Integer.class));

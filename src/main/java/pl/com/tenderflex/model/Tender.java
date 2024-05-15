@@ -10,8 +10,9 @@ import lombok.Data;
 public class Tender {
 
     private Integer id;
-    private Integer userId;
-    private Organization organization;
+    private Integer contractorId;
+    private CompanyDetails contractor;
+    private ContactPerson contactPerson;
     private CPV cpv;
     private TypeOfTender type;
     private TenderStatus status;
