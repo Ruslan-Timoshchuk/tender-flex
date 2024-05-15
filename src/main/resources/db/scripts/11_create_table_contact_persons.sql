@@ -1,6 +1,0 @@
-CREATE TABLE contact_persons (
-    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    phone VARCHAR NOT NULL
-);
