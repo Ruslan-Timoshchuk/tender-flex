@@ -7,9 +7,8 @@ import lombok.Data;
 @Builder
 public class ContactPerson {
 
-    private Integer id;
     private String firstName;
     private String lastName;
-    private String phone;
+    private String phoneNumber;
 
 }

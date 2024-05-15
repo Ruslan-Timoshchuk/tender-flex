@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class TenderDetailsRequest {
 
-    private String organizationName;
-    private String nationalRegistrationNumber;
+    private String company;
+    private String registrationNumber;
     private Integer countryId;
     private String city;
     private String firstName;
     private String lastName;
-    private String phone;
+    private String phoneNumber;
     private Integer cpvId;
     private Integer typeOfTenderId;
     private String details;
