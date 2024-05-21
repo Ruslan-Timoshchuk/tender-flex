@@ -1,6 +1,7 @@
 package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,6 @@ public class Tender {
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
-    private Integer offersAmount;
+    private Set<Offer>offers;
 
 }
