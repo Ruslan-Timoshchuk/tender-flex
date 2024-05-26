@@ -1,4 +1,0 @@
-CREATE TABLE tender_statuses (
-    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    status VARCHAR
-);

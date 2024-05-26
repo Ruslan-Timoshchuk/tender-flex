@@ -17,7 +17,7 @@ CREATE TABLE tenders (
     publication_date TIMESTAMP NOT NULL,
     deadline TIMESTAMP NOT NULL,
     deadline_for_signed_contract TIMESTAMP,
-    status_id INTEGER REFERENCES tender_statuses(id) DEFAULT 1,
+    status VARCHAR NOT NULL,
     contract_file_name VARCHAR NOT NULL,
     award_decision_file_name VARCHAR NOT NULL,
     reject_decision_file_name VARCHAR NOT NULL
