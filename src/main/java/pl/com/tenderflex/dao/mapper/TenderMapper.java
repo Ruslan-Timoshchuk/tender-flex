@@ -3,14 +3,15 @@ package pl.com.tenderflex.dao.mapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.impl.OfferRepositoryImpl;
+import pl.com.tenderflex.dao.impl.UserRepositoryImpl;
 import pl.com.tenderflex.exception.DataMappingException;
 import pl.com.tenderflex.model.CPV;
 import pl.com.tenderflex.model.CompanyDetails;
 import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
+import pl.com.tenderflex.model.ETenderStatus;
 import pl.com.tenderflex.model.Tender;
-import pl.com.tenderflex.model.TenderStatus;
 import pl.com.tenderflex.model.TypeOfTender;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class TenderMapper implements RowMapper<Tender> {
 
+    private final UserRepositoryImpl userRepositoryImpl;
     private final OfferRepositoryImpl offerRepository;
 
     @Override
@@ -28,12 +30,12 @@ public class TenderMapper implements RowMapper<Tender> {
         try {
             return Tender.builder()
                     .id(resultSet.getInt("id"))
-                    .contractorId(resultSet.getInt("contractor_id"))
-                    .contractor(mapCompanyDetails(resultSet))
+                    .contractor(userRepositoryImpl.getById(resultSet.getInt("contractor_id")))
+                    .contractorCompanyDetails(mapCompanyDetails(resultSet))
                     .contactPerson(mapContactPerson(resultSet))
                     .cpv(mapCPV(resultSet))
                     .type(mapTypeOfTender(resultSet))
-                    .status(mapTenderStatus(resultSet))
+                    .status(ETenderStatus.valueOf(resultSet.getString("status")))
                     .details(resultSet.getString("details"))
                     .minPrice(resultSet.getInt("min_price"))
                     .maxPrice(resultSet.getInt("max_price"))
@@ -87,13 +89,6 @@ public class TenderMapper implements RowMapper<Tender> {
         return TypeOfTender.builder()
                 .id(resultSet.getInt("type_of_tender_id"))
                 .title(resultSet.getString("title"))
-                .build();
-    }
-
-    private TenderStatus mapTenderStatus(ResultSet resultSet) throws SQLException {
-        return TenderStatus.builder()
-                .id(resultSet.getInt("id"))
-                .status(resultSet.getString("status"))
                 .build();
     }
 

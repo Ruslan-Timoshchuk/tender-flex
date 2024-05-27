@@ -10,11 +10,11 @@ import lombok.Data;
 public class Offer {
 
     private Integer id;
-    private Integer bidderId;
-    private Integer tenderId;
+    private User bidder;
+    private Tender tender;
     private String fieldOfTheTender;
-    private OfferStatus status;
-    private Organization organization;
+    private CompanyDetails bidderCompanyDetails;
+    private ContactPerson contactPerson;
     private Integer bidPrice;
     private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
@@ -22,5 +22,7 @@ public class Offer {
     private String documentName;
     private String awardDecision;
     private String rejectDecision;
+    private EOfferStatus offerStatusBidder;
+    private EOfferStatus offerStatusContractor;
 
 }

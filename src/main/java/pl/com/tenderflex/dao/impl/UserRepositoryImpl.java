@@ -13,6 +13,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     public static final String GET_USER_BY_EMAIL_QUERY = "SELECT id, first_name, last_name, email, password "
             + "FROM users WHERE email = ?";
+    
+    public static final String GET_USER_BY_ID_QUERY = "SELECT id, first_name, last_name, email, password "
+            + "FROM users WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
@@ -20,5 +23,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getByEmail(String email) {
         return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL_QUERY, userMapper, email);
+    }
+    
+    public User getById(Integer email) {
+        return jdbcTemplate.queryForObject(GET_USER_BY_ID_QUERY, userMapper, email);
     }
 }

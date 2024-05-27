@@ -11,12 +11,12 @@ import lombok.Data;
 public class Tender {
 
     private Integer id;
-    private Integer contractorId;
-    private CompanyDetails contractor;
+    private User contractor;
+    private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
     private CPV cpv;
     private TypeOfTender type;
-    private TenderStatus status;
+    private ETenderStatus status;
     private String details;
     private Integer minPrice;
     private Integer maxPrice;
