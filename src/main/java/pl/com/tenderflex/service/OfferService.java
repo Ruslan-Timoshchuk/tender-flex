@@ -1,5 +1,6 @@
 package pl.com.tenderflex.service;
 
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
@@ -11,7 +12,7 @@ import pl.com.tenderflex.payload.response.OfferResponse;
 
 public interface OfferService {
 
-    void createOffer(OfferDetailsRequest offer, Integer bidderId);
+    void createOffer(OfferDetailsRequest offer, User bidder);
 
     OfferDetailsResponse getById(Integer offerId);
 

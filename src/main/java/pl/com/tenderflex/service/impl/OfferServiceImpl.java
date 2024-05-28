@@ -1,16 +1,14 @@
 package pl.com.tenderflex.service.impl;
 
 import static java.time.LocalDate.*;
+import static pl.com.tenderflex.model.EOfferStatus.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.ContactPersonRepository;
 import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.OrganizationRepository;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Offer;
-import pl.com.tenderflex.model.Organization;
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
@@ -29,21 +27,17 @@ public class OfferServiceImpl implements OfferService {
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
     private final TenderRepository tenderRepository;
-    private final ContactPersonRepository contactPersonRepository;
-    private final OrganizationRepository organizationRepository;
 
     @Override
     @Transactional
-    public void createOffer(OfferDetailsRequest offerDetailsRequest, Integer bidderId) {
+    public void createOffer(OfferDetailsRequest offerDetailsRequest, User bidder) {
         Offer offer = offerMapper.offerDetailsRequestToOffer(offerDetailsRequest);
-        Organization organization = offer.getOrganization();
-        ContactPerson contactPerson = contactPersonRepository.create(organization.getContactPerson());
-        organization.setContactPerson(contactPerson);
-        organization = organizationRepository.create(organization);
-        offer.setOrganization(organization);
-        offer.setBidderId(bidderId);
+        offer.setTender(tenderRepository.getById(offerDetailsRequest.getTenderId()));
+        offer.setBidder(bidder);
         offer.setPublicationDate(now());
-        offerRepository.create(offer, bidderId);
+        offer.setOfferStatusContractor(OFFER_RECEIVED);
+        offer.setOfferStatusBidder(OFFER_SENT_TO_CONTRACTOR);
+        offerRepository.create(offer);
     }
 
     @Override
