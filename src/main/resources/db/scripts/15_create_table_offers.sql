@@ -16,5 +16,5 @@ CREATE TABLE offers (
     award_decision_name VARCHAR,
     reject_decision_name VARCHAR,
     offer_status_bidder VARCHAR NOT NULL,
-    offer_status_contractor VARCHAR NOT NULL,
+    offer_status_contractor VARCHAR NOT NULL
 );

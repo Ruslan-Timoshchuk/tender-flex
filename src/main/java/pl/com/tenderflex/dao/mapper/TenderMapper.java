@@ -2,7 +2,6 @@ package pl.com.tenderflex.dao.mapper;
 
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.impl.OfferRepositoryImpl;
 import pl.com.tenderflex.dao.impl.UserRepositoryImpl;
 import pl.com.tenderflex.exception.DataMappingException;
 import pl.com.tenderflex.model.CPV;
@@ -22,15 +21,14 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class TenderMapper implements RowMapper<Tender> {
 
-    private final UserRepositoryImpl userRepositoryImpl;
-    private final OfferRepositoryImpl offerRepository;
+    private final UserRepositoryImpl userRepository;
 
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         try {
             return Tender.builder()
                     .id(resultSet.getInt("id"))
-                    .contractor(userRepositoryImpl.getById(resultSet.getInt("contractor_id")))
+                    .contractor(userRepository.getById(resultSet.getInt("contractor_id")))
                     .contractorCompanyDetails(mapCompanyDetails(resultSet))
                     .contactPerson(mapContactPerson(resultSet))
                     .cpv(mapCPV(resultSet))
@@ -46,7 +44,6 @@ public class TenderMapper implements RowMapper<Tender> {
                     .contractFileName(resultSet.getString("contract_file_name"))
                     .awardDecisionFileName(resultSet.getString("award_decision_file_name"))
                     .rejectDecisionFileName(resultSet.getString("reject_decision_file_name"))
-                    .offers(offerRepository.getByTender(resultSet.getInt("id")))
                     .build();
         } catch (SQLException e) {
             throw new DataMappingException("Error mapping row to Tender", e);
