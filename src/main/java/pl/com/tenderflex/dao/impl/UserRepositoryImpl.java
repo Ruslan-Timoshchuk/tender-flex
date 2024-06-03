@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.UserRepository;
 import pl.com.tenderflex.dao.mapper.UserMapper;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
+import pl.com.tenderflex.model.User;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,11 +21,11 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public UserDetailsImpl getByEmail(String email) {
+    public User getByEmail(String email) {
         return jdbcTemplate.queryForObject(GET_USER_BY_EMAIL_QUERY, userMapper, email);
     }
     
-    public UserDetailsImpl getById(Integer email) {
+    public User getById(Integer email) {
         return jdbcTemplate.queryForObject(GET_USER_BY_ID_QUERY, userMapper, email);
     }
 }

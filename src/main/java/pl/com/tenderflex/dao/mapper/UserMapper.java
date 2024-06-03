@@ -5,14 +5,13 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.User;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
 
 @Component
-public class UserMapper implements RowMapper<UserDetailsImpl> {
+public class UserMapper implements RowMapper<User> {
 
     @Override
-    public UserDetailsImpl mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return UserDetailsImpl
+    public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return User
                 .builder()
                 .id(resultSet.getInt("id"))
                 .firstName(resultSet.getString("first_name"))

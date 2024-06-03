@@ -1,4 +1,4 @@
-package pl.com.tenderflex.security.impl;
+package pl.com.tenderflex.model;
 
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
