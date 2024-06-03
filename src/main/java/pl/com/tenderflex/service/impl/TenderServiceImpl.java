@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
@@ -17,7 +18,6 @@ import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
@@ -30,7 +30,7 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     @Transactional
-    public void createTender(TenderDetailsRequest tenderDetailsRequest, UserDetailsImpl contractor) {
+    public void createTender(TenderDetailsRequest tenderDetailsRequest, User contractor) {
         Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
         tender.setContractor(contractor);
         tender.setStatus(TENDER_IN_PROGRESS);
@@ -50,8 +50,9 @@ public class TenderServiceImpl implements TenderService {
             }
         }
         List<ContractorTenderResponse> tenders = tenderRepository
-                .getByContractor(contractorId, tendersPerPage, amountTendersToSkip).stream()
-                .map(tenderMapper::tenderToContractorTenderResponse).toList();
+                .getByContractor(contractorId, tendersPerPage, amountTendersToSkip).stream().map(tender -> tenderMapper
+                        .tenderToContractorTenderResponse(tender, offerRepository.countOffersByTender(tender.getId())))
+                .toList();
         return new Page<>(currentPage, totalPages, tenders);
     }
 

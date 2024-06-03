@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
 
@@ -28,7 +29,7 @@ public class TenderController {
 
     @Secured("CONTRACTOR")
     @PostMapping
-    public void createTender(@AuthenticationPrincipal UserDetailsImpl contractor,
+    public void createTender(@AuthenticationPrincipal User contractor,
             @RequestBody TenderDetailsRequest tender) {
         tenderService.createTender(tender, contractor);
     }

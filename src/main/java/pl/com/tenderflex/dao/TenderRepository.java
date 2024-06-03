@@ -1,6 +1,8 @@
 package pl.com.tenderflex.dao;
 
 import java.util.List;
+import java.util.Set;
+
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.Total;
 
@@ -8,7 +10,7 @@ public interface TenderRepository {
 
     Tender create(Tender tender);
 
-    List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
+    Set<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
 
     Integer countTendersByContractor(Integer contractorId);
     

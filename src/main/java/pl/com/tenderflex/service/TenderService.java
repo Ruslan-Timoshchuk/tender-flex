@@ -1,16 +1,16 @@
 package pl.com.tenderflex.service;
 
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
 
 public interface TenderService {
 
-    void createTender(TenderDetailsRequest tenderDetails, UserDetailsImpl contractor);
+    void createTender(TenderDetailsRequest tenderDetails, User contractor);
     
     Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage);
 

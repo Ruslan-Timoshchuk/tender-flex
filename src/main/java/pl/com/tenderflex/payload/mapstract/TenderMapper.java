@@ -33,11 +33,14 @@ public interface TenderMapper {
     @Mapping(target = "rejectDecisionFileName", source = "rejectDecisionFileName")
     Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
     
-    @Mapping(target = "tenderId", source = "id")
-    @Mapping(target = "cpvCode", source = "cpv.code")
-    @Mapping(target = "cpvDescription", source = "cpv.description")
-    @Mapping(target = "deadline", source = "deadline", dateFormat = "dd-MM-yyyy")
-    ContractorTenderResponse tenderToContractorTenderResponse(Tender tender);
+    @Mapping(target = "tenderId", source = "tender.id")
+    @Mapping(target = "cpvCode", source = "tender.cpv.code")
+    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
+    @Mapping(target = "officialName", source = "tender.contractorCompanyDetails.officialName")
+    @Mapping(target = "status", source = "tender.status")
+    @Mapping(target = "deadline", source = "tender.deadline", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "offersAmount", source = "offersAmount")
+    ContractorTenderResponse tenderToContractorTenderResponse(Tender tender, Integer offersAmount);
 
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "cpvCode", source = "cpv.code")

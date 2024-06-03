@@ -40,7 +40,7 @@ public class TenderMapper implements RowMapper<Tender> {
                     .currency(mapCurrency(resultSet))
                     .publication(resultSet.getObject("publication_date", LocalDate.class))
                     .deadline(resultSet.getObject("deadline", LocalDate.class))
-                    .signedContractDeadline(resultSet.getObject("deadline_for_signed_contract", LocalDate.class))
+                    .signedContractDeadline(resultSet.getObject("signed_contract_deadline", LocalDate.class))
                     .contractFileName(resultSet.getString("contract_file_name"))
                     .awardDecisionFileName(resultSet.getString("award_decision_file_name"))
                     .rejectDecisionFileName(resultSet.getString("reject_decision_file_name"))

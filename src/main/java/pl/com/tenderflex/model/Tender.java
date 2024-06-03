@@ -4,14 +4,13 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
-import pl.com.tenderflex.security.impl.UserDetailsImpl;
 
 @Data
 @Builder
 public class Tender {
 
     private Integer id;
-    private UserDetailsImpl contractor;
+    private User contractor;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
     private CPV cpv;
