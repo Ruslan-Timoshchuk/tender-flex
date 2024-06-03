@@ -1,2 +1,2 @@
-INSERT INTO roles(name) 
+INSERT INTO roles(role) 
 VALUES ('BIDDER'), ('CONTRACTOR'), ('ADMINISTRATOR')

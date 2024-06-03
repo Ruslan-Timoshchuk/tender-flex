@@ -5,17 +5,17 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.ERole;
-import pl.com.tenderflex.model.Role;
+import pl.com.tenderflex.model.GrantedAuthorityRole;
 
 @Component
-public class RoleMapper implements RowMapper<Role> {
+public class GrantedAuthorityRoleMapper implements RowMapper<GrantedAuthorityRole> {
 
     @Override
-    public Role mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return Role
+    public GrantedAuthorityRole mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return GrantedAuthorityRole
                 .builder()
                 .id(resultSet.getInt("id"))
-                .name(ERole.valueOf(resultSet.getString("name")))
+                .role(ERole.valueOf(resultSet.getString("role")))
                 .build();
     }
 }
