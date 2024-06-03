@@ -1,9 +1,9 @@
 package pl.com.tenderflex.dao;
 
-import pl.com.tenderflex.model.User;
+import pl.com.tenderflex.security.impl.UserDetailsImpl;
 
 public interface UserRepository {
 
-    User getByEmail(String email);
+    UserDetailsImpl getByEmail(String email);
     
 }

@@ -6,10 +6,11 @@ import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.security.impl.UserDetailsImpl;
 
 public interface TenderService {
 
-    void createTender(TenderDetailsRequest tenderDetails, Integer contractorId);
+    void createTender(TenderDetailsRequest tenderDetails, UserDetailsImpl contractor);
     
     Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage);
 

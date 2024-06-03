@@ -1,14 +1,14 @@
 package pl.com.tenderflex.service.impl;
 
+import static pl.com.tenderflex.model.ETenderStatus.*;
+import static pl.com.tenderflex.model.EOfferStatus.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.OfferStatusRepository;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.model.OfferStatus;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
@@ -17,25 +17,24 @@ import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.security.impl.UserDetailsImpl;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
-
-    public static final String OFFER_HAS_NOT_SENT = "Offer has not sent";
     
     private final TenderMapper tenderMapper;
     private final TenderRepository tenderRepository;
     private final OfferRepository offerRepository;
-    private final OfferStatusRepository offerStatusRepository;
 
     @Override
     @Transactional
-    public void createTender(TenderDetailsRequest tenderDetailsRequest, Integer contractorId) {
+    public void createTender(TenderDetailsRequest tenderDetailsRequest, UserDetailsImpl contractor) {
         Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
-        tender.setContractorId(contractorId);
-        tenderRepository.create(tender, contractorId);
+        tender.setContractor(contractor);
+        tender.setStatus(TENDER_IN_PROGRESS);
+        tenderRepository.create(tender);
     }
 
     @Override
@@ -69,14 +68,15 @@ public class TenderServiceImpl implements TenderService {
         }
         List<BidderTenderResponse> tenders = new ArrayList<>();
         tenderRepository.getAll(tendersPerPage, amountTendersToSkip).forEach(tender -> {
-            BidderTenderResponse tenderResponse = tenderMapper.tenderToBidderTenderResponse(tender);
-            if (!offerRepository.isExistsOfferByTenderAndBidder(tender.getId(), bidderId)) {
-                tenderResponse.setOfferStatus(OFFER_HAS_NOT_SENT);
-            } else {
-                OfferStatus status = offerStatusRepository.getByTenderAndBidder(tender.getId(), bidderId);
-                tenderResponse.setOfferStatus(status.getBidder());
-                tenderResponse.setTenderStatus(status.getTender());
-            }
+           BidderTenderResponse tenderResponse = tenderMapper.tenderToBidderTenderResponse(tender);
+           offerRepository.getAllByBidder(bidderId).forEach(offer -> {
+               if(!offer.getTender().equals(tender)) {      
+                   tenderResponse.setOfferStatusBidder(OFFER_HAS_NOT_SENT.name());
+               } else {
+                   tenderResponse.setOfferStatusBidder(offer.getOfferStatusBidder().name());
+                   tenderResponse.setOfferStatusContractor(offer.getOfferStatusContractor().name());
+               }
+           });      
             tenders.add(tenderResponse);
         });
         return new Page<>(currentPage, totalPages, tenders);
@@ -94,14 +94,16 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId, Integer bidderId) {
-        BidderTenderDetailsResponse tender = tenderMapper.tenderToBidderTenderDetailsResponse(tenderRepository.getById(tenderId));
-        if (!offerRepository.isExistsOfferByTenderAndBidder(tenderId, bidderId)) {
-            tender.setOfferStatus(OFFER_HAS_NOT_SENT);
-        } else {
-            OfferStatus status = offerStatusRepository.getByTenderAndBidder(tenderId, bidderId);
-            tender.setOfferStatus(status.getBidder());
-            tender.setTenderStatus(status.getTender());
-        }
-        return tender;
+        Tender tender = tenderRepository.getById(tenderId);
+        BidderTenderDetailsResponse tenderDetails = tenderMapper.tenderToBidderTenderDetailsResponse(tender);
+        offerRepository.getAllByBidder(bidderId).forEach(offer -> {
+            if(!offer.getTender().equals(tender)) {
+                tenderDetails.setOfferStatusBidder(OFFER_HAS_NOT_SENT.name());
+            } else {
+                tenderDetails.setOfferStatusBidder(offer.getOfferStatusBidder().name());
+                tenderDetails.setTenderStatusContractor(tender.getStatus().name());
+            }
+        });
+        return tenderDetails;
     }
 }

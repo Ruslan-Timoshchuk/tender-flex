@@ -1,13 +1,11 @@
 package pl.com.tenderflex.payload.request;
 
-import java.time.LocalDate;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
 public class TenderDetailsRequest {
 
-    private String company;
+    private String officialName;
     private String registrationNumber;
     private Integer countryId;
     private String city;
@@ -17,15 +15,12 @@ public class TenderDetailsRequest {
     private Integer cpvId;
     private Integer typeOfTenderId;
     private String details;
-    private Integer minPrice;
     private Integer maxPrice;
+    private Integer minPrice;
     private Integer currencyId;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate publication;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate deadline;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate deadlineForSignedContract;
+    private String publication;
+    private String deadline;
+    private String signedContractDeadline;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;

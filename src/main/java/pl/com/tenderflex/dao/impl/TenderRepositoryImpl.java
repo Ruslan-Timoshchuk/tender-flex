@@ -8,8 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.dao.mapper.TenderBidderMapperList;
-import pl.com.tenderflex.dao.mapper.TenderContractorMapperList;
 import pl.com.tenderflex.dao.mapper.TenderMapper;
 import pl.com.tenderflex.dao.mapper.TotalMapper;
 import pl.com.tenderflex.model.Tender;
@@ -21,9 +19,9 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     public static final String ADD_NEW_TENDER_QUERY = "INSERT INTO "
             + "tenders(contractor_id, official_name, registration_number, country_id, city, first_name, last_name, phone_number, "
-            + "cpv_id, type_of_tender_id, details, min_price, max_price, currency_id, publication_date, deadline, "
-            + "deadline_for_signed_contract, contract_file_name, award_decision_file_name, reject_decision_file_name) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "cpv_id, type_of_tender_id, details, max_price, min_price, currency_id, publication_date, deadline, "
+            + "signed_contract_deadline, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.cpv_id, cp.code, cp.description, organization_name, "
             + "ten.status_id, ts.status, ten.deadline, count(os.id) AS offers_total "
             + "FROM tenders ten "
@@ -75,36 +73,35 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String GET_REJECT_FILE_NAME_BY_TENDER_QUERY = "SELECT reject_decision_file_name FROM tenders WHERE id = ?";
     
     private final JdbcTemplate jdbcTemplate;
-    private final TenderContractorMapperList tenderContractorMapperList;
-    private final TenderBidderMapperList tenderBidderMapperList;
     private final TenderMapper tenderMapper;
     private final TotalMapper totalMapper;
  
     @Override
-    public Tender create(Tender tender, Integer contractorId) {
+    public Tender create(Tender tender) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
-            statement.setInt(1, contractorId);
-            statement.setString(2, tender.getContractor().getOfficialName());
-            statement.setString(3, tender.getContractor().getRegistrationNumber());
-            statement.setInt(4, tender.getContractor().getCountry().getId());
-            statement.setString(5, tender.getContractor().getCity());
+            statement.setInt(1, tender.getContractor().getId());
+            statement.setString(2, tender.getContractorCompanyDetails().getOfficialName());
+            statement.setString(3, tender.getContractorCompanyDetails().getRegistrationNumber());
+            statement.setInt(4, tender.getContractorCompanyDetails().getCountry().getId());
+            statement.setString(5, tender.getContractorCompanyDetails().getCity());
             statement.setString(6, tender.getContactPerson().getFirstName());
             statement.setString(7, tender.getContactPerson().getLastName());
             statement.setString(8, tender.getContactPerson().getPhoneNumber());
             statement.setInt(9, tender.getCpv().getId());
             statement.setInt(10, tender.getType().getId());
             statement.setString(11, tender.getDetails());
-            statement.setLong(12, tender.getMinPrice());
-            statement.setLong(13, tender.getMaxPrice());
+            statement.setLong(12, tender.getMaxPrice());
+            statement.setLong(13, tender.getMinPrice());
             statement.setInt(14, tender.getCurrency().getId());
             statement.setObject(15, tender.getPublication());
             statement.setObject(16, tender.getDeadline());
-            statement.setObject(17, tender.getDeadlineForSignedContract());
-            statement.setString(18, tender.getContractFileName());
-            statement.setString(19, tender.getAwardDecisionFileName());
-            statement.setString(20, tender.getRejectDecisionFileName());
+            statement.setObject(17, tender.getSignedContractDeadline());
+            statement.setString(18, tender.getStatus().name());
+            statement.setString(19, tender.getContractFileName());
+            statement.setString(20, tender.getAwardDecisionFileName());
+            statement.setString(21, tender.getRejectDecisionFileName());
             return statement;
         }, keyHolder);
         tender.setId(keyHolder.getKeyAs(Integer.class));
@@ -113,7 +110,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     
     @Override
     public List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip) {
-        return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderContractorMapperList, contractorId, amountTenders,
+        return jdbcTemplate.query(GET_TENDERS_BY_CONTRACTOR_QUERY, tenderMapper, contractorId, amountTenders,
                 amountTendersToSkip);
     }
     
@@ -124,7 +121,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     
     @Override
     public List<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip) {
-        return jdbcTemplate.query(GET_ALL_TENDERS, tenderBidderMapperList, amountTenders, amountTendersToSkip);
+        return jdbcTemplate.query(GET_ALL_TENDERS, tenderMapper, amountTenders, amountTendersToSkip);
     }
 
     @Override

@@ -15,6 +15,7 @@ import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.BidderTenderResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.security.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
 
@@ -27,9 +28,9 @@ public class TenderController {
 
     @Secured("CONTRACTOR")
     @PostMapping
-    public void createTender(@AuthenticationPrincipal(expression = "id") Integer contractorId,
+    public void createTender(@AuthenticationPrincipal UserDetailsImpl contractor,
             @RequestBody TenderDetailsRequest tender) {
-        tenderService.createTender(tender, contractorId);
+        tenderService.createTender(tender, contractor);
     }
 
     @Secured("CONTRACTOR")

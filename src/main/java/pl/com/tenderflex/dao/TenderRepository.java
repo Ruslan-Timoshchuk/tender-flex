@@ -6,7 +6,7 @@ import pl.com.tenderflex.model.Total;
 
 public interface TenderRepository {
 
-    Tender create(Tender tender, Integer contractorId);
+    Tender create(Tender tender);
 
     List<Tender> getByContractor(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
 
