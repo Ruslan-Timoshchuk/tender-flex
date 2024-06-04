@@ -14,9 +14,9 @@ import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.BidderTenderResponse;
+import pl.com.tenderflex.payload.response.BidderTenderInListResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.payload.response.ContractorTenderInListResponse;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
 
@@ -36,7 +36,7 @@ public class TenderController {
 
     @Secured("CONTRACTOR")
     @GetMapping("/list/contractor")
-    public Page<ContractorTenderResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
+    public Page<ContractorTenderInListResponse> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage,
             @AuthenticationPrincipal(expression = "id") Integer contractorId) {
         return tenderService.getByContractor(contractorId, currentPage, tendersPerPage);
@@ -44,7 +44,7 @@ public class TenderController {
 
     @Secured("BIDDER")
     @GetMapping("/list/bidder")
-    public Page<BidderTenderResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId, 
+    public Page<BidderTenderInListResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
         return tenderService.getByBidder(bidderId, currentPage, tendersPerPage);

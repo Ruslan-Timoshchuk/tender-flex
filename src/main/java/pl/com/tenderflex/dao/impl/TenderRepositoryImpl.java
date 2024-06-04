@@ -2,8 +2,8 @@ package pl.com.tenderflex.dao.impl;
 
 import static java.util.stream.Collectors.toSet;
 import java.sql.PreparedStatement;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,7 +24,7 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "cpv_id, type_of_tender_id, details, max_price, min_price, currency_id, publication_date, deadline, "
             + "signed_contract_deadline, status, contract_file_name, award_decision_file_name, reject_decision_file_name) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = "SELECT ten.id, ten.contractor_id, ten.official_name, ten.registration_number, "
+    private static final String BASE_CELECT_QUERY = "SELECT ten.id, ten.contractor_id, ten.official_name, ten.registration_number, "
             + "ten.country_id, co.country_name, ten.city, ten.first_name, ten.last_name, "
             + "ten.phone_number, ten.cpv_id, cs.code, cs.description, ten.type_of_tender_id, tot.title, ten.details, ten.max_price, ten.min_price, "
             + "ten.currency_id, cur.currency_type, ten.publication_date, ten.deadline, ten.signed_contract_deadline, ten.status, "
@@ -33,28 +33,15 @@ public class TenderRepositoryImpl implements TenderRepository {
             + "LEFT JOIN countries co ON co.id = ten.country_id "
             + "LEFT JOIN cpvs cs ON cs.id = ten.cpv_id "
             + "LEFT JOIN types_of_tender tot ON tot.id = ten.type_of_tender_id "
-            + "LEFT JOIN currencies cur ON cur.id = ten.currency_id "
-            + "WHERE contractor_id = ? LIMIT ? OFFSET ?";
-    public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
-    public static final String GET_ALL_TENDERS = "SELECT ten.id, ten.contractor_id, ten.cpv_id, cp.code, cp.description, organization_name, "
-            + "ten.status_id, ts.status, ten.deadline "
-            + "FROM tenders ten "
-            + "LEFT JOIN organizations org ON org.id = ten.organization_id "
-            + "LEFT JOIN cpvs cp ON cp.id = ten.cpv_id "
-            + "LEFT JOIN tender_statuses ts ON ts.id = ten.status_id "
-            + "LIMIT ? OFFSET ?";
-    public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
-    public static final String GET_TENDER_BY_ID_QUERY = "SELECT ten.id, ten.contractor_id, ten.official_name, ten.registration_number, "
-            + "ten.country_id, co.country_name, ten.city, ten.first_name, ten.last_name, "
-            + "ten.phone_number, ten.cpv_id, cs.code, cs.description, ten.type_of_tender_id, tot.title, ten.details, ten.max_price, ten.min_price, "
-            + "ten.currency_id, cur.currency_type, ten.publication_date, ten.deadline, ten.signed_contract_deadline, ten.status, "
-            + "ten.contract_file_name, ten.award_decision_file_name, ten.reject_decision_file_name "
-            + "FROM tenders ten "
-            + "LEFT JOIN countries co ON co.id = ten.country_id "
-            + "LEFT JOIN cpvs cs ON cs.id = ten.cpv_id "
-            + "LEFT JOIN types_of_tender tot ON tot.id = ten.type_of_tender_id "
-            + "LEFT JOIN currencies cur ON cur.id = ten.currency_id "
+            + "LEFT JOIN currencies cur ON cur.id = ten.currency_id ";
+    public static final String GET_TENDER_BY_ID_QUERY = BASE_CELECT_QUERY
             + "WHERE ten.id = ?";
+    public static final String GET_TENDERS_BY_CONTRACTOR_QUERY = BASE_CELECT_QUERY 
+            + "WHERE contractor_id = ? LIMIT ? OFFSET ?";
+    public static final String GET_ALL_TENDERS = BASE_CELECT_QUERY 
+            + "LIMIT ? OFFSET ?";
+    public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
+    public static final String COUNT_ALL_TENDERS_QUERY = "SELECT count(*) FROM tenders";
     public static final String GET_TENDER_BY_OFFER_QUERY = "SELECT ten.id, ten.contractor_id, ten.organization_id, org.organization_name, "
             + "org.national_registration_number, org.country_id, co.country_name, org.city, org.contact_person_id, cp.first_name, cp.last_name, "
             + "cp.phone, ten.cpv_id, cs.code, cs.description, ten.tender_type, ten.status_id, ts.status, ten.details, ten.min_price, ten.max_price, ten.currency_id, cur.currency_type, "
@@ -121,8 +108,9 @@ public class TenderRepositoryImpl implements TenderRepository {
     }
     
     @Override
-    public List<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip) {
-        return jdbcTemplate.query(GET_ALL_TENDERS, tenderMapper, amountTenders, amountTendersToSkip);
+    public Set<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip) {
+        return jdbcTemplate.query(GET_ALL_TENDERS, tenderMapper, amountTenders, amountTendersToSkip).stream()
+                .collect(Collectors.toSet());
     }
 
     @Override
