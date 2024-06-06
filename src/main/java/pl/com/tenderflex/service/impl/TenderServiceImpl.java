@@ -15,9 +15,8 @@ import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.BidderTenderInListResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderInListResponse;
+import pl.com.tenderflex.payload.response.TenderInListResponse;
 import pl.com.tenderflex.service.TenderService;
 
 @Service
@@ -38,7 +37,7 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<ContractorTenderInListResponse> getByContractor(Integer contractorId, Integer currentPage,
+    public Page<TenderInListResponse<Integer>> getByContractor(Integer contractorId, Integer currentPage,
             Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
@@ -49,7 +48,7 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        List<ContractorTenderInListResponse> tenders = tenderRepository
+        List<TenderInListResponse<Integer>> tenders = tenderRepository
                 .getByContractor(contractorId, tendersPerPage, amountTendersToSkip).stream().map(tender -> tenderMapper
                         .tenderToContractorTenderResponse(tender, offerRepository.countOffersByTender(tender.getId())))
                 .toList();
@@ -57,7 +56,7 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<BidderTenderInListResponse> getByBidder(Integer bidderId, Integer currentPage, Integer tendersPerPage) {
+    public Page<TenderInListResponse<String>> getByBidder(Integer bidderId, Integer currentPage, Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countAllTenders();
         Integer totalPages = 1;
@@ -67,7 +66,7 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        List<BidderTenderInListResponse> tenders = new ArrayList<>();
+        List<TenderInListResponse<String>> tenders = new ArrayList<>();
         tenderRepository.getAll(tendersPerPage, amountTendersToSkip)
                 .forEach(tender -> offerRepository.getBy(tender.getId(), bidderId).ifPresentOrElse(
                         offer -> tenders.add(

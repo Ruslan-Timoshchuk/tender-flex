@@ -5,9 +5,8 @@ import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.BidderTenderInListResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderInListResponse;
+import pl.com.tenderflex.payload.response.TenderInListResponse;
 
 @Mapper(componentModel = "spring")
 public interface TenderMapper {
@@ -37,10 +36,10 @@ public interface TenderMapper {
     @Mapping(target = "cpvCode", source = "tender.cpv.code")
     @Mapping(target = "cpvDescription", source = "tender.cpv.description")
     @Mapping(target = "officialName", source = "tender.contractorCompanyDetails.officialName")
-    @Mapping(target = "status", source = "tender.status")
+    @Mapping(target = "tenderStatus", source = "tender.status")
     @Mapping(target = "deadline", source = "tender.deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "offersAmount", source = "offersAmount")
-    ContractorTenderInListResponse tenderToContractorTenderResponse(Tender tender, Integer offersAmount);
+    @Mapping(target = "offValue", source = "offersAmount")
+    TenderInListResponse<Integer> tenderToContractorTenderResponse(Tender tender, Integer offersAmount);
 
     @Mapping(target = "tenderId", source = "tender.id")
     @Mapping(target = "cpvCode", source = "tender.cpv.code")
@@ -48,8 +47,8 @@ public interface TenderMapper {
     @Mapping(target = "officialName", source = "tender.contractorCompanyDetails.officialName")
     @Mapping(target = "tenderStatus", source = "tender.status")
     @Mapping(target = "deadline", source = "tender.deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "offerStatus", source = "offerStatus")
-    BidderTenderInListResponse tenderToBidderTenderResponse(Tender tender, String offerStatus);
+    @Mapping(target = "offValue", source = "offerStatus")
+    TenderInListResponse<String> tenderToBidderTenderResponse(Tender tender, String offerStatus);
     
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "language", constant = "ENGLISH")
