@@ -6,8 +6,8 @@ import lombok.Data;
 public class ContractorTenderDetailsResponse {
     
     private Integer tenderId;
-    private String organizationName;
-    private String nationalRegistrationNumber;
+    private String companyName;
+    private String registrationNumber;
     private String country;
     private String city;
     private String firstName;
@@ -19,12 +19,12 @@ public class ContractorTenderDetailsResponse {
     private String cpvDescription;
     private String type;
     private String description;
-    private Integer minTenderValue;
     private Integer maxTenderValue;
+    private Integer minTenderValue;
     private String currency;
-    private String tenderPublicationDate;
-    private String deadlineForOfferSubmission;
-    private String deadlineForSignedContractSubmission;
+    private String publicationDate;
+    private String offerSubmissionDeadline;
+    private String signedContractSubmissionDeadline;
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
