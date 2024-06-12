@@ -1,13 +1,10 @@
 package pl.com.tenderflex.service.impl;
 
-import static java.time.LocalDate.*;
-import static pl.com.tenderflex.model.EOfferStatus.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
@@ -31,13 +28,7 @@ public class OfferServiceImpl implements OfferService {
     @Override
     @Transactional
     public void createOffer(OfferDetailsRequest offerDetailsRequest, User bidder) {
-        Offer offer = offerMapper.offerDetailsRequestToOffer(offerDetailsRequest);
-        offer.setTender(tenderRepository.getById(offerDetailsRequest.getTenderId()));
-        offer.setBidder(bidder);
-        offer.setPublicationDate(now());
-        offer.setOfferStatusContractor(OFFER_RECEIVED);
-        offer.setOfferStatusBidder(OFFER_SENT_TO_CONTRACTOR);
-        offerRepository.create(offer);
+        offerRepository.create(offerMapper.newOfferRequestToOffer(offerDetailsRequest, bidder));
     }
 
     @Override

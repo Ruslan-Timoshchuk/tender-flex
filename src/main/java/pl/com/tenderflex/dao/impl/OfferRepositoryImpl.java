@@ -1,15 +1,20 @@
 package pl.com.tenderflex.dao.impl;
 
+import static java.util.stream.Collectors.toSet;
+import static java.util.Optional.*;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.mapper.OfferMapperList;
-import pl.com.tenderflex.dao.mapper.OfferDetailsMapper;
+import pl.com.tenderflex.dao.mapper.OfferMapper;
 import pl.com.tenderflex.dao.mapper.TotalMapper;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Total;
@@ -18,8 +23,10 @@ import pl.com.tenderflex.model.Total;
 @RequiredArgsConstructor
 public class OfferRepositoryImpl implements OfferRepository {
 
-    public static final String ADD_NEW_OFFER_QURY = "INSERT INTO offers(bidder_id, tender_id, organization_id, "
-            + "bid_price, currency_id, publication_date, document_name) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static final String ADD_NEW_OFFER_QUERY = "INSERT INTO offers(bidder_id, tender_id, official_name, registration_number, "
+            + "country_id, city, first_name, last_name, phone_number, bid_price, currency_id, publication_date, document_name, "
+            + "offer_status_bidder, offer_status_contractor) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String GET_OFFERS_BY_BIDDER_QUERY = "SELECT os.id, os.bidder_id, os.status_id, ofst.contractor, "
             + "ofst.bidder, os.organization_id, org.organization_name, org.country_id, co.country_name, os.tender_id, "
             + "cs.description, os.bid_price, os.currency_id, cur.currency_type, os.publication_date, "
@@ -64,8 +71,9 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN countries cs ON cs.id = org.country_id "
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
             + "LEFT JOIN currencies cur ON cur.id = os.currency_id " + "WHERE os.id = ?";
-    public static final String OFFER_IS_EXISTS_BY_TENDER_AND_BIDDER_QUERY = "SELECT EXISTS(SELECT 1 FROM offers "
-            + "WHERE tender_id = ? AND bidder_id = ?)";
+    
+    public static final String GET_OFFER_BY_TENDER_AND_BIDDER_QUERY = "SELECT * FROM offers WHERE tender_id = ? AND bidder_id = ?";
+    
     public static final String GET_TOTAL_BY_BIDDER_QUERY = "SELECT (SELECT COUNT(id) FROM tenders) as tenders, "
             + "(SELECT COUNT(id) from offers WHERE bidder_id = ?) as offers";
     public static final String ADD_AWARD_DECISION_QUERY = "UPDATE offers SET award_decision_name = ?, status_id = ? WHERE id = ?";
@@ -75,22 +83,29 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "reject_decision_name = ? WHERE tender_id = ? AND status_id <= ? AND id != ?";
 
     private final JdbcTemplate jdbcTemplate;
-    private final OfferMapperList offerMapperList;
-    private final OfferDetailsMapper offerDetailsMapper;
+    private final OfferMapper offerMapper;
     private final TotalMapper totalMapper;
 
     @Override
-    public Offer create(Offer offer, Integer bidderId) {
+    public Offer create(Offer offer) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_OFFER_QURY, new String[] { "id" });
-            statement.setInt(1, bidderId);
-            statement.setInt(2, offer.getTenderId());
-            statement.setInt(3, offer.getOrganization().getId());
-            statement.setLong(4, offer.getBidPrice());
-            statement.setInt(5, offer.getCurrency().getId());
-            statement.setObject(6, offer.getPublicationDate());
-            statement.setString(7, offer.getDocumentName());
+            PreparedStatement statement = connection.prepareStatement(ADD_NEW_OFFER_QUERY, new String[] { "id" });
+            statement.setInt(1, offer.getBidder().getId());
+            statement.setInt(2, offer.getTender().getId());
+            statement.setString(3, offer.getBidderCompanyDetails().getOfficialName());
+            statement.setString(4, offer.getBidderCompanyDetails().getRegistrationNumber());
+            statement.setInt(5, offer.getBidderCompanyDetails().getCountry().getId());
+            statement.setString(6, offer.getBidderCompanyDetails().getCity());
+            statement.setString(7, offer.getContactPerson().getFirstName());
+            statement.setString(8, offer.getContactPerson().getLastName());
+            statement.setString(9, offer.getContactPerson().getPhoneNumber());
+            statement.setLong(10, offer.getBidPrice());
+            statement.setInt(11, offer.getCurrency().getId());
+            statement.setObject(12, offer.getPublicationDate());
+            statement.setString(13, offer.getDocumentName());
+            statement.setString(14, offer.getOfferStatusBidder().name());
+            statement.setString(15, offer.getOfferStatusContractor().name());
             return statement;
         }, keyHolder);
         offer.setId(keyHolder.getKeyAs(Integer.class));
@@ -98,21 +113,32 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
+    public Set<Offer> getAllByBidder(Integer bidderId) {
+        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapper, bidderId).stream()
+                .collect(toSet());
+    }
+    
+    @Override
     public List<Offer> getByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapperList, bidderId, amountOffers,
+        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapper, bidderId, amountOffers,
                 amountOffersToSkip);
     }
 
     @Override
     public List<Offer> getByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerMapperList, contractorId, amountOffers,
+        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerMapper, contractorId, amountOffers,
                 amountOffersToSkip);
     }
 
     @Override
     public List<Offer> getByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerMapperList, tenderId, amountOffers,
+        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerMapper, tenderId, amountOffers,
                 amountOffersToSkip);
+    }
+    
+    public Set<Offer> getByTender(Integer tenderId) {
+        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerMapper, tenderId).stream()
+                .collect(toSet());
     }
 
     @Override
@@ -137,13 +163,16 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public Offer getById(Integer offerId) {
-        return jdbcTemplate.queryForObject(GET_OFFER_BY_ID_QUERY, offerDetailsMapper, offerId);
+        return jdbcTemplate.queryForObject(GET_OFFER_BY_ID_QUERY, offerMapper, offerId);
     }
-
+    
     @Override
-    public boolean isExistsOfferByTenderAndBidder(Integer tenderId, Integer bidderId) {
-        return jdbcTemplate.queryForObject(OFFER_IS_EXISTS_BY_TENDER_AND_BIDDER_QUERY, Boolean.class, tenderId,
-                bidderId);
+    public Optional<Offer> getBy(Integer tenderId, Integer bidderId) {
+        try {
+            return of(jdbcTemplate.queryForObject(GET_OFFER_BY_TENDER_AND_BIDDER_QUERY, offerMapper, tenderId, bidderId));
+        } catch (EmptyResultDataAccessException e) {
+            return empty();
+        }
     }
 
     @Override
