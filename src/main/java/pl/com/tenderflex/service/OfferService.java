@@ -8,7 +8,7 @@ import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
-import pl.com.tenderflex.payload.response.OfferResponse;
+import pl.com.tenderflex.payload.response.OfferInListResponse;
 
 public interface OfferService {
 
@@ -16,11 +16,11 @@ public interface OfferService {
 
     OfferDetailsResponse getById(Integer offerId);
 
-    Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
+    Page<OfferInListResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
-    Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
+    Page<OfferInListResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
 
-    Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
+    Page<OfferInListResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
 
     void addAwardDecisionFile(AwardDecisionRequest award);
 

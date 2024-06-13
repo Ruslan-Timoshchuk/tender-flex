@@ -14,7 +14,7 @@ import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
-import pl.com.tenderflex.payload.response.OfferResponse;
+import pl.com.tenderflex.payload.response.OfferInListResponse;
 import pl.com.tenderflex.service.OfferService;
 
 @Service
@@ -32,7 +32,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferInListResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
         Integer totalPages = 1;
@@ -44,11 +44,11 @@ public class OfferServiceImpl implements OfferService {
         }
         return new Page<>(currentPage, totalPages,
                 offerRepository.getByBidder(bidderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::offerToOfferResponse).toList());
+                        .map(offerMapper::offerToOfferInListBidderResponse).toList());
     }
 
     @Override
-    public Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferInListResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByContractor(contractorId);
         Integer totalPages = 1;
@@ -60,11 +60,11 @@ public class OfferServiceImpl implements OfferService {
         }
         return new Page<>(currentPage, totalPages,
                 offerRepository.getByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::offerToOfferResponse).toList());
+                        .map(offerMapper::offerToOfferInListContractorResponse).toList());
     }
 
     @Override
-    public Page<OfferResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferInListResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByTender(tenderId);
         Integer totalPages = 1;
