@@ -67,9 +67,13 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN countries cs ON cs.id = org.country_id "
             + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
             + "LEFT JOIN currencies cur ON cur.id = os.currency_id " + "WHERE os.id = ?";
-    
-    public static final String GET_OFFER_BY_TENDER_AND_BIDDER_QUERY = "SELECT * FROM offers WHERE tender_id = ? AND bidder_id = ?";
-    
+    public static final String GET_OFFER_BY_TENDER_AND_BIDDER_QUERY = "SELECT o.id, bidder_id, tender_id, official_name, registration_number, "
+            + "country_id, country_name, city, first_name, last_name, phone_number, bid_price, currency_id, currency_type, publication_date, "
+            + "document_name, offer_status_bidder, offer_status_contractor "
+            + "FROM offers o "
+            + "LEFT JOIN countries c ON c.id = o.country_id "
+            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
+            + "WHERE tender_id = ? AND bidder_id = ?";
     public static final String GET_TOTAL_BY_BIDDER_QUERY = "SELECT (SELECT COUNT(id) FROM tenders) as tenders, "
             + "(SELECT COUNT(id) from offers WHERE bidder_id = ?) as offers";
     public static final String ADD_AWARD_DECISION_QUERY = "UPDATE offers SET award_decision_name = ?, status_id = ? WHERE id = ?";
@@ -132,6 +136,7 @@ public class OfferRepositoryImpl implements OfferRepository {
                 amountOffersToSkip);
     }
     
+    @Override
     public Set<Offer> getByTender(Integer tenderId) {
         return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerMapper, tenderId).stream()
                 .collect(toSet());
@@ -147,10 +152,12 @@ public class OfferRepositoryImpl implements OfferRepository {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_CONTRACTOR, Integer.class, contractorId);
     }
 
+    
     @Override
     public Integer countOffersByTender(Integer tenderId) {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER, Integer.class, tenderId);
     }
+     
 
     @Override
     public Integer countActiveOffersByTender(Integer tenderId, Integer activeOfferStatusId) {
@@ -163,7 +170,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
     
     @Override
-    public Optional<Offer> getBy(Integer tenderId, Integer bidderId) {
+    public Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId) {
         try {
             return of(jdbcTemplate.queryForObject(GET_OFFER_BY_TENDER_AND_BIDDER_QUERY, offerMapper, tenderId, bidderId));
         } catch (EmptyResultDataAccessException e) {

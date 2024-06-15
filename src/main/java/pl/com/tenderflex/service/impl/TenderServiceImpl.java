@@ -2,7 +2,6 @@ package pl.com.tenderflex.service.impl;
 
 import static pl.com.tenderflex.model.ETenderStatus.*;
 import static pl.com.tenderflex.model.EOfferStatus.*;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import pl.com.tenderflex.service.TenderService;
 @Service
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
-    
+
     private final TenderMapper tenderMapper;
     private final TenderRepository tenderRepository;
     private final OfferRepository offerRepository;
@@ -37,7 +36,7 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<TenderInListResponse<Integer>> getByContractor(Integer contractorId, Integer currentPage,
+    public Page<TenderInListResponse<Integer>> getContractorPage(Integer contractorId, Integer currentPage,
             Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
@@ -56,7 +55,8 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<TenderInListResponse<String>> getByBidder(Integer bidderId, Integer currentPage, Integer tendersPerPage) {
+    public Page<TenderInListResponse<String>> getBidderPage(Integer bidderId, Integer currentPage,
+            Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countAllTenders();
         Integer totalPages = 1;
@@ -66,14 +66,12 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        List<TenderInListResponse<String>> tenders = new ArrayList<>();
-        tenderRepository.getAll(tendersPerPage, amountTendersToSkip)
-                .forEach(tender -> offerRepository.getBy(tender.getId(), bidderId).ifPresentOrElse(
-                        offer -> tenders.add(
-                                tenderMapper.tenderToBidderTenderResponse(tender, offer.getOfferStatusBidder().name())),
-                        () -> tenders
-                                .add(tenderMapper.tenderToBidderTenderResponse(tender, OFFER_HAS_NOT_SENT.name()))));
-        return new Page<>(currentPage, totalPages, tenders);
+        return new Page<>(currentPage, totalPages, tenderRepository.getTendersPage(tendersPerPage, amountTendersToSkip)
+                .stream()
+                .map(tender -> tenderMapper.tenderToBidderTenderResponse(tender,
+                        offerRepository.findOfferByTenderAndBidder(tender.getId(), bidderId)
+                                .map(offer -> offer.getOfferStatusBidder().name()).orElse(OFFER_HAS_NOT_SENT.name())))
+                .toList());
     }
 
     @Override
@@ -90,14 +88,13 @@ public class TenderServiceImpl implements TenderService {
     public BidderTenderDetailsResponse getByIdForBidder(Integer tenderId, Integer bidderId) {
         Tender tender = tenderRepository.getById(tenderId);
         BidderTenderDetailsResponse tenderDetails = tenderMapper.tenderToBidderTenderDetailsResponse(tender);
-        offerRepository.getAllByBidder(bidderId).forEach(offer -> {
-            if(!offer.getTender().equals(tender)) {
-                tenderDetails.setOfferStatusBidder(OFFER_HAS_NOT_SENT.name());
-            } else {
-                tenderDetails.setOfferStatusBidder(offer.getOfferStatusBidder().name());
-                tenderDetails.setTenderStatusContractor(tender.getStatus().name());
-            }
-        });
+        /*
+         * offerRepository.getAllByBidder(bidderId).forEach(offer -> {
+         * if(!offer.getTender().equals(tender)) {
+         * tenderDetails.setOfferStatusBidder(OFFER_HAS_NOT_SENT.name()); } else {
+         * tenderDetails.setOfferStatusBidder(offer.getOfferStatusBidder().name());
+         * tenderDetails.setTenderStatusContractor(tender.getStatus().name()); } });
+         */
         return tenderDetails;
     }
 }

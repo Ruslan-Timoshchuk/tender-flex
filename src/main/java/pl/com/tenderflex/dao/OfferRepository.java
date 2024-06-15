@@ -1,14 +1,18 @@
 package pl.com.tenderflex.dao;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Total;
 
 public interface OfferRepository {
 
-    Offer create(Offer offer, Integer bidderId);
+    Offer create(Offer offer);
     
-    List<Offer> getByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
+    Set<Offer> getAllByBidder(Integer bidderId);
+    
+    Set<Offer> getByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
     
     List<Offer> getByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
     
@@ -23,8 +27,6 @@ public interface OfferRepository {
     Integer countActiveOffersByTender(Integer tenderId, Integer activeOfferStatusId);
     
     Offer getById(Integer offerId);
-
-    boolean isExistsOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
     
     Total getTotalTendersAndOffersByBidder(Integer bidderId);
 
@@ -36,5 +38,9 @@ public interface OfferRepository {
 
     void  updateOffersStatus(Integer statusId, String rejectDecisionName, Integer tenderId,
             Integer statusOfActiveOffers, Integer offerId);
+
+    Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
+
+    Set<Offer> getByTender(Integer tenderId);
 
 }

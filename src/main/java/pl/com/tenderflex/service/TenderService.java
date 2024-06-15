@@ -11,9 +11,9 @@ public interface TenderService {
 
     void createTender(TenderDetailsRequest tenderDetails, User contractor);
     
-    Page<TenderInListResponse<Integer>> getByContractor(Integer contractorId, Integer currentPage, Integer tendersPerPage);
+    Page<TenderInListResponse<Integer>> getContractorPage(Integer contractorId, Integer currentPage, Integer tendersPerPage);
 
-    Page<TenderInListResponse<String>> getByBidder(Integer bidderId, Integer currentPage, Integer tendersPerPage);
+    Page<TenderInListResponse<String>> getBidderPage(Integer bidderId, Integer currentPage, Integer tendersPerPage);
 
     ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
     
