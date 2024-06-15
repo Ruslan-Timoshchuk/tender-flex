@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
@@ -17,7 +19,7 @@ import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.payload.response.DecisionResponse;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
-import pl.com.tenderflex.payload.response.OfferResponse;
+import pl.com.tenderflex.payload.response.OfferInListResponse;
 import pl.com.tenderflex.service.OfferService;
 
 @RestController
@@ -29,9 +31,9 @@ public class OfferController {
 
     @Secured("BIDDER")
     @PostMapping
-    public void createOffer(@AuthenticationPrincipal(expression = "id") Integer bidderId,
+    public void createOffer(@AuthenticationPrincipal User bidder,
             @RequestBody OfferDetailsRequest offer) {
-        offerService.createOffer(offer, bidderId);
+        offerService.createOffer(offer, bidder);
     }
 
     @Secured({ "BIDDER", "CONTRACTOR" })
@@ -42,7 +44,7 @@ public class OfferController {
 
     @Secured("BIDDER")
     @GetMapping("/list/bidder")
-    public Page<OfferResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId,
+    public Page<OfferInListResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return offerService.getOffersByBidder(bidderId, currentPage, offersPerPage);
@@ -50,7 +52,7 @@ public class OfferController {
 
     @Secured("CONTRACTOR")
     @GetMapping("/list/contractor")
-    public Page<OfferResponse> getAllByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId,
+    public Page<OfferInListResponse> getAllByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return offerService.getOffersByContractor(contractorId, currentPage, offersPerPage);
@@ -58,7 +60,7 @@ public class OfferController {
 
     @Secured("CONTRACTOR")
     @GetMapping("/list/{tender_id}")
-    public Page<OfferResponse> getAllByTender(@PathVariable("tender_id") Integer tenderId,
+    public Page<OfferInListResponse> getAllByTender(@PathVariable("tender_id") Integer tenderId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return offerService.getOffersByTender(tenderId, currentPage, offersPerPage);

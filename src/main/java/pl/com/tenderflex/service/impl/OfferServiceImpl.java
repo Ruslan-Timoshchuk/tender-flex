@@ -43,7 +43,7 @@ public class OfferServiceImpl implements OfferService {
             }
         }
         return new Page<>(currentPage, totalPages,
-                offerRepository.getByBidder(bidderId, offersPerPage, amountOffersToSkip).stream()
+                offerRepository.getPageByBidder(bidderId, offersPerPage, amountOffersToSkip).stream()
                         .map(offerMapper::offerToOfferInListBidderResponse).toList());
     }
 

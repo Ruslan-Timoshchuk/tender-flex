@@ -10,9 +10,7 @@ public interface OfferRepository {
 
     Offer create(Offer offer);
     
-    Set<Offer> getAllByBidder(Integer bidderId);
-    
-    Set<Offer> getByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
+    Set<Offer> getPageByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
     
     List<Offer> getByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
     

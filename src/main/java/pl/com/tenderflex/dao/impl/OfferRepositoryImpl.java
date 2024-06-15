@@ -33,15 +33,13 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN countries co ON co.id = o.country_id "
             + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
             + "WHERE bidder_id = ? LIMIT ? OFFSET ?";
-    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT os.id, os.bidder_id, os.status_id, ofst.contractor, "
-            + "ofst.bidder, os.organization_id, org.organization_name, org.country_id, co.country_name, os.tender_id, "
-            + "cs.description, os.bid_price, os.currency_id, cur.currency_type, os.publication_date, "
-            + "COALESCE(os.award_decision_name, 'OFFER IS NOT AWARDED') AS award_decision_name, "
-            + "COALESCE(os.reject_decision_name, 'OFFER IS NOT REJECTED') AS reject_decision_name FROM offers os "
-            + "LEFT JOIN organizations org ON org.id = os.organization_id "
-            + "LEFT JOIN countries co ON co.id = org.country_id LEFT JOIN tenders ten ON ten.id = os.tender_id "
-            + "LEFT JOIN offer_statuses ofst ON ofst.id = os.status_id LEFT JOIN cpvs cs ON cs.id = ten.cpv_id "
-            + "LEFT JOIN currencies cur ON cur.id = os.currency_id "
+    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT o.id, bidder_id, tender_id, o.official_name, o.registration_number, "
+            + "o.country_id, country_name, o.city, o.first_name, o.last_name, o.phone_number, bid_price, o.currency_id, currency_type, o.publication_date, "
+            + "document_name, offer_status_bidder, offer_status_contractor "
+            + "FROM offers o "
+            + "LEFT JOIN countries c ON c.id = o.country_id "
+            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
+            + "LEFT JOIN tenders t ON t.id = tender_id "
             + "WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String GET_OFFERS_BY_TENDER_QUERY = "SELECT os.id, os.bidder_id, os.status_id, ofst.contractor, ofst.bidder, "
             + "os.organization_id, org.organization_name, org.country_id, co.country_name, os.tender_id, cs.description, "
@@ -111,15 +109,9 @@ public class OfferRepositoryImpl implements OfferRepository {
         offer.setId(keyHolder.getKeyAs(Integer.class));
         return offer;
     }
-
-    @Override
-    public Set<Offer> getAllByBidder(Integer bidderId) {
-        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapper, bidderId).stream()
-                .collect(toSet());
-    }
     
     @Override
-    public Set<Offer>getByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip) {
+    public Set<Offer>getPageByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip) {
         return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapper, bidderId, amountOffers,
                 amountOffersToSkip).stream().collect(toSet()) ;
     }

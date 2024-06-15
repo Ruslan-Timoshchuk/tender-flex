@@ -12,7 +12,6 @@ public class Offer {
     private Integer id;
     private User bidder;
     private Tender tender;
-    private String fieldOfTheTender;
     private CompanyDetails bidderCompanyDetails;
     private ContactPerson contactPerson;
     private Integer bidPrice;
