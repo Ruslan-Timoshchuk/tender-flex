@@ -56,15 +56,13 @@ public class OfferRepositoryImpl implements OfferRepository {
             + "LEFT JOIN tenders ten ON ten.id = os.tender_id WHERE contractor_id = ?";
     public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ?";
     public static final String COUNT_ACTIVE_OFFERS_BY_TENDER = "SELECT count(id) FROM offers WHERE tender_id = ? AND status_id <= ?";
-    public static final String GET_OFFER_BY_ID_QUERY = "SELECT os.id, os.bidder_id, os.status_id, ost.contractor, ost.bidder, "
-            + "os.organization_id, org.organization_name, org.national_registration_number, org.country_id, cs.country_name, "
-            + "org.city, org.contact_person_id, cp.first_name, cp.last_name, cp.phone, os.bid_price, os.currency_id, cur.currency_type, "
-            + "os.document_name, os.award_decision_name, os.reject_decision_name " + "FROM offers os "
-            + "LEFT JOIN offer_statuses ost ON ost.id = os.status_id "
-            + "LEFT JOIN organizations org ON org.id = os.organization_id "
-            + "LEFT JOIN countries cs ON cs.id = org.country_id "
-            + "LEFT JOIN contact_persons cp ON cp.id = org.contact_person_id "
-            + "LEFT JOIN currencies cur ON cur.id = os.currency_id " + "WHERE os.id = ?";
+    public static final String GET_OFFER_BY_ID_QUERY = "SELECT o.id, bidder_id, tender_id, official_name, registration_number, "
+            + "country_id, country_name, city, first_name, last_name, phone_number, bid_price, currency_id, currency_type, publication_date, "
+            + "document_name, offer_status_bidder, offer_status_contractor "
+            + "FROM offers o "
+            + "LEFT JOIN countries c ON c.id = o.country_id "
+            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
+            + "WHERE o.id = ?";
     public static final String GET_OFFER_BY_TENDER_AND_BIDDER_QUERY = "SELECT o.id, bidder_id, tender_id, official_name, registration_number, "
             + "country_id, country_name, city, first_name, last_name, phone_number, bid_price, currency_id, currency_type, publication_date, "
             + "document_name, offer_status_bidder, offer_status_contractor "

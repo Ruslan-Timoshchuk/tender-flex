@@ -13,6 +13,7 @@ import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.dao.impl.TenderRepositoryImpl;
 import pl.com.tenderflex.dao.impl.UserRepositoryImpl;
 import pl.com.tenderflex.model.CompanyDetails;
+import pl.com.tenderflex.model.ContactPerson;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class OfferMapper implements RowMapper<Offer> {
                  .bidder(userRepository.getById(resultSet.getInt("bidder_id")))
                  .tender(tenderRepository.getById(resultSet.getInt("tender_id")))
                  .bidderCompanyDetails(mapCompanyDetails(resultSet))
+                 .contactPerson(mapContactPerson(resultSet))
                  .bidPrice(resultSet.getInt("bid_price"))
                  .currency(mapCurrency(resultSet))
                  .publicationDate(resultSet.getObject("publication_date", LocalDate.class))
@@ -51,6 +53,14 @@ public class OfferMapper implements RowMapper<Offer> {
         return Country.builder()
                 .id(resultSet.getInt("country_id"))
                 .countryName(resultSet.getString("country_name"))
+                .build();
+    }
+    
+    private ContactPerson mapContactPerson(ResultSet resultSet) throws SQLException {
+        return ContactPerson.builder()
+                .firstName(resultSet.getString("first_name"))
+                .lastName(resultSet.getString("last_name"))
+                .phoneNumber(resultSet.getString("phone_number"))
                 .build();
     }
     

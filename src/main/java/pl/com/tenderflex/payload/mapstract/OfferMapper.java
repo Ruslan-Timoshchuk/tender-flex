@@ -8,7 +8,7 @@ import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.response.OfferDetailsResponse;
 import pl.com.tenderflex.payload.response.OfferInListResponse;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TenderMapper.class)
 public interface OfferMapper {
 
     @Mapping(target = "bidder.id", source = "bidder.id")
@@ -59,6 +59,14 @@ public interface OfferMapper {
     OfferInListResponse offerToOfferResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "tender", source = "tender")
+    @Mapping(target = "bidderCompanyName", source = "bidderCompanyDetails.officialName")
+    @Mapping(target = "registrationNumber", source = "bidderCompanyDetails.registrationNumber")
+    @Mapping(target = "country", source = "bidderCompanyDetails.country.countryName")
+    @Mapping(target = "city", source = "bidderCompanyDetails.city")
+    @Mapping(target = "firstName", source = "contactPerson.firstName")
+    @Mapping(target = "lastName", source = "contactPerson.lastName")
+    @Mapping(target = "phone", source = "contactPerson.phoneNumber")
     @Mapping(target = "bidPrice", source = "bidPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
     @Mapping(target = "documentName", source = "documentName")

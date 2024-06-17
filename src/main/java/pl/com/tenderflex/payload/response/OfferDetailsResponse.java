@@ -6,10 +6,11 @@ import lombok.Data;
 public class OfferDetailsResponse {
 
     private Integer offerId;
+    private BidderTenderDetailsResponse tender;
     private String contractorSt;
     private String bidderSt;
-    private String organizationNameByBidder;
-    private String nationalRegistrationNumber;
+    private String bidderCompanyName;
+    private String registrationNumber;
     private String country;
     private String city;
     private String firstName;
