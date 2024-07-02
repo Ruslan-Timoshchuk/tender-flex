@@ -3,7 +3,6 @@ package pl.com.tenderflex.dao.impl;
 import static java.util.stream.Collectors.toSet;
 import java.sql.PreparedStatement;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -63,7 +62,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     private final JdbcTemplate jdbcTemplate;
     private final TenderMapper tenderMapper;
     private final TotalMapper totalMapper;
- 
+    
     @Override
     public Tender create(Tender tender) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -108,9 +107,9 @@ public class TenderRepositoryImpl implements TenderRepository {
     }
     
     @Override
-    public Set<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip) {
+    public Set<Tender> getTendersPage(Integer amountTenders, Integer amountTendersToSkip) {
         return jdbcTemplate.query(GET_ALL_TENDERS, tenderMapper, amountTenders, amountTendersToSkip).stream()
-                .collect(Collectors.toSet());
+                .collect(toSet());
     }
 
     @Override

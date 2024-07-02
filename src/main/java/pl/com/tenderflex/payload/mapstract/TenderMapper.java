@@ -1,11 +1,13 @@
 package pl.com.tenderflex.payload.mapstract;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
 import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
 import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
+import pl.com.tenderflex.payload.response.OfferInListResponse;
 import pl.com.tenderflex.payload.response.TenderInListResponse;
 
 @Mapper(componentModel = "spring")
@@ -50,6 +52,32 @@ public interface TenderMapper {
     @Mapping(target = "offValue", source = "offerStatus")
     TenderInListResponse<String> tenderToBidderTenderResponse(Tender tender, String offerStatus);
     
+    @Mapping(target = "tenderId", source = "tender.id")
+    @Mapping(target = "companyName", source = "tender.contractorCompanyDetails.officialName")
+    @Mapping(target = "registrationNumber", source = "tender.contractorCompanyDetails.registrationNumber")
+    @Mapping(target = "country", source = "tender.contractorCompanyDetails.country.countryName")
+    @Mapping(target = "city", source = "tender.contractorCompanyDetails.city")
+    @Mapping(target = "firstName", source = "tender.contactPerson.firstName")
+    @Mapping(target = "lastName", source = "tender.contactPerson.lastName")
+    @Mapping(target = "phone", source = "tender.contactPerson.phoneNumber")
+    @Mapping(target = "procedure", constant = "OPEN_PROCEDURE")
+    @Mapping(target = "language", constant = "ENGLISH")
+    @Mapping(target = "cpvCode", source = "tender.cpv.code")
+    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
+    @Mapping(target = "type", source = "tender.type.title")
+    @Mapping(target = "description", source = "tender.details")
+    @Mapping(target = "maxTenderValue", source = "tender.maxPrice")
+    @Mapping(target = "minTenderValue", source = "tender.minPrice")
+    @Mapping(target = "currency", source = "tender.currency.currencyType")
+    @Mapping(target = "publicationDate", source = "tender.publication", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "offerSubmissionDeadline", source = "tender.deadline", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "signedContractSubmissionDeadline", source = "tender.signedContractDeadline", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "contractFileName", source = "tender.contractFileName")
+    @Mapping(target = "awardDecisionFileName", source = "tender.awardDecisionFileName")
+    @Mapping(target = "rejectDecisionFileName", source = "tender.rejectDecisionFileName")
+    @Mapping(target = "offers", source = "offers")
+    ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender, List<OfferInListResponse>offers);
+    
     @Mapping(target = "tenderId", source = "id")
     @Mapping(target = "companyName", source = "contractorCompanyDetails.officialName")
     @Mapping(target = "registrationNumber", source = "contractorCompanyDetails.registrationNumber")
@@ -64,28 +92,11 @@ public interface TenderMapper {
     @Mapping(target = "cpvDescription", source = "cpv.description")
     @Mapping(target = "type", source = "type.title")
     @Mapping(target = "description", source = "details")
-    @Mapping(target = "maxTenderValue", source = "maxPrice")
     @Mapping(target = "minTenderValue", source = "minPrice")
     @Mapping(target = "currency", source = "currency.currencyType")
     @Mapping(target = "publicationDate", source = "publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerSubmissionDeadline", source = "deadline", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "signedContractSubmissionDeadline", source = "signedContractDeadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "contractFileName", source = "contractFileName")
-    @Mapping(target = "awardDecisionFileName", source = "awardDecisionFileName")
-    @Mapping(target = "rejectDecisionFileName", source = "rejectDecisionFileName")
-    ContractorTenderDetailsResponse tenderToContractorTenderDetailsResponse(Tender tender);
-    
-    @Mapping(target = "tenderId", source = "id")
-    @Mapping(target = "language", constant = "ENGLISH")
-    @Mapping(target = "cpvCode", source = "cpv.code")
-    @Mapping(target = "cpvDescription", source = "cpv.description")
-    @Mapping(target = "type", source = "type.title")
-    @Mapping(target = "description", source = "details")
-    @Mapping(target = "minTenderValue", source = "minPrice")
-    @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "tenderPublicationDate", source = "publication", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "deadlineForOfferSubmission", source = "deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "deadlineForSignedContractSubmission", source = "signedContractDeadline", dateFormat = "dd-MM-yyyy")
     @Mapping(target = "contractFileName", source = "contractFileName")
     BidderTenderDetailsResponse tenderToBidderTenderDetailsResponse(Tender tender);
 }

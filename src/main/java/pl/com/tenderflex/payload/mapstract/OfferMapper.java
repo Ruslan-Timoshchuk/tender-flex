@@ -2,6 +2,8 @@ package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import pl.com.tenderflex.model.EOfferStatus;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
@@ -28,35 +30,15 @@ public interface OfferMapper {
     @Mapping(target = "offerStatusContractor", expression = "java(pl.com.tenderflex.model.EOfferStatus.OFFER_RECEIVED)")
     Offer newOfferRequestToOffer(OfferDetailsRequest offerDetails, User bidder);
         
-    @Mapping(target = "offerId", source = "id")
-    @Mapping(target = "bidderOficialName", source = "bidderCompanyDetails.officialName")
-    @Mapping(target = "country", source = "bidderCompanyDetails.country.countryName")
-    @Mapping(target = "fieldOfTheTender", source = "tender.cpv.description")
-    @Mapping(target = "price", source = "bidPrice")
-    @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "date", source = "publicationDate", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "status", source = "offerStatusBidder")
-    OfferInListResponse offerToOfferInListBidderResponse(Offer offer);
-    
-    @Mapping(target = "offerId", source = "id")
-    @Mapping(target = "bidderOficialName", source = "bidderCompanyDetails.officialName")
-    @Mapping(target = "country", source = "bidderCompanyDetails.country.countryName")
-    @Mapping(target = "fieldOfTheTender", source = "tender.cpv.description")
-    @Mapping(target = "price", source = "bidPrice")
-    @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "date", source = "publicationDate", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "status", source = "offerStatusContractor")
-    OfferInListResponse offerToOfferInListContractorResponse(Offer offer);
-    
-    @Mapping(target = "offerId", source = "id")
-    @Mapping(target = "bidderOficialName", source = "bidderCompanyDetails.officialName")
-    @Mapping(target = "country", source = "bidderCompanyDetails.country.countryName")
-    @Mapping(target = "fieldOfTheTender", source = "tender.cpv.description")
-    @Mapping(target = "price", source = "bidPrice")
-    @Mapping(target = "currency", source = "currency.currencyType")
-    @Mapping(target = "date", source = "publicationDate")
-    @Mapping(target = "status", source = "offerStatusContractor")
-    OfferInListResponse offerToOfferResponse(Offer offer);
+    @Mapping(target = "offerId", source = "offer.id")
+    @Mapping(target = "bidderOficialName", source = "offer.bidderCompanyDetails.officialName")
+    @Mapping(target = "country", source = "offer.bidderCompanyDetails.country.countryName")
+    @Mapping(target = "fieldOfTheTender", source = "offer.tender.cpv.description")
+    @Mapping(target = "price", source = "offer.bidPrice")
+    @Mapping(target = "currency", source = "offer.currency.currencyType")
+    @Mapping(target = "date", source = "offer.publicationDate", dateFormat = "dd-MM-yyyy")
+    @Mapping(target = "status", source = "status")
+    OfferInListResponse offerToOfferInListResponse(Offer offer, EOfferStatus status);
     
     @Mapping(target = "offerId", source = "id")
     @Mapping(target = "tender", source = "tender")

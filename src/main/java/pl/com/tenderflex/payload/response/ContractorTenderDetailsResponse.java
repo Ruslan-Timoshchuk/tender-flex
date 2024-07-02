@@ -1,5 +1,7 @@
 package pl.com.tenderflex.payload.response;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -28,5 +30,6 @@ public class ContractorTenderDetailsResponse {
     private String contractFileName;
     private String awardDecisionFileName;
     private String rejectDecisionFileName;
+    private List<OfferInListResponse>offers;
     
 }

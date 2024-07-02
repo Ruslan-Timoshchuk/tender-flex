@@ -44,11 +44,13 @@ public class OfferServiceImpl implements OfferService {
         }
         return new Page<>(currentPage, totalPages,
                 offerRepository.getPageByBidder(bidderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::offerToOfferInListBidderResponse).toList());
+                        .map(offer -> offerMapper.offerToOfferInListResponse(offer, offer.getOfferStatusBidder()))
+                        .toList());
     }
 
     @Override
-    public Page<OfferInListResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferInListResponse> getOffersByContractor(Integer contractorId, Integer currentPage,
+            Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByContractor(contractorId);
         Integer totalPages = 1;
@@ -59,24 +61,10 @@ public class OfferServiceImpl implements OfferService {
             }
         }
         return new Page<>(currentPage, totalPages,
-                offerRepository.getByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::offerToOfferInListContractorResponse).toList());
-    }
-
-    @Override
-    public Page<OfferInListResponse> getOffersByTender(Integer tenderId, Integer currentPage, Integer offersPerPage) {
-        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
-        Integer allOffersAmount = offerRepository.countOffersByTender(tenderId);
-        Integer totalPages = 1;
-        if (allOffersAmount >= offersPerPage) {
-            totalPages = allOffersAmount / offersPerPage;
-            if (allOffersAmount % offersPerPage > 0) {
-                totalPages++;
-            }
-        }
-        return new Page<>(currentPage, totalPages,
-                offerRepository.getByTender(tenderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::offerToOfferResponse).toList());
+                offerRepository.getPageByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
+                        .map(offer -> offerMapper.offerToOfferInListResponse(offer,
+                                 offer.getOfferStatusContractor()))
+                        .toList());
     }
 
     @Override
