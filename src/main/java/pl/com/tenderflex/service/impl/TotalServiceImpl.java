@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
+import pl.com.tenderflex.payload.iresponse.response.TotalResponse;
 import pl.com.tenderflex.payload.mapstract.TotalMapper;
-import pl.com.tenderflex.payload.response.TotalResponse;
 import pl.com.tenderflex.service.TotalService;
 
 @Service

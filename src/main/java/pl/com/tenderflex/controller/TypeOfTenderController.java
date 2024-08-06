@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.response.TypeOfTenderResponse;
+import pl.com.tenderflex.payload.iresponse.response.TypeOfTenderResponse;
 import pl.com.tenderflex.service.TypeOfTenderService;
 
 @RestController

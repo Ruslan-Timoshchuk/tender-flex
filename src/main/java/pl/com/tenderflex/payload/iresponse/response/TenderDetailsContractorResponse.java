@@ -1,11 +1,11 @@
-package pl.com.tenderflex.payload.response;
+package pl.com.tenderflex.payload.iresponse.response;
 
 import java.util.List;
-
 import lombok.Data;
+import pl.com.tenderflex.payload.iresponse.TenderDetails;
 
 @Data
-public class ContractorTenderDetailsResponse {
+public class TenderDetailsContractorResponse implements TenderDetails {
     
     private Integer tenderId;
     private String companyName;

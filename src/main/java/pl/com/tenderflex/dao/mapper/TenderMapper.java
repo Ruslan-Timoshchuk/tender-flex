@@ -50,7 +50,7 @@ public class TenderMapper implements RowMapper<Tender> {
         }
     }
 
-    private CompanyDetails mapCompanyDetails(ResultSet resultSet) throws SQLException {
+    protected CompanyDetails mapCompanyDetails(ResultSet resultSet) throws SQLException {
         return CompanyDetails.builder()
                 .officialName(resultSet.getString("official_name"))
                 .registrationNumber(resultSet.getString("registration_number"))
@@ -66,7 +66,7 @@ public class TenderMapper implements RowMapper<Tender> {
                 .build();
     }
 
-    private ContactPerson mapContactPerson(ResultSet resultSet) throws SQLException {
+    protected ContactPerson mapContactPerson(ResultSet resultSet) throws SQLException {
         return ContactPerson.builder()
                 .firstName(resultSet.getString("first_name"))
                 .lastName(resultSet.getString("last_name"))
@@ -89,7 +89,7 @@ public class TenderMapper implements RowMapper<Tender> {
                 .build();
     }
 
-    private Currency mapCurrency(ResultSet resultSet) throws SQLException {
+    protected Currency mapCurrency(ResultSet resultSet) throws SQLException {
         return Currency.builder()
                 .id(resultSet.getInt("currency_id"))
                 .currencyType(resultSet.getString("currency_type"))

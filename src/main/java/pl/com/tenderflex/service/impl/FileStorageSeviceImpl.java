@@ -11,7 +11,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.response.MultipartFileResponse;
+import pl.com.tenderflex.payload.iresponse.response.MultipartFileResponse;
 import pl.com.tenderflex.service.FileStorageService;
 
 @Service

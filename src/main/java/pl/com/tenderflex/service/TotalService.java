@@ -1,6 +1,6 @@
 package pl.com.tenderflex.service;
 
-import pl.com.tenderflex.payload.response.TotalResponse;
+import pl.com.tenderflex.payload.iresponse.response.TotalResponse;
 
 public interface TotalService {
 

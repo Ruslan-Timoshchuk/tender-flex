@@ -1,6 +1,9 @@
 package pl.com.tenderflex.controller;
 
+import java.util.Collection;
+
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.iresponse.TenderDetails;
+import pl.com.tenderflex.payload.iresponse.response.TenderDetailsContractorResponse;
+import pl.com.tenderflex.payload.iresponse.response.TenderInListResponse;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
-import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.TenderInListResponse;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
 
@@ -37,7 +40,7 @@ public class TenderController {
     public Page<TenderInListResponse<Integer>> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage,
             @AuthenticationPrincipal(expression = "id") Integer contractorId) {
-        return tenderService.getByContractor(contractorId, currentPage, tendersPerPage);
+        return tenderService.getContractorPage(contractorId, currentPage, tendersPerPage);
     }
 
     @Secured("BIDDER")
@@ -45,25 +48,14 @@ public class TenderController {
     public Page<TenderInListResponse<String>> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
-        return tenderService.getByBidder(bidderId, currentPage, tendersPerPage);
+        return tenderService.getBidderPage(bidderId, currentPage, tendersPerPage);
     }
 
-    @Secured("CONTRACTOR")
-    @GetMapping("/details/contractor/{id}")
-    public ContractorTenderDetailsResponse getTenderByIdForContractor(@PathVariable("id") Integer tenderId) {
-        return tenderService.getByIdForContractor(tenderId);
-    }
-    
-    @Secured("BIDDER")
-    @GetMapping("/details/offer/{id}")
-    public BidderTenderDetailsResponse getTenderByOfferId(@PathVariable("id") Integer offerId) {
-        return tenderService.getTenderByOfferId(offerId);
-    }
-     
-    @Secured("BIDDER")
-    @GetMapping("/details/bidder/{id}")
-    public BidderTenderDetailsResponse getTenderByIdForBidder(@PathVariable("id") Integer tenderId, 
-            @AuthenticationPrincipal(expression = "id") Integer bidderId) {
-        return tenderService.getByIdForBidder(tenderId, bidderId);
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping("/details/{id}")
+    public TenderDetails getTenderDetailsById(
+            @AuthenticationPrincipal(expression = "authorities") Collection<GrantedAuthority> authorities,
+            @PathVariable("id") Integer tenderId) {
+        return tenderService.getTenderDetails(tenderId, authorities);
     }
 }

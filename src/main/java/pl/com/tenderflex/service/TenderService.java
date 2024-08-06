@@ -1,11 +1,14 @@
 package pl.com.tenderflex.service;
 
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.iresponse.TenderDetails;
+import pl.com.tenderflex.payload.iresponse.response.TenderInListResponse;
 import pl.com.tenderflex.payload.request.TenderDetailsRequest;
-import pl.com.tenderflex.payload.response.BidderTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.TenderInListResponse;
 
 public interface TenderService {
 
@@ -15,10 +18,6 @@ public interface TenderService {
 
     Page<TenderInListResponse<String>> getBidderPage(Integer bidderId, Integer currentPage, Integer tendersPerPage);
 
-    ContractorTenderDetailsResponse getByIdForContractor(Integer tenderId);
+    TenderDetails getTenderDetails(Integer tenderId, Collection<GrantedAuthority> authorities);
     
-    BidderTenderDetailsResponse getByIdForBidder(Integer tenderId, Integer bidderId);
-
-    BidderTenderDetailsResponse getTenderByOfferId(Integer offerId);
-
 }

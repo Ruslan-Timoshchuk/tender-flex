@@ -2,7 +2,7 @@ package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import pl.com.tenderflex.model.TypeOfTender;
-import pl.com.tenderflex.payload.response.TypeOfTenderResponse;
+import pl.com.tenderflex.payload.iresponse.response.TypeOfTenderResponse;
 
 @Mapper(componentModel = "spring")
 public interface TypeOfTenderMapper {

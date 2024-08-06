@@ -1,9 +1,9 @@
-package pl.com.tenderflex.payload.response;
+package pl.com.tenderflex.payload.iresponse.response;
 
 import lombok.Data;
 
 @Data
-public class BidderTenderInListResponse {
+public class TenderInListResponse<T> {
 
     private Integer tenderId;
     private String cpvCode;
@@ -11,6 +11,6 @@ public class BidderTenderInListResponse {
     private String officialName;
     private String tenderStatus;
     private String deadline;
-    private String offerStatus;
-    
+    private T offValue;
+
 }

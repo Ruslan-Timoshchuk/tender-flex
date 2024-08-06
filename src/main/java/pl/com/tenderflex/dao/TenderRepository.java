@@ -12,7 +12,7 @@ public interface TenderRepository {
 
     Integer countTendersByContractor(Integer contractorId);
     
-    Set<Tender> getAll(Integer amountTenders, Integer amountTendersToSkip);
+    Set<Tender> getTendersPage(Integer amountTenders, Integer amountTendersToSkip);
     
     Integer countAllTenders();
 
