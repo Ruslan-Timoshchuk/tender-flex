@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.response.CPVresponse;
-import pl.com.tenderflex.service.CPVService;
+import pl.com.tenderflex.payload.iresponse.response.CpvResponse;
+import pl.com.tenderflex.service.CpvService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/cpv")
-public class CPVController {
+public class CpvController {
 
-    private final CPVService cpvService;
+    private final CpvService cpvService;
     
     @Secured("CONTRACTOR")
     @GetMapping("/list")
-    public List<CPVresponse> getAllCountries() {
+    public List<CpvResponse> getAllCountries() {
         return cpvService.getAllCPVs();
     }
 }

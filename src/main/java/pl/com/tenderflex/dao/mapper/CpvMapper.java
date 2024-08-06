@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.com.tenderflex.model.CPV;
 
 @Component
-public class CPVmapper implements RowMapper<CPV>{
+public class CpvMapper implements RowMapper<CPV>{
 
         @Override
         public CPV mapRow(ResultSet resultSet, int rowNum) throws SQLException {

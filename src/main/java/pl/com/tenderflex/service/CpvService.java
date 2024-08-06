@@ -2,10 +2,10 @@ package pl.com.tenderflex.service;
 
 import java.util.List;
 
-import pl.com.tenderflex.payload.iresponse.response.CPVresponse;
+import pl.com.tenderflex.payload.iresponse.response.CpvResponse;
 
 public interface CpvService {
 
-    List<CPVresponse> getAllCPVs();
+    List<CpvResponse> getAllCPVs();
 
 }

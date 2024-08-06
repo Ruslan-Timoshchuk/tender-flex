@@ -2,11 +2,11 @@ package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import pl.com.tenderflex.model.CPV;
-import pl.com.tenderflex.payload.response.CPVresponse;
+import pl.com.tenderflex.payload.iresponse.response.CpvResponse;
 
 @Mapper(componentModel = "spring")
-public interface CPVMapper {
+public interface CpvMapper {
 
-    CPVresponse cpvToCPVResponce(CPV cpv);
+    CpvResponse cpvToCPVResponce(CPV cpv);
     
 }
