@@ -2,13 +2,13 @@ package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import pl.com.tenderflex.model.EOfferStatus;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.User;
+import pl.com.tenderflex.payload.iresponse.response.OfferDetailsBidderResponse;
+import pl.com.tenderflex.payload.iresponse.response.OfferDetailsContractorResponse;
+import pl.com.tenderflex.payload.iresponse.response.OfferInListResponse;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
-import pl.com.tenderflex.payload.response.OfferDetailsResponse;
-import pl.com.tenderflex.payload.response.OfferInListResponse;
 
 @Mapper(componentModel = "spring", uses = TenderMapper.class)
 public interface OfferMapper {
@@ -54,6 +54,23 @@ public interface OfferMapper {
     @Mapping(target = "documentName", source = "documentName")
     @Mapping(target = "awardDecision", source = "awardDecision")
     @Mapping(target = "rejectDecision", source = "rejectDecision")
-    OfferDetailsResponse offerToOfferDetailsResponse(Offer offer);
+    @Mapping(target = "status", source = "offerStatusBidder")
+    OfferDetailsBidderResponse offerToOfferDetailsBidderResponse(Offer offer);
+    
+    @Mapping(target = "offerId", source = "id")
+    @Mapping(target = "bidderCompanyName", source = "bidderCompanyDetails.officialName")
+    @Mapping(target = "registrationNumber", source = "bidderCompanyDetails.registrationNumber")
+    @Mapping(target = "country", source = "bidderCompanyDetails.country.countryName")
+    @Mapping(target = "city", source = "bidderCompanyDetails.city")
+    @Mapping(target = "firstName", source = "contactPerson.firstName")
+    @Mapping(target = "lastName", source = "contactPerson.lastName")
+    @Mapping(target = "phone", source = "contactPerson.phoneNumber")
+    @Mapping(target = "bidPrice", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency.currencyType")
+    @Mapping(target = "documentName", source = "documentName")
+    @Mapping(target = "awardDecision", source = "awardDecision")
+    @Mapping(target = "rejectDecision", source = "rejectDecision")
+    @Mapping(target = "status", source = "offerStatusContractor")
+    OfferDetailsContractorResponse offerToOfferDetailsContractorResponse(Offer offer);
     
 }

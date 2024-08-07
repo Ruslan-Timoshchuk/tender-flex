@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.exception.FileNotExistsException;
-import pl.com.tenderflex.payload.response.MultipartFileResponse;
+import pl.com.tenderflex.payload.iresponse.response.MultipartFileResponse;
 import pl.com.tenderflex.service.FileStorageService;
 
 @RestController

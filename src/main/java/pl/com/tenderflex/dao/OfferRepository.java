@@ -1,6 +1,5 @@
 package pl.com.tenderflex.dao;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import pl.com.tenderflex.model.Offer;
@@ -12,9 +11,7 @@ public interface OfferRepository {
     
     Set<Offer> getPageByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
     
-    List<Offer> getByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
-    
-    List<Offer> getByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
+    Set<Offer> getPageByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
     
     Integer countOffersByBidder(Integer bidderId);
     

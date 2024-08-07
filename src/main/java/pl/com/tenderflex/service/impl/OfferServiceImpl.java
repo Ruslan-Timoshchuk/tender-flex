@@ -1,21 +1,26 @@
 package pl.com.tenderflex.service.impl;
 
+import static pl.com.tenderflex.model.ERole.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
 import pl.com.tenderflex.dao.OfferRepository;
 import pl.com.tenderflex.dao.TenderRepository;
+import pl.com.tenderflex.exception.UnauthorizedAccessException;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.iresponse.OfferDetails;
+import pl.com.tenderflex.payload.iresponse.response.DecisionResponse;
+import pl.com.tenderflex.payload.iresponse.response.OfferInListResponse;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
 import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
 import pl.com.tenderflex.payload.request.RejectDecisionRequest;
-import pl.com.tenderflex.payload.response.DecisionResponse;
-import pl.com.tenderflex.payload.response.OfferDetailsResponse;
-import pl.com.tenderflex.payload.response.OfferInListResponse;
 import pl.com.tenderflex.service.OfferService;
+import java.util.Collection;
+import org.springframework.security.core.GrantedAuthority;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class OfferServiceImpl implements OfferService {
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
     private final TenderRepository tenderRepository;
+    private final GrantedAuthorityRoleRepository roleRepository;
 
     @Override
     @Transactional
@@ -62,14 +68,18 @@ public class OfferServiceImpl implements OfferService {
         }
         return new Page<>(currentPage, totalPages,
                 offerRepository.getPageByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offer -> offerMapper.offerToOfferInListResponse(offer,
-                                 offer.getOfferStatusContractor()))
+                        .map(offer -> offerMapper.offerToOfferInListResponse(offer, offer.getOfferStatusContractor()))
                         .toList());
     }
 
     @Override
-    public OfferDetailsResponse getById(Integer offerId) {
-        return offerMapper.offerToOfferDetailsResponse(offerRepository.getById(offerId));
+    public OfferDetails getOfferDetails(Integer offerId, Collection<GrantedAuthority> authorities) {
+        if (authorities.contains(roleRepository.getByName(CONTRACTOR))) {
+            return offerMapper.offerToOfferDetailsContractorResponse(offerRepository.getById(offerId));
+        } else if (authorities.contains(roleRepository.getByName(BIDDER))) {
+            return offerMapper.offerToOfferDetailsBidderResponse(offerRepository.getById(offerId));
+        }
+        throw new UnauthorizedAccessException("User does not have the required role to access this resource");
     }
 
     @Override

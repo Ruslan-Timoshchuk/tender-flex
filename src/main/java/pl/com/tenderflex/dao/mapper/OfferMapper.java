@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.CompanyDetails;
+import pl.com.tenderflex.model.ContactPerson;
 import pl.com.tenderflex.model.Country;
 import pl.com.tenderflex.model.Currency;
 import pl.com.tenderflex.model.EOfferStatus;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.dao.impl.TenderRepositoryImpl;
 import pl.com.tenderflex.dao.impl.UserRepositoryImpl;
-import pl.com.tenderflex.model.CompanyDetails;
-import pl.com.tenderflex.model.ContactPerson;
 
 @Component
 @RequiredArgsConstructor
