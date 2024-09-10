@@ -1,6 +1,7 @@
 package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +14,15 @@ public class Tender {
     private User contractor;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
-    private CPV cpv;
+    private Cpv cpv;
     private TypeOfTender type;
-    private ETenderStatus status;
     private String details;
     private Integer maxPrice;
     private Integer minPrice;
     private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate publication;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate deadline;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate signedContractDeadline;
-    private String contractFileName;
-    private String awardDecisionFileName;
-    private String rejectDecisionFileName;
-   
+    private Contract contract;
+    private Set<TenderFile>files;
+    
 }
