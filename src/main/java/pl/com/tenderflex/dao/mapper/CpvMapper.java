@@ -4,14 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import pl.com.tenderflex.model.CPV;
+import pl.com.tenderflex.model.Cpv;
 
 @Component
-public class CpvMapper implements RowMapper<CPV>{
+public class CpvMapper implements RowMapper<Cpv>{
 
         @Override
-        public CPV mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            return CPV
+        public Cpv mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            return Cpv
                     .builder()
                     .id(resultSet.getInt("id"))
                     .code(resultSet.getString("code"))

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CPV {
+public class Cpv {
 
     private final Integer id;
     private final String code;

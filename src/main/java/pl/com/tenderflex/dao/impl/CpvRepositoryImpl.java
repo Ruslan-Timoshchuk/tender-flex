@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.CpvRepository;
 import pl.com.tenderflex.dao.mapper.CpvMapper;
-import pl.com.tenderflex.model.CPV;
+import pl.com.tenderflex.model.Cpv;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,7 +18,7 @@ public class CpvRepositoryImpl implements CpvRepository {
     private final CpvMapper cpvMapper;
 
     @Override
-    public List<CPV> getAllCPVs() {
+    public List<Cpv> getAllCPVs() {
         return jdbcTemplate.query(GET_ALL_CPVS_QUERY, cpvMapper);
     }
 }
