@@ -11,7 +11,6 @@ import lombok.Data;
 public class Contract {
 
     private Integer id;
-    private Tender tender;
     private Set<Offer>offers;
     private Set<TenderStatus>userTenderStatuses;
     private Set<OfferStatus>userOfferStatuses;
