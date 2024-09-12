@@ -24,5 +24,6 @@ public class Tender {
     private LocalDate publication;
     private Contract contract;
     private Set<TenderFile>files;
+    private Set<TenderStatus>userTenderStatuses;
     
 }
