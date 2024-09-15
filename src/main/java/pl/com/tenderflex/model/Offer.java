@@ -1,6 +1,7 @@
 package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Offer {
     private Contract contract;
     private OfferFile proposition;
     private TenderFile decision;
+    private Set<OfferStatus>userOfferStatuses;
 
 }

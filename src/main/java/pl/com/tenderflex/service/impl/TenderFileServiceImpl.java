@@ -1,9 +1,9 @@
 package pl.com.tenderflex.service.impl;
 
+import static java.util.stream.Collectors.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.TenderFileRepository;
@@ -27,7 +27,7 @@ public class TenderFileServiceImpl implements TenderFileService {
                         return tenderFileRepository
                         .create(TenderFile.builder()
                                  .name(entry.getValue().getOriginalFilename())
-                                 .type(entry.getKey())
+                                 .fileType(entry.getKey())
                                  .contentType(entry.getValue().getContentType())
                                  .awsS3fileKey(s3BucketService.upload(entry.getValue()))
                                  .build());
@@ -35,6 +35,6 @@ public class TenderFileServiceImpl implements TenderFileService {
                         throw new FileUploadException("Failed to upload file to S3", e);
                     }
                 })
-        .collect(Collectors.toSet());
+        .collect(toSet());
     }   
 }

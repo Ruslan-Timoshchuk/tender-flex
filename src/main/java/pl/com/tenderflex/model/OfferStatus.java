@@ -8,7 +8,7 @@ public class OfferStatus {
 
     private Integer id;
     private User user;
-    private Contract contract;
+    private Offer offer;
     private EUserOfferStatus status;
     private LocalDate lastUpdated;
     
