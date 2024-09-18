@@ -12,6 +12,5 @@ CREATE TABLE offers (
     currency_id INTEGER REFERENCES currencies(id),
     publication_date TIMESTAMP NOT NULL,
     contract_id INTEGER REFERENCES contracts(id),
-    proposition_file_id INTEGER REFERENCES offer_files(id),
-    decision_file_id INTEGER REFERENCES tender_files(id)
+    proposition_file_id INTEGER REFERENCES offer_files(id)
 );

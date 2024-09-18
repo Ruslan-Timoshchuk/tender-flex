@@ -11,7 +11,7 @@ import lombok.Data;
 public class Offer {
 
     private Integer id;
-    private User bidder;
+    private Integer bidderId;
     private CompanyDetails bidderCompanyDetails;
     private ContactPerson contactPerson;
     private Integer bidPrice;
@@ -20,7 +20,6 @@ public class Offer {
     private LocalDate publicationDate;
     private Contract contract;
     private OfferFile proposition;
-    private TenderFile decision;
     private Set<OfferStatus>userOfferStatuses;
 
 }

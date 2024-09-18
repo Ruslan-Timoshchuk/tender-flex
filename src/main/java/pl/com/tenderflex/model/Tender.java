@@ -11,7 +11,7 @@ import lombok.Data;
 public class Tender {
 
     private Integer id;
-    private User contractor;
+    private Integer contractorId;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
     private Cpv cpv;
@@ -23,7 +23,7 @@ public class Tender {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate publication;
     private Contract contract;
-    private Set<TenderFile>files;
+    private Set<TenderFile>files; 
     private Set<TenderStatus>userTenderStatuses;
-    
+   
 }

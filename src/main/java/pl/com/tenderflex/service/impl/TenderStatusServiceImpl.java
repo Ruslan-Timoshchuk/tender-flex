@@ -20,8 +20,8 @@ public class TenderStatusServiceImpl implements TenderStatusService {
         tender.setUserTenderStatuses(new HashSet<>(asList(tenderStatusRepository
               .create(TenderStatus
                         .builder()
-                        .user(tender.getContractor())
-                        .tender(tender)
+                        .userId(tender.getContractorId())
+                        .tenderId(tender.getId())
                         .status(TENDER_IN_PROGRESS)
                         .lastUpdated(now())
                         .build()))));

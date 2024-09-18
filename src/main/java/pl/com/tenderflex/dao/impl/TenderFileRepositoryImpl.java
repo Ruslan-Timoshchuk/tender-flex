@@ -22,7 +22,7 @@ public class TenderFileRepositoryImpl implements TenderFileRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_FILE_QUERY, new String[] { "id" });
             statement.setString(1, tenderFile.getName());
-            statement.setString(2, tenderFile.getType().name());
+            statement.setString(2, tenderFile.getFileType().name());
             statement.setString(3, tenderFile.getContentType());
             statement.setString(4, tenderFile.getAwsS3fileKey());
             return statement;
