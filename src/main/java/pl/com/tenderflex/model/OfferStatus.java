@@ -7,8 +7,8 @@ import lombok.Data;
 public class OfferStatus {
 
     private Integer id;
-    private User user;
-    private Offer offer;
+    private Integer userId;
+    private Integer offerId;
     private EUserOfferStatus status;
     private LocalDate lastUpdated;
     

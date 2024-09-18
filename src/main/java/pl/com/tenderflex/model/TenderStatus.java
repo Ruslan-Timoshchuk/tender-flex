@@ -9,8 +9,8 @@ import lombok.Data;
 public class TenderStatus {
 
     private Integer id;
-    private User user;
-    private Tender tender;
+    private Integer userId;
+    private Integer tenderId;
     private EUserTenderStatus status;
     private LocalDate lastUpdated; 
     
