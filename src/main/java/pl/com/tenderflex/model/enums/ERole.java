@@ -1,4 +1,4 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.model.enums;
 
 public enum ERole {
 

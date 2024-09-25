@@ -2,6 +2,7 @@ package pl.com.tenderflex.model;
 
 import lombok.Builder;
 import lombok.Data;
+import pl.com.tenderflex.model.enums.EFileType;
 
 @Data
 @Builder

@@ -1,6 +1,7 @@
 CREATE TABLE offers (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     bidder_id INTEGER REFERENCES users(id),
+    tender_id INTEGER REFERENCES tenders(id),
     official_name VARCHAR NOT NULL,
     registration_number VARCHAR NOT NULL,
     country_id INTEGER REFERENCES countries(id),
@@ -11,6 +12,5 @@ CREATE TABLE offers (
     bid_price BIGINT NOT NULL,
     currency_id INTEGER REFERENCES currencies(id),
     publication_date TIMESTAMP NOT NULL,
-    contract_id INTEGER REFERENCES contracts(id),
     proposition_file_id INTEGER REFERENCES offer_files(id)
 );
