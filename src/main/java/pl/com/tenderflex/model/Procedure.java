@@ -9,7 +9,7 @@ import pl.com.tenderflex.model.enums.EProcedure;
 @Builder
 public class Procedure {
 
-    private EProcedure procedureType;
+    private EProcedure type;
     private ELanguage language;
     
 }

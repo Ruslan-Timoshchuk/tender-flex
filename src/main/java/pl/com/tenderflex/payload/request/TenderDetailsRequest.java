@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class TenderDetailsRequest {
 
+    private Integer userId;
     private String officialName;
     private String registrationNumber;
     private Integer countryId;
@@ -14,15 +15,12 @@ public class TenderDetailsRequest {
     private String phoneNumber;
     private Integer cpvId;
     private Integer typeOfTenderId;
-    private String details;
-    private Integer maxPrice;
+    private String description;
     private Integer minPrice;
+    private Integer maxPrice;
     private Integer currencyId;
     private String publication;
-    private String deadline;
+    private String offerSubmissionDeadline;
     private String signedContractDeadline;
-    private String contractFileName;
-    private String awardDecisionFileName;
-    private String rejectDecisionFileName;
 
 }
