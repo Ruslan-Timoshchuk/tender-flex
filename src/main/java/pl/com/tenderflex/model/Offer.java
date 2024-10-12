@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
-import pl.com.tenderflex.model.enums.EDecisionType;
 import pl.com.tenderflex.model.enums.EOfferStatus;
 
 @Data
@@ -20,8 +19,9 @@ public class Offer {
     private Currency currency;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate publicationDate;
-    private OfferFile proposition;
-    private EDecisionType type;
+    private File proposition;
+    private Contract contract;
+    private RejectDecision reject;
     private EOfferStatus contractorStatus;
     private EOfferStatus bidderStatus;
      

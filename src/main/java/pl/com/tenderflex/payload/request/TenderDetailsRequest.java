@@ -22,5 +22,8 @@ public class TenderDetailsRequest {
     private String publication;
     private String offerSubmissionDeadline;
     private String signedContractDeadline;
+    private Integer contractFileId;
+    private Integer awardFileId;
+    private Integer rejectFileId;
 
 }

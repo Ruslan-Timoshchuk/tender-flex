@@ -19,5 +19,6 @@ CREATE TABLE tenders (
     status VARCHAR NOT NULL,
     publication TIMESTAMP NOT NULL,
     offer_submission_deadline TIMESTAMP NOT NULL,
-    signed_contract_deadline TIMESTAMP NOT NULL
+    contract_id INTEGER REFERENCES contracts(id),
+    reject_id INTEGER REFERENCES rejects(id)
 );

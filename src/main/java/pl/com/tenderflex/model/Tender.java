@@ -22,9 +22,8 @@ public class Tender {
     private LocalDate publication; 
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate offerSubmissionDeadline;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate signedContractDeadline;
-    private Set<TenderFile>files; 
+    private Contract contract;
+    private RejectDecision reject;
     private Set<Offer>offers;
 
 }
