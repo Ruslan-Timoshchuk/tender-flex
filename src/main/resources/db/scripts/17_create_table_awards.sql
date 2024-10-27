@@ -1,4 +1,4 @@
 CREATE TABLE awards (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    file_id INTEGER REFERENCES files(id)
+    award_file_id INTEGER REFERENCES files(id)
 );
