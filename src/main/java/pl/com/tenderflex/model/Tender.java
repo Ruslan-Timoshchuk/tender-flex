@@ -2,7 +2,6 @@ package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
 import java.util.Set;
-import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
 import pl.com.tenderflex.model.enums.ETenderStatus;
@@ -13,17 +12,15 @@ public class Tender {
 
     private Integer id;
     private Integer contractorId;
+    private Procedure procedure;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
-    private Procedure procedure;
     private SubjectOfProcurement subjectOfProcurement;
     private ETenderStatus status; 
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate publication; 
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
     private Contract contract;
-    private RejectDecision reject;
-    private Set<Offer>offers;
-
+    private Set<ProcurementProtocol> submittedProtocols;
+    private Set<Submission> submissions;
+        
 }

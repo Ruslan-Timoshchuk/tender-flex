@@ -5,6 +5,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.enums.ERole;
 
 @Data
 @Builder
@@ -19,4 +20,5 @@ public class GrantedAuthorityRole implements GrantedAuthority {
     public String getAuthority() {
         return this.role.name();
     }
+    
 }
