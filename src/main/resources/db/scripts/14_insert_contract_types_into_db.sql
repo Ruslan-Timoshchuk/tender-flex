@@ -1,4 +1,4 @@
-INSERT INTO types_of_tender(title)
+INSERT INTO contract_types(title)
 VALUES ('WORKS'),
        ('SUPPLIES'),
        ('SERVICES'),

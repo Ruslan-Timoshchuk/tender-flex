@@ -11,8 +11,11 @@ public class Contract {
     private Integer id;
     private Tender tender;
     private Offer offer;
+    private ContractType contractType;
+    private Integer minPrice;
+    private Integer maxPrice;
+    private Currency currency;
     private File contractFile;
-    private AwardDecision award;
     
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     @FutureOrPresent(message = "The contract signing deadline must be today or a future date.")

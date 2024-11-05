@@ -16,7 +16,8 @@ public class CpvServiceImpl implements CpvService {
     private final CpvMapper cpvMapper;
 
     @Override
-    public List<CpvResponse> getAllCPVs() {
-        return cpvRepository.getAllCPVs().stream().map(cpvMapper::cpvToCPVResponce).toList();
+    public List<CpvResponse> getAllCpvs() {
+        return cpvRepository.getAllCpvs().stream().map(cpvMapper::cpvToCpvResponce).toList();
     }
+    
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TypeOfTender {
+public class ContractType {
 
     private Integer id;
     private String title;

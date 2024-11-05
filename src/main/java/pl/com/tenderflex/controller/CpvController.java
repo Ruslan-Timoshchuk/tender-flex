@@ -11,14 +11,15 @@ import pl.com.tenderflex.service.CpvService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/cpv")
+@RequestMapping("/api/v1/cpvs")
 public class CpvController {
 
     private final CpvService cpvService;
     
     @Secured("CONTRACTOR")
-    @GetMapping("/list")
-    public List<CpvResponse> getAllCountries() {
-        return cpvService.getAllCPVs();
+    @GetMapping
+    public List<CpvResponse> getAllCpvs() {
+        return cpvService.getAllCpvs();
     }
+    
 }

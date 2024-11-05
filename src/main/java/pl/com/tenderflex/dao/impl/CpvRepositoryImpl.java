@@ -1,6 +1,7 @@
 package pl.com.tenderflex.dao.impl;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,8 @@ public class CpvRepositoryImpl implements CpvRepository {
     private final CpvMapper cpvMapper;
 
     @Override
-    public List<Cpv> getAllCPVs() {
-        return jdbcTemplate.query(GET_ALL_CPVS_QUERY, cpvMapper);
+    public Set<Cpv> getAllCpvs() {
+        return jdbcTemplate.query(GET_ALL_CPVS_QUERY, cpvMapper).stream().collect(Collectors.toSet());
     }
+
 }

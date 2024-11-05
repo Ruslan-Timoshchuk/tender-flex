@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
 import pl.com.tenderflex.dao.mapper.GrantedAuthorityRoleMapper;
-import pl.com.tenderflex.model.ERole;
 import pl.com.tenderflex.model.GrantedAuthorityRole;
+import pl.com.tenderflex.model.enums.ERole;
 
 @Repository
 @RequiredArgsConstructor

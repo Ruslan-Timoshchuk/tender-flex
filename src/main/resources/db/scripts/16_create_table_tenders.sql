@@ -11,11 +11,7 @@ CREATE TABLE tenders (
     procedure_type VARCHAR NOT NULL,
     language VARCHAR NOT NULL,
     cpv_id INTEGER NOT NULL REFERENCES cpvs(id),
-    type_of_tender_id INTEGER NOT NULL REFERENCES types_of_tender(id),
     description VARCHAR(250) NOT NULL,
-    min_price BIGINT NOT NULL,
-    max_price BIGINT NOT NULL,
-    currency_id INTEGER NOT NULL REFERENCES currencies(id),
     status VARCHAR NOT NULL,
     publication_date TIMESTAMP NOT NULL,
     offer_submission_deadline TIMESTAMP NOT NULL

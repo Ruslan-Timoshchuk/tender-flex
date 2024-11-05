@@ -4,7 +4,7 @@ import lombok.Data;
 import pl.com.tenderflex.payload.iresponse.OfferDetails;
 
 @Data
-public class OfferDetailsContractorResponse implements OfferDetails {
+public class OfferResponse implements OfferDetails {
 
     private Integer offerId;
     private String bidderCompanyName;

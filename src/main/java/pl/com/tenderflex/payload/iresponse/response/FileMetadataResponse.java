@@ -1,15 +1,13 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.payload.iresponse.response;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class File {
+public class FileMetadataResponse {
 
     private Integer id;
     private String name;
     private String contentType;
     private String awsS3fileKey;
-   
+    
 }

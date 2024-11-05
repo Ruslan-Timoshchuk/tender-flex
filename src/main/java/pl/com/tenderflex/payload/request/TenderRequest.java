@@ -3,7 +3,7 @@ package pl.com.tenderflex.payload.request;
 import lombok.Data;
 
 @Data
-public class TenderDetailsRequest {
+public class TenderRequest {
 
     private Integer userId;
     private String officialName;
@@ -14,16 +14,8 @@ public class TenderDetailsRequest {
     private String lastName;
     private String phoneNumber;
     private Integer cpvId;
-    private Integer typeOfTenderId;
     private String description;
-    private Integer minPrice;
-    private Integer maxPrice;
-    private Integer currencyId;
     private String publication;
     private String offerSubmissionDeadline;
-    private String signedContractDeadline;
-    private Integer contractFileId;
-    private Integer awardFileId;
-    private Integer rejectFileId;
 
 }

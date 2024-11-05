@@ -7,6 +7,7 @@ import lombok.Data;
 public class RejectDecision {
 
     private Integer id;
+    private Tender tender;
     private File rejectFile;
     private LocalDate createdDate;
     private LocalDate lastUpdated;

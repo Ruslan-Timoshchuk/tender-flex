@@ -7,6 +7,6 @@ import pl.com.tenderflex.payload.iresponse.response.CpvResponse;
 @Mapper(componentModel = "spring")
 public interface CpvMapper {
 
-    CpvResponse cpvToCPVResponce(Cpv cpv);
+    CpvResponse cpvToCpvResponce(Cpv cpv);
     
 }

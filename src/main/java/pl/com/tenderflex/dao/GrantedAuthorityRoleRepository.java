@@ -1,8 +1,9 @@
 package pl.com.tenderflex.dao;
 
 import java.util.Set;
-import pl.com.tenderflex.model.ERole;
+
 import pl.com.tenderflex.model.GrantedAuthorityRole;
+import pl.com.tenderflex.model.enums.ERole;
 
 public interface GrantedAuthorityRoleRepository {
 

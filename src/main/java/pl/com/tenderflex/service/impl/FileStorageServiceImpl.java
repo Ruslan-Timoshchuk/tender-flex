@@ -14,8 +14,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.dao.FileRepository;
 import pl.com.tenderflex.model.File;
-import pl.com.tenderflex.model.enums.EFileType;
+import pl.com.tenderflex.payload.iresponse.response.FileMetadataResponse;
 import pl.com.tenderflex.payload.iresponse.response.MultipartFileResponse;
+import pl.com.tenderflex.payload.mapstract.FileMapper;
 import pl.com.tenderflex.service.FileStorageService;
 
 @Service
@@ -30,31 +31,31 @@ public class FileStorageServiceImpl implements FileStorageService {
     private Integer expTimePresignedUrl;
     private final AmazonS3 amazonS3Client;
     private final FileRepository fileRepository;
+    private final FileMapper fileMapper;
 
     @Override
     @Transactional
-    public Integer upload(MultipartFile file, EFileType type) throws IOException {
+    public FileMetadataResponse upload(MultipartFile file) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
-        amazonS3Client.doesBucketExistV2(bucketName);        
+        amazonS3Client.doesBucketExistV2(bucketName);
         String originalFilename = file.getOriginalFilename();
         StringBuilder fileKey = new StringBuilder();
         if (originalFilename != null && originalFilename.contains(FILE_EXTENSION_SEPARATOR)) {
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(FILE_EXTENSION_SEPARATOR));    
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(FILE_EXTENSION_SEPARATOR));
             fileKey.append(randomUUID());
             fileKey.append(fileExtension);
         }
         amazonS3Client.putObject(bucketName, fileKey.toString(), file.getInputStream(), metadata);
-        return fileRepository.create(
-                 File
-                   .builder()
-                   .name(originalFilename)
-                   .fileType(type)
-                   .contentType(file.getContentType())
-                   .awsS3fileKey(fileKey.toString())
-                   .build())
-                .getId();
+        return fileMapper.fileToFileDetailsResponse(
+                fileRepository.save(
+                        File
+                          .builder()
+                          .name(originalFilename)
+                          .contentType(file.getContentType())
+                          .awsS3fileKey(fileKey.toString())
+                          .build()));
     }
 
     @Override

@@ -6,19 +6,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.iresponse.response.TypeOfTenderResponse;
-import pl.com.tenderflex.service.TypeOfTenderService;
+import pl.com.tenderflex.payload.iresponse.response.ContractTypeResponse;
+import pl.com.tenderflex.service.ContractTypeService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/type_of_tender")
-public class TypeOfTenderController {
+@RequestMapping("/api/v1/contract-types")
+public class ContractTypeController {
 
-    private final TypeOfTenderService typeOfTenderService;
+    private final ContractTypeService contractTypeService;
     
     @Secured("CONTRACTOR")
-    @GetMapping("/list")
-    public List<TypeOfTenderResponse> getAllTypes() {
-        return typeOfTenderService.getAll();
+    @GetMapping
+    public List<ContractTypeResponse> getAllContractTypes() {
+        return contractTypeService.getAll();
     }
+    
 }

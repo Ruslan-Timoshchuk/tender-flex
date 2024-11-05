@@ -1,10 +1,11 @@
 package pl.com.tenderflex.dao;
 
-import java.util.List;
+import java.util.Set;
+
 import pl.com.tenderflex.model.Cpv;
 
 public interface CpvRepository {
 
-    List<Cpv> getAllCPVs();
+    Set<Cpv> getAllCpvs();
     
 }

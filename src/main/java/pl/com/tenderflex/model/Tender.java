@@ -12,14 +12,17 @@ public class Tender {
 
     private Integer id;
     private Integer contractorId;
-    private Procedure procedure;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
-    private SubjectOfProcurement subjectOfProcurement;
+    private Procedure procedure;
+    private Cpv cpv;
+    private String description;
     private ETenderStatus status; 
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
     private Contract contract;
+    private AwardDecision award;
+    private RejectDecision reject;
     private Set<ProcurementProtocol> submittedProtocols;
     private Set<Submission> submissions;
         
