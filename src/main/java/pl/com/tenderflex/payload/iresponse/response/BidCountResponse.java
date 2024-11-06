@@ -3,9 +3,8 @@ package pl.com.tenderflex.payload.iresponse.response;
 import lombok.Data;
 
 @Data
-public class TotalResponse {
+public class BidCountResponse {
 
-    private Integer tenders;
-    private Integer offers;
+    private Integer bidCount;
     
 }

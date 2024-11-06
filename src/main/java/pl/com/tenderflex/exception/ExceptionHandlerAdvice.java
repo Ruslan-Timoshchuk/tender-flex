@@ -31,9 +31,9 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(BAD_REQUEST)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ExceptionHandlerResponse handleDataAccessException(DataAccessException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
+        return new ExceptionHandlerResponse(now(), INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 
     @ExceptionHandler(CookiesNotPresentException.class)
