@@ -11,7 +11,7 @@ import pl.com.tenderflex.model.enums.ETenderStatus;
 public class Tender {
 
     private Integer id;
-    private Integer contractorId;
+    private User contractor;
     private CompanyDetails contractorCompanyDetails;
     private ContactPerson contactPerson;
     private Procedure procedure;
@@ -20,9 +20,6 @@ public class Tender {
     private ETenderStatus status; 
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
-    private Contract contract;
-    private AwardDecision award;
-    private RejectDecision reject;
     private Set<ProcurementProtocol> submittedProtocols;
     private Set<Submission> submissions;
         

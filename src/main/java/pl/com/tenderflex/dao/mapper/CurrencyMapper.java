@@ -17,4 +17,5 @@ public class CurrencyMapper implements RowMapper<Currency> {
                 .currencyType(resultSet.getString("currency_type"))
                 .build();
     }
+    
 }

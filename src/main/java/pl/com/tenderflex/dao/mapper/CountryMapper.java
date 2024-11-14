@@ -17,4 +17,5 @@ public class CountryMapper implements RowMapper<Country> {
                 .countryName(resultSet.getString("country_name"))
                 .build();
     }
+    
 }

@@ -3,9 +3,11 @@ package pl.com.tenderflex.model;
 import java.time.LocalDate;
 import javax.validation.constraints.FutureOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Contract {
 
     private Integer id;

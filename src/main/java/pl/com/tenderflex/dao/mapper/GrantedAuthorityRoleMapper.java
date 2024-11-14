@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import pl.com.tenderflex.model.GrantedAuthorityRole;
 import pl.com.tenderflex.model.enums.ERole;
 
@@ -19,4 +18,5 @@ public class GrantedAuthorityRoleMapper implements RowMapper<GrantedAuthorityRol
                 .role(ERole.valueOf(resultSet.getString("role")))
                 .build();
     }
+    
 }

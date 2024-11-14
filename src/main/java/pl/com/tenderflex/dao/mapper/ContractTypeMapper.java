@@ -17,4 +17,5 @@ public class ContractTypeMapper implements RowMapper<ContractType>{
                 .title(resultSet.getString("title"))
                 .build();
     }  
+    
 }

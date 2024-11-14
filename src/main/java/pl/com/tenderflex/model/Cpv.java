@@ -7,8 +7,8 @@ import lombok.Data;
 @Builder
 public class Cpv {
 
-    private final Integer id;
-    private final String code;
-    private final String description;
+    private Integer id;
+    private String code;
+    private String description;
     
 }
