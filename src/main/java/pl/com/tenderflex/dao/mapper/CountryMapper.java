@@ -13,7 +13,7 @@ public class CountryMapper implements RowMapper<Country> {
     public Country mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return Country
                 .builder()
-                .id(resultSet.getInt("id"))
+                .id(resultSet.getInt("country_id"))
                 .countryName(resultSet.getString("country_name"))
                 .build();
     }

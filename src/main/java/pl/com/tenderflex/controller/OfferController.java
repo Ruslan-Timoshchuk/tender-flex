@@ -15,13 +15,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.iresponse.OfferDetails;
-import pl.com.tenderflex.payload.iresponse.response.DecisionResponse;
+import pl.com.tenderflex.payload.iresponse.response.BidCountResponse;
 import pl.com.tenderflex.payload.iresponse.response.OfferInListResponse;
-import pl.com.tenderflex.payload.request.AwardDecisionRequest;
-import pl.com.tenderflex.payload.request.DecisionRequest;
 import pl.com.tenderflex.payload.request.OfferDetailsRequest;
-import pl.com.tenderflex.payload.request.RejectDecisionRequest;
 import pl.com.tenderflex.service.OfferService;
+import pl.com.tenderflex.service.RoleBasedActionExecutor;
 
 @RestController
 @RequestMapping("/api/v1/offers")
@@ -29,6 +27,7 @@ import pl.com.tenderflex.service.OfferService;
 public class OfferController {
 
     private final OfferService offerService;
+    private final RoleBasedActionExecutor roleBasedActionExecutor;
 
     @Secured("BIDDER")
     @PostMapping
@@ -61,27 +60,12 @@ public class OfferController {
         return offerService.getOffersByContractor(contractorId, currentPage, offersPerPage);
     }
 
-    @Secured("CONTRACTOR")
-    @PostMapping("/decision/award")
-    public void saveAwardDecisionDocumentForOffer(@RequestBody AwardDecisionRequest award) {
-        offerService.addAwardDecisionFile(award);
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping("/count")
+    public BidCountResponse getOffersCount(@AuthenticationPrincipal User user) {
+        return roleBasedActionExecutor.executeRoleBasedAction(user,
+                contractor -> offerService.countByContractor(contractor.getId()),
+                bidder -> offerService.countByBidder(bidder.getId()));
     }
-
-    @Secured("CONTRACTOR")
-    @PostMapping("/decision/reject")
-    public void saveRejectDecisionDocumentForOffer(@RequestBody RejectDecisionRequest reject) {
-        offerService.addRejectDecisionFile(reject);
-    }
-
-    @Secured("BIDDER")
-    @PostMapping("/decision/approve")
-    public DecisionResponse saveApproveDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
-        return offerService.saveApproveDecision(decision);
-    }
-
-    @Secured("BIDDER")
-    @PostMapping("/decision/decline")
-    public DecisionResponse saveDeclineDecisionStatusForOffer(@RequestBody DecisionRequest decision) {
-        return offerService.saveDeclineDecision(decision);
-    }
+    
 }

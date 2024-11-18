@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
-import pl.com.tenderflex.payload.iresponse.TenderDetails;
-import pl.com.tenderflex.payload.iresponse.response.TenderInListResponse;
-import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.iresponse.response.TenderResponse;
+import pl.com.tenderflex.payload.iresponse.response.BidCountResponse;
+import pl.com.tenderflex.payload.iresponse.response.TenderListResponse;
+import pl.com.tenderflex.payload.request.TenderRequest;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.service.TenderService;
+import pl.com.tenderflex.service.impl.RoleBasedActionExecutorImpl;
 
 @RestController
 @RequestMapping("/api/v1/tenders")
@@ -24,35 +27,45 @@ import pl.com.tenderflex.service.TenderService;
 public class TenderController {
 
     private final TenderService tenderService;
-
+    private final RoleBasedActionExecutorImpl roleBasedActionExecutor;
+    
     @Secured("CONTRACTOR")
-    @PostMapping("/create")
-    public Integer createTender(@RequestBody TenderDetailsRequest tender) {
-        return tenderService.createTender(tender);
+    @PostMapping
+    public TenderResponse createTender(@RequestBody TenderRequest tenderRequest) {
+         return tenderService.create(tenderRequest);
     }
 
-    @Secured("CONTRACTOR")
-    @GetMapping("/list/contractor")
-    public Page<TenderInListResponse<Integer>> getAllByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer tendersPerPage,
-            @AuthenticationPrincipal(expression = "id") Integer contractorId) {
-        return tenderService.getContractorPage(contractorId, currentPage, tendersPerPage);
-    }
-
-    @Secured("BIDDER")
-    @GetMapping("/list/bidder")
-    public Page<TenderInListResponse<String>> getAllByBidder(
-            @AuthenticationPrincipal(expression = "id") Integer bidderId,
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping("/{user-id}")
+    public Page<TenderListResponse> getTendersPage(
             @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer tendersPerPage) {
-        return tenderService.getBidderPage(bidderId, currentPage, tendersPerPage);
+            @RequestParam(defaultValue = "10") Integer tendersPerPage,
+            @PathVariable("user-id") Integer userId) {
+        return tenderService.getTendersPage(userId, currentPage, tendersPerPage);
+    }
+    
+    @Secured("CONTRACTOR")
+    @GetMapping("/contractors/{contractor-id}")
+    public Page<TenderListResponse> getPageByContractor(@RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer tendersPerPage,
+            @PathVariable("contractor-id") Integer contractorId) {
+        return tenderService.getTendersPageByContractor(contractorId, currentPage, tendersPerPage);
     }
 
     @Secured({ "CONTRACTOR", "BIDDER" })
     @GetMapping("/details/{id}")
-    public TenderDetails getTenderDetailsById(
+    public TenderResponse getTenderDetailsById(
             @AuthenticationPrincipal(expression = "authorities") Collection<GrantedAuthority> authorities,
             @PathVariable("id") Integer tenderId) {
         return tenderService.getTenderDetails(tenderId, authorities);
     }
+    
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping("/count")
+    public BidCountResponse getTendersCount(@AuthenticationPrincipal User user) {
+        return roleBasedActionExecutor.executeRoleBasedAction(user,
+                contractor -> tenderService.countByContractor(contractor.getId()), 
+                bidder -> tenderService.countAll());    
+    }
+
 }

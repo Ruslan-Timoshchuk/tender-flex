@@ -17,7 +17,7 @@ public class Tender {
     private Procedure procedure;
     private Cpv cpv;
     private String description;
-    private ETenderStatus status; 
+    private ETenderStatus globalStatus; 
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
     private Set<ProcurementProtocol> submittedProtocols;

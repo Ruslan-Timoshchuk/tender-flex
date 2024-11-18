@@ -12,7 +12,7 @@ CREATE TABLE tenders (
     language VARCHAR NOT NULL,
     cpv_id INTEGER NOT NULL REFERENCES cpvs(id),
     description VARCHAR(250) NOT NULL,
-    status VARCHAR NOT NULL,
+    global_status VARCHAR NOT NULL,
     publication_date TIMESTAMP NOT NULL,
     offer_submission_deadline TIMESTAMP NOT NULL
 );

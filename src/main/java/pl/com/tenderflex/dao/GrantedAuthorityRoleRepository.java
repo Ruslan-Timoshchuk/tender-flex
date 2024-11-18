@@ -1,13 +1,12 @@
 package pl.com.tenderflex.dao;
 
-import java.util.Set;
-
+import java.util.List;
 import pl.com.tenderflex.model.GrantedAuthorityRole;
 import pl.com.tenderflex.model.enums.ERole;
 
 public interface GrantedAuthorityRoleRepository {
 
-    Set<GrantedAuthorityRole> getByUser(Integer userId);
+    List<GrantedAuthorityRole> getByUser(Integer userId);
 
     GrantedAuthorityRole getByName(ERole name);
     

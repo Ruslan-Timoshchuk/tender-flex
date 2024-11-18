@@ -13,7 +13,7 @@ import pl.com.tenderflex.model.Cpv;
 @RequiredArgsConstructor
 public class CpvRepositoryImpl implements CpvRepository {
 
-    public static final String GET_ALL_CPVS_QUERY = "SELECT id, code, description FROM cpvs";
+    public static final String GET_ALL_CPVS_QUERY = "SELECT id AS cpv_id, code, description FROM cpvs";
 
     private final JdbcTemplate jdbcTemplate;
     private final CpvMapper cpvMapper;

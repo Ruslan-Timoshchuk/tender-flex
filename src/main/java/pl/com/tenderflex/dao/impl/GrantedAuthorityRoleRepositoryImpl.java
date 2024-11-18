@@ -1,7 +1,6 @@
 package pl.com.tenderflex.dao.impl;
 
-import static java.util.stream.Collectors.toSet;
-import java.util.Set;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +21,13 @@ public class GrantedAuthorityRoleRepositoryImpl implements GrantedAuthorityRoleR
     private final GrantedAuthorityRoleMapper roleMapper;
 
     @Override
-    public Set<GrantedAuthorityRole> getByUser(Integer userId) {
-        return jdbcTemplate.query(GET_ROLES_BY_USER_QUERY, roleMapper, userId).stream().collect(toSet());
+    public List<GrantedAuthorityRole> getByUser(Integer userId) {
+        return jdbcTemplate.query(GET_ROLES_BY_USER_QUERY, roleMapper, userId);
     }
 
     @Override
     public GrantedAuthorityRole getByName(ERole role) {
         return jdbcTemplate.queryForObject(GET_ROLE_BY_NAME, roleMapper, role.name());
     }
+    
 }

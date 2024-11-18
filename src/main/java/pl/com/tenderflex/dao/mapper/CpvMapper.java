@@ -13,7 +13,7 @@ public class CpvMapper implements RowMapper<Cpv>{
         public Cpv mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             return Cpv
                     .builder()
-                    .id(resultSet.getInt("id"))
+                    .id(resultSet.getInt("cpv_id"))
                     .code(resultSet.getString("code"))
                     .description(resultSet.getString("description"))
                     .build();

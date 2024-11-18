@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class TenderRequest {
 
-    private Integer userId;
+    private Integer contractorId;
     private String officialName;
     private String registrationNumber;
     private Integer countryId;

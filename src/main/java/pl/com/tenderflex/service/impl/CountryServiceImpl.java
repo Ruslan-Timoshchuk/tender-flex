@@ -18,4 +18,5 @@ public class CountryServiceImpl implements CountryService {
     public List<CountryResponse> getAllCountries() {
         return countryRepository.getAll().stream().map(countryMapper::countryToCountryResponse).toList();
     }
+    
 }

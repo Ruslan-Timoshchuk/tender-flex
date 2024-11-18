@@ -12,7 +12,7 @@ import pl.com.tenderflex.model.Country;
 @RequiredArgsConstructor
 public class CountryRepositoryImpl implements CountryRepository {
 
-    public static final String GET_ALL_COUNTRIES_QUERY = "SELECT id, country_name FROM countries";
+    public static final String GET_ALL_COUNTRIES_QUERY = "SELECT id AS country_id, country_name FROM countries";
     
     private final JdbcTemplate jdbcTemplate;
     private final CountryMapper countryMapper;
@@ -21,4 +21,5 @@ public class CountryRepositoryImpl implements CountryRepository {
     public List<Country> getAll(){
         return jdbcTemplate.query(GET_ALL_COUNTRIES_QUERY, countryMapper);
     }
+    
 }
