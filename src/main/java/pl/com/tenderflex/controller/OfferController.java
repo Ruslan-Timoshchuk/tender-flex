@@ -68,4 +68,10 @@ public class OfferController {
                 bidder -> offerService.countByBidder(bidder.getId()));
     }
     
+    @Secured("CONTRACTOR")
+    @GetMapping("/count/{tender-id}")
+    public BidCountResponse getOffersCountByTender(@PathVariable("tender-id") Integer tenderId) {
+        return offerService.countByTender(tenderId);
+    }
+    
 }
