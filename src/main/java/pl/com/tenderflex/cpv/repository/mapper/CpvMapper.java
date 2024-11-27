@@ -1,4 +1,4 @@
-package pl.com.tenderflex.dao.mapper;
+package pl.com.tenderflex.cpv.repository.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,7 @@ public class CpvMapper implements RowMapper<Cpv>{
         public Cpv mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             return Cpv
                     .builder()
-                    .id(resultSet.getInt("cpv_id"))
+                    .id(resultSet.getInt("id"))
                     .code(resultSet.getString("code"))
                     .description(resultSet.getString("description"))
                     .build();
