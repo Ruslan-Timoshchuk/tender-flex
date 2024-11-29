@@ -1,8 +1,8 @@
-package pl.com.tenderflex.service;
+package pl.com.tenderflex.currency.service;
 
 import java.util.List;
 
-import pl.com.tenderflex.payload.iresponse.response.CurrencyResponse;
+import pl.com.tenderflex.currency.payload.CurrencyResponse;
 
 public interface CurrencyService {
 

@@ -1,4 +1,4 @@
-package pl.com.tenderflex.controller;
+package pl.com.tenderflex.currency.controller;
 
 import java.util.List;
 import org.springframework.security.access.annotation.Secured;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.iresponse.response.CurrencyResponse;
-import pl.com.tenderflex.service.CurrencyService;
+import pl.com.tenderflex.currency.payload.CurrencyResponse;
+import pl.com.tenderflex.currency.service.CurrencyService;
 
 @RestController
 @RequiredArgsConstructor
