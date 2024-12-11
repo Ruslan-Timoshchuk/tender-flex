@@ -1,12 +1,12 @@
-package pl.com.tenderflex.dao.impl;
+package pl.com.tenderflex.companyprofile.repository.impl;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.CountryRepository;
-import pl.com.tenderflex.dao.mapper.CountryMapper;
-import pl.com.tenderflex.model.Country;
+import pl.com.tenderflex.companyprofile.model.Country;
+import pl.com.tenderflex.companyprofile.repository.CountryRepository;
+import pl.com.tenderflex.companyprofile.repository.mapper.CountryMapper;
 
 @Repository
 @RequiredArgsConstructor

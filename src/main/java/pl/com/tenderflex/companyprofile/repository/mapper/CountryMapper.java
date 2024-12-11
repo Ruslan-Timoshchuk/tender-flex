@@ -1,10 +1,11 @@
-package pl.com.tenderflex.dao.mapper;
+package pl.com.tenderflex.companyprofile.repository.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import pl.com.tenderflex.model.Country;
+
+import pl.com.tenderflex.companyprofile.model.Country;
 
 @Component
 public class CountryMapper implements RowMapper<Country> {

@@ -1,4 +1,4 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.companyprofile.model;
 
 import lombok.Builder;
 import lombok.Data;
