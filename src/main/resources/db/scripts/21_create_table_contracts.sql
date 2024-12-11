@@ -6,7 +6,7 @@ CREATE TABLE contracts (
     min_price INTEGER NOT NULL,
     max_price INTEGER NOT NULL,
     currency_id INTEGER NOT NULL REFERENCES currencies(id),
-    contract_file_id INTEGER NOT NULL REFERENCES files(id),
+    file_id INTEGER NOT NULL REFERENCES files(id),
     signed_deadline TIMESTAMP NOT NULL,
     signed_date TIMESTAMP
 );
