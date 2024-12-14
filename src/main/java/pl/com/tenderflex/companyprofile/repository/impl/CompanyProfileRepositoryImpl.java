@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.companyprofile.model.CompanyProfile;
 import pl.com.tenderflex.companyprofile.repository.CompanyProfileRepository;
+import pl.com.tenderflex.companyprofile.repository.mapper.CompanyProfileMapper;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,8 +17,12 @@ public class CompanyProfileRepositoryImpl implements CompanyProfileRepository {
     public static final String ADD_NEW_COMPANY_PROFILE_QUERY = "INSERT INTO "
             + "company_profiles(official_name, registration_number, country_id, city, first_name, last_name, phone_number) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static final String FIND_COMPANY_PROFILE_BY_ID_QUERY = "SELECT cp.id, cp.official_name, cp.registration_number, "
+            + "cp.country_id, cs.country_name, cp.city, cp.first_name, cp.last_name, cp.phone_number "
+            + "FROM company_profiles cp LEFT JOIN countries cs ON cs.id = cp.country_id WHERE cp.id = ?";
     
     private final JdbcTemplate jdbcTemplate;
+    private final CompanyProfileMapper companyProfileMapper;
     
     @Override
     public CompanyProfile save(CompanyProfile companyProfile) {
@@ -35,6 +40,11 @@ public class CompanyProfileRepositoryImpl implements CompanyProfileRepository {
         }, keyHolder);
         companyProfile.setId(keyHolder.getKeyAs(Integer.class));
         return companyProfile;
+    }
+    
+    @Override
+    public CompanyProfile findById(Integer id) {
+       return jdbcTemplate.queryForObject(FIND_COMPANY_PROFILE_BY_ID_QUERY, companyProfileMapper, id);
     }
 
 }

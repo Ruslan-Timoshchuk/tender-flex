@@ -5,5 +5,7 @@ import pl.com.tenderflex.companyprofile.model.CompanyProfile;
 public interface CompanyProfileRepository {
 
     CompanyProfile save(CompanyProfile companyProfile);
+
+    CompanyProfile findById(Integer id);
     
 }
