@@ -8,6 +8,6 @@ import lombok.Data;
 public class Country {
 
     private Integer id;
-    private String countryName;
+    private String name;
     
 }

@@ -12,10 +12,14 @@ public class CountryMapper implements RowMapper<Country> {
 
     @Override
     public Country mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return mapCountry(resultSet);
+    }
+    
+    public Country mapCountry(ResultSet resultSet) throws SQLException {
         return Country
                 .builder()
                 .id(resultSet.getInt("country_id"))
-                .countryName(resultSet.getString("country_name"))
+                .name(resultSet.getString("country_name"))
                 .build();
     }
     
