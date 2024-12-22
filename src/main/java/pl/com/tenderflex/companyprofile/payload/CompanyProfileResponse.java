@@ -10,7 +10,5 @@ public record CompanyProfileResponse(
         String city,
         String officialName, 
         String registrationNumber, 
-        String firstName, 
-        String lastName, 
-        String phoneNumber) {
+        ContactPersonResponse contactPerson) {
 }
