@@ -1,23 +1,25 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.contract.model;
 
 import java.time.LocalDate;
 import javax.validation.constraints.FutureOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Builder;
 import lombok.Data;
+import pl.com.tenderflex.currency.model.Currency;
+import pl.com.tenderflex.model.FileMetadata;
 
 @Data
 @Builder
 public class Contract {
 
     private Integer id;
-    private Tender tender;
-    private Offer offer;
+    private Integer tenderId;
+    private Integer offerId;
     private ContractType contractType;
     private Integer minPrice;
     private Integer maxPrice;
     private Currency currency;
-    private File contractFile;
+    private FileMetadata fileMetadata;
     
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     @FutureOrPresent(message = "The contract signing deadline must be today or a future date.")

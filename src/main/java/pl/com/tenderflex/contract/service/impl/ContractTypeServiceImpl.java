@@ -1,12 +1,12 @@
-package pl.com.tenderflex.service.impl;
+package pl.com.tenderflex.contract.service.impl;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.ContractTypeRepository;
-import pl.com.tenderflex.payload.iresponse.response.ContractTypeResponse;
-import pl.com.tenderflex.payload.mapstract.ContractTypeMapper;
-import pl.com.tenderflex.service.ContractTypeService;
+import pl.com.tenderflex.contract.payload.ContractTypeMapper;
+import pl.com.tenderflex.contract.payload.ContractTypeResponse;
+import pl.com.tenderflex.contract.repository.ContractTypeRepository;
+import pl.com.tenderflex.contract.service.ContractTypeService;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +17,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
 
     @Override
     public List<ContractTypeResponse> getAll() {
-        return contractTypeRepository.getAll().stream().map(contractTypeMapper::typeOfTenderToTypeOfTenderResponse)
+        return contractTypeRepository.getAll().stream().map(contractTypeMapper::teResponse)
                 .toList();
     }
 }
