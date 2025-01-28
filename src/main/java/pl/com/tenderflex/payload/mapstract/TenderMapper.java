@@ -1,105 +1,28 @@
 package pl.com.tenderflex.payload.mapstract;
 
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.Tender;
-import pl.com.tenderflex.payload.iresponse.response.OfferInListResponse;
-import pl.com.tenderflex.payload.iresponse.response.TenderDetailsBidderResponse;
-import pl.com.tenderflex.payload.iresponse.response.TenderDetailsContractorResponse;
-import pl.com.tenderflex.payload.iresponse.response.TenderInListResponse;
-import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.model.enums.ETenderStatus;
+import pl.com.tenderflex.payload.request.TenderRequest;
+import pl.com.tenderflex.payload.response.TenderResponse;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class, ContractMapper.class,
+        AwardMapper.class, RejectMapper.class })
 public interface TenderMapper {
 
-    @Mapping(target = "contractorCompanyDetails.officialName", source = "officialName")
-    @Mapping(target = "contractorCompanyDetails.registrationNumber", source = "registrationNumber")
-    @Mapping(target = "contractorCompanyDetails.country.id", source = "countryId")
-    @Mapping(target = "contractorCompanyDetails.city", source = "city")
-    @Mapping(target = "contactPerson.firstName", source = "firstName")
-    @Mapping(target = "contactPerson.lastName", source = "lastName")
-    @Mapping(target = "contactPerson.phoneNumber", source = "phoneNumber")
-    @Mapping(target = "cpv.id", source = "cpvId")
-    @Mapping(target = "type.id", source = "typeOfTenderId")
-    @Mapping(target = "details", source = "details")
-    @Mapping(target = "maxPrice", source = "maxPrice")
-    @Mapping(target = "minPrice", source = "minPrice")
-    @Mapping(target = "currency.id", source = "currencyId")
-    @Mapping(target = "publication", source = "publication")
-    @Mapping(target = "deadline", source = "deadline")
-    @Mapping(target = "signedContractDeadline", source = "signedContractDeadline")
-    @Mapping(target = "contractFileName", source = "contractFileName")
-    @Mapping(target = "awardDecisionFileName", source = "awardDecisionFileName")
-    @Mapping(target = "rejectDecisionFileName", source = "rejectDecisionFileName")
-    Tender tenderDetailsRequestToTender(TenderDetailsRequest tenderDetailsRequest);
-    
-    @Mapping(target = "tenderId", source = "tender.id")
-    @Mapping(target = "cpvCode", source = "tender.cpv.code")
-    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
-    @Mapping(target = "officialName", source = "tender.contractorCompanyDetails.officialName")
-    @Mapping(target = "tenderStatus", source = "tender.status")
-    @Mapping(target = "deadline", source = "tender.deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "offValue", source = "offersAmount")
-    TenderInListResponse<Integer> tenderToContractorTenderResponse(Tender tender, Integer offersAmount);
+    @Mapping(target = "publicationDate", source = "publication", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "yyyy-MM-dd")
+    Tender toEntity(TenderRequest tenderRequest);
 
-    @Mapping(target = "tenderId", source = "tender.id")
-    @Mapping(target = "cpvCode", source = "tender.cpv.code")
-    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
-    @Mapping(target = "officialName", source = "tender.contractorCompanyDetails.officialName")
-    @Mapping(target = "tenderStatus", source = "tender.status")
-    @Mapping(target = "deadline", source = "tender.deadline", dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "offValue", source = "offerStatus")
-    TenderInListResponse<String> tenderToBidderTenderResponse(Tender tender, String offerStatus);
-    
-    @Mapping(target = "tenderId", source = "tender.id")
-    @Mapping(target = "companyName", source = "tender.contractorCompanyDetails.officialName")
-    @Mapping(target = "registrationNumber", source = "tender.contractorCompanyDetails.registrationNumber")
-    @Mapping(target = "country", source = "tender.contractorCompanyDetails.country.countryName")
-    @Mapping(target = "city", source = "tender.contractorCompanyDetails.city")
-    @Mapping(target = "firstName", source = "tender.contactPerson.firstName")
-    @Mapping(target = "lastName", source = "tender.contactPerson.lastName")
-    @Mapping(target = "phone", source = "tender.contactPerson.phoneNumber")
-    @Mapping(target = "procedure", constant = "OPEN_PROCEDURE")
-    @Mapping(target = "language", constant = "ENGLISH")
-    @Mapping(target = "cpvCode", source = "tender.cpv.code")
-    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
-    @Mapping(target = "type", source = "tender.type.title")
-    @Mapping(target = "description", source = "tender.details")
-    @Mapping(target = "maxTenderValue", source = "tender.maxPrice")
-    @Mapping(target = "minTenderValue", source = "tender.minPrice")
-    @Mapping(target = "currency", source = "tender.currency.currencyType")
-    @Mapping(target = "publicationDate", source = "tender.publication", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerSubmissionDeadline", source = "tender.deadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "signedContractSubmissionDeadline", source = "tender.signedContractDeadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "contractFileName", source = "tender.contractFileName")
-    @Mapping(target = "awardDecisionFileName", source = "tender.awardDecisionFileName")
-    @Mapping(target = "rejectDecisionFileName", source = "tender.rejectDecisionFileName")
-    @Mapping(target = "offers", source = "offers")
-    TenderDetailsContractorResponse tenderToTenderDetailsContractorResponse(Tender tender, List<OfferInListResponse>offers);
-    
-    @Mapping(target = "tenderId", source = "tender.id")
-    @Mapping(target = "companyName", source = "tender.contractorCompanyDetails.officialName")
-    @Mapping(target = "registrationNumber", source = "tender.contractorCompanyDetails.registrationNumber")
-    @Mapping(target = "country", source = "tender.contractorCompanyDetails.country.countryName")
-    @Mapping(target = "city", source = "tender.contractorCompanyDetails.city")
-    @Mapping(target = "firstName", source = "tender.contactPerson.firstName")
-    @Mapping(target = "lastName", source = "tender.contactPerson.lastName")
-    @Mapping(target = "phone", source = "tender.contactPerson.phoneNumber")
-    @Mapping(target = "procedure", constant = "OPEN_PROCEDURE")
-    @Mapping(target = "language", constant = "ENGLISH")
-    @Mapping(target = "cpvCode", source = "tender.cpv.code")
-    @Mapping(target = "cpvDescription", source = "tender.cpv.description")
-    @Mapping(target = "type", source = "tender.type.title")
-    @Mapping(target = "description", source = "tender.details")
-    @Mapping(target = "maxTenderValue", source = "tender.maxPrice")
-    @Mapping(target = "minTenderValue", source = "tender.minPrice")
-    @Mapping(target = "currency", source = "tender.currency.currencyType")
-    @Mapping(target = "publicationDate", source = "tender.publication", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerSubmissionDeadline", source = "tender.deadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "signedContractSubmissionDeadline", source = "tender.signedContractDeadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "contractFileName", source = "tender.contractFileName")
-    @Mapping(target = "awardDecisionFileName", source = "tender.awardDecisionFileName")
-    @Mapping(target = "rejectDecisionFileName", source = "tender.rejectDecisionFileName")
-    TenderDetailsBidderResponse tenderToTenderDetailsBidderResponse(Tender tender);
+    @Mapping(target = "id", source = "tender.id")
+    @Mapping(target = "companyProfile", source = "tender.companyProfile")
+    @Mapping(target = "procedure", source = "tender.procedure.type")
+    @Mapping(target = "language", source = "tender.procedure.language")
+    @Mapping(target = "description", source = "tender.description")
+    @Mapping(target = "publicationDate", source = "tender.publicationDate", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "offerSubmissionDeadline", source = "tender.offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "status", source = "status")
+    TenderResponse toResponse(Tender tender, ETenderStatus status);
+
 }

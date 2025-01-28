@@ -1,18 +1,12 @@
 package pl.com.tenderflex.payload.mapstract;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import pl.com.tenderflex.model.AwardDecision;
-import pl.com.tenderflex.payload.iresponse.response.AwardResponse;
-import pl.com.tenderflex.payload.request.AwardRequest;
+import pl.com.tenderflex.payload.request.AwardDecisionRequest;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = FileMetadataMapper.class)
 public interface AwardMapper {
+    
+    AwardDecision toEntity(AwardDecisionRequest awardDecisionRequest);
 
-    @Mapping(target = "tender.id", source = "tenderId")
-    @Mapping(target = "awardFile.id", source = "awardFileId")
-    AwardDecision awardRequestToAwardDecision(AwardRequest awardRequest);
-    
-    AwardResponse awardDecisionToAwardResponse(AwardDecision awardDecision);
-    
 }
