@@ -1,7 +1,6 @@
 package pl.com.tenderflex.model;
 
 import java.time.LocalDate;
-import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
 import pl.com.tenderflex.model.enums.ETenderStatus;
@@ -11,16 +10,16 @@ import pl.com.tenderflex.model.enums.ETenderStatus;
 public class Tender {
 
     private Integer id;
-    private User contractor;
-    private CompanyDetails contractorCompanyDetails;
-    private ContactPerson contactPerson;
+    private Integer contractorId;
+    private CompanyProfile companyProfile;
     private Procedure procedure;
     private Cpv cpv;
     private String description;
     private ETenderStatus globalStatus; 
+    private Contract contract;
+    private AwardDecision award;
+    private RejectDecision reject;
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
-    private Set<ProcurementProtocol> submittedProtocols;
-    private Set<Submission> submissions;
         
 }
