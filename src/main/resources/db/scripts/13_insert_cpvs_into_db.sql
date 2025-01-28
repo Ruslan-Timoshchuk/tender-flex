@@ -1,4 +1,4 @@
-INSERT INTO cpvs(code, description)
+INSERT INTO cpvs(code, summary)
 VALUES ('03000000', 'Agricultural, farming, fishing, forestry and related products'),
        ('09000000', 'Petroleum products, fuel, electricity and other sources of energy'),
        ('14000000', 'Mining, basic metals and related products'),
