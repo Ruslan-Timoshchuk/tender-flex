@@ -9,5 +9,7 @@ public class Country {
 
     private Integer id;
     private String name;
+    private String isoCode;
+    private String phoneCode;
     
 }
