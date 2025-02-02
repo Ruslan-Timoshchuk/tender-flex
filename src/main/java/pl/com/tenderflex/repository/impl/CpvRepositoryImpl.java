@@ -1,6 +1,5 @@
 package pl.com.tenderflex.repository.impl;
 
-import static java.lang.String.format;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +16,14 @@ public class CpvRepositoryImpl implements CpvRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CpvRepositoryImpl.class);
     
-    public static final String FIND_ALL_PATTERN_QUERY = "SELECT %s, %s, %s FROM %s";
-    public static final String CPV_ID = "id";
-    public static final String CPV_CODE = "code";
-    public static final String CPV_DESCRIPTION = "description";
-    public static final String CPVS_TABLE = "cpvs";
-   
+    public static final String FIND_ALL_CPVS_QUERY = "SELECT id AS cpv_id, code AS cpv_code, summary AS cpv_summary FROM cpvs";
+      
     private final JdbcTemplate jdbcTemplate;
     private final CpvMapper cpvMapper;
 
     @Override
     public List<Cpv> findAll() {
-        String sqlQuery = format(FIND_ALL_PATTERN_QUERY, CPV_ID, CPV_CODE, CPV_DESCRIPTION, CPVS_TABLE);
-        LOGGER.debug("Executing SQL Query: {}", sqlQuery);
-        List<Cpv> cpvs = jdbcTemplate.query(sqlQuery, cpvMapper);
+        List<Cpv> cpvs = jdbcTemplate.query(FIND_ALL_CPVS_QUERY, cpvMapper);
         LOGGER.info("Successfully fetched {} cpvs", cpvs.size());
         return cpvs;
     }

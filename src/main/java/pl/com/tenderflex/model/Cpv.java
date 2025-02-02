@@ -9,6 +9,6 @@ public class Cpv {
 
     private Integer id;
     private String code;
-    private String description;
+    private String summary;
     
 }
