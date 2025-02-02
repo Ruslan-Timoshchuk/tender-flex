@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.payload.AuthenticationDetails;
+import pl.com.tenderflex.payload.iresponse.response.AuthenticationResponse;
 import pl.com.tenderflex.payload.request.AuthenticationRequest;
-import pl.com.tenderflex.payload.response.AuthenticationResponse;
 import pl.com.tenderflex.security.AuthenticationService;
 
 @RestController
@@ -23,7 +23,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public AuthenticationResponse performAuthenticate(@RequestBody @Valid AuthenticationRequest request,
             HttpServletResponse response, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

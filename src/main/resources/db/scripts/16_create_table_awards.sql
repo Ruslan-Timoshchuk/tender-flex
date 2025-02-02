@@ -1,0 +1,5 @@
+CREATE TABLE awards (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tender_id INTEGER NOT NULL REFERENCES tenders(id),
+    award_file_id INTEGER REFERENCES files(id)
+);

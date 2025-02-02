@@ -11,14 +11,17 @@ import pl.com.tenderflex.service.CurrencyService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/currency")
+@RequestMapping("/api/v1/currencies")
 public class CurrencyController {
 
+    public static final String URL_CURRENCIES_ALL = "/all";
+        
     private final CurrencyService currencyService;
 
-    @Secured("CONTRACTOR")
-    @GetMapping("/list")
-    public List<CurrencyResponse> getCurrencies() {
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping(URL_CURRENCIES_ALL)
+    public List<CurrencyResponse> getAllCurrencies() {
         return currencyService.getAllCurrencies();
     }
+    
 }

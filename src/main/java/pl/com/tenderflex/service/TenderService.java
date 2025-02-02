@@ -1,21 +1,26 @@
 package pl.com.tenderflex.service;
 
+import java.util.Collection;
+import org.springframework.security.core.GrantedAuthority;
 import pl.com.tenderflex.payload.Page;
-import pl.com.tenderflex.payload.request.TenderDetailsRequest;
-import pl.com.tenderflex.payload.response.BidderTenderResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderDetailsResponse;
-import pl.com.tenderflex.payload.response.ContractorTenderResponse;
+import pl.com.tenderflex.payload.iresponse.response.TenderResponse;
+import pl.com.tenderflex.payload.iresponse.response.BidCountResponse;
+import pl.com.tenderflex.payload.iresponse.response.TenderListResponse;
+import pl.com.tenderflex.payload.request.TenderRequest;
 
 public interface TenderService {
 
-    void createTender(TenderDetailsRequest tenderDetails, Integer contractorId);
+    TenderResponse create(TenderRequest tender);
 
-    Integer getTendersAmountByContractor(Integer contractorId);
+    Page<TenderListResponse> getTendersPage(Integer userId, Integer currentPage, Integer tendersPerPage);
     
-    Page<ContractorTenderResponse> getByContractor(Integer contractorId, Integer currentPage);
+    Page<TenderListResponse> getTendersPageByContractor(Integer contractorId, Integer currentPage,
+            Integer tendersPerPage);
 
-    Page<BidderTenderResponse> getByCondition(Integer currentPage);
+    TenderResponse getTenderDetails(Integer tenderId, Collection<GrantedAuthority> authorities);
 
-    ContractorTenderDetailsResponse getById(Integer tenderId);
+    BidCountResponse countAll();
+    
+    BidCountResponse countByContractor(Integer userId);
 
 }

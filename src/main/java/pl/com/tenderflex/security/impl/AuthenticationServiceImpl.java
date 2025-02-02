@@ -1,6 +1,7 @@
 package pl.com.tenderflex.security.impl;
 
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.AuthenticationDetails;
 import pl.com.tenderflex.payload.request.AuthenticationRequest;
 import pl.com.tenderflex.security.AuthenticationService;
@@ -23,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationDetails authenticate(AuthenticationRequest request) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        UserDetailsImpl user = (UserDetailsImpl) userDetailsService.loadUserByUsername(request.getEmail());
+        User user = (User) userDetailsService.loadUserByUsername(request.getEmail());
         String userRole = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElseThrow();
         return new AuthenticationDetails(user.getId(), userRole, jwtService.generateJwtCookie(user.getUsername()));
     }

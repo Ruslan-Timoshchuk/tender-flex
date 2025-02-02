@@ -1,25 +1,20 @@
 package pl.com.tenderflex.payload.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import pl.com.tenderflex.model.Country;
-import pl.com.tenderflex.model.Currency;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class OfferDetailsRequest {
 
     private Integer tenderId;
-    private String organizationName;
-    private String nationalRegistrationNumber;
-    private Country country;
+    private String company;
+    private String registrationNumber;
+    private Integer countryId;
     private String city;
     private String firstName;
     private String lastName;
-    private String phone;
+    private String phoneNumber;
     private Integer bidPrice;
-    private Currency currency;
-
+    private Integer currencyId;
+    private String documentName;
+    
 }

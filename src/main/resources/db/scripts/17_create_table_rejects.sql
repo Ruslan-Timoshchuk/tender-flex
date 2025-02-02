@@ -1,0 +1,5 @@
+CREATE TABLE rejects (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tender_id INTEGER NOT NULL REFERENCES tenders(id),
+    reject_file_id INTEGER NOT NULL REFERENCES files(id)
+);

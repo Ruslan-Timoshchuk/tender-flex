@@ -11,14 +11,17 @@ import pl.com.tenderflex.service.CountryService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/country")
+@RequestMapping("/api/v1/countries")
 public class CountryController {
 
+    public static final String URL_COUNTRIES_ALL = "/all";
+    
     private final CountryService countryService;
     
-    @Secured("CONTRACTOR")
-    @GetMapping("/list")
+    @Secured({ "CONTRACTOR", "BIDDER" })
+    @GetMapping(URL_COUNTRIES_ALL)
     public List<CountryResponse> getAllCountries() {
         return countryService.getAllCountries();
     }
+    
 }
