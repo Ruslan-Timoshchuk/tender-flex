@@ -8,6 +8,7 @@ import lombok.Data;
 public class Currency {
 
     private Integer id;
-    private String type;
+    private String code;
+    private String symbol;
     
 }
