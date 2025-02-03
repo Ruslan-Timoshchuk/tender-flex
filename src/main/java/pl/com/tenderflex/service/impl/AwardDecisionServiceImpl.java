@@ -11,12 +11,12 @@ import pl.com.tenderflex.service.AwardDecisionService;
 @RequiredArgsConstructor
 public class AwardDecisionServiceImpl implements AwardDecisionService {
 
-    private final AwardDecisionRepository awardDecisionRepository;
+    private final AwardDecisionRepository awardRepository;
 
     @Override
     @Transactional
     public AwardDecision create(AwardDecision awardDecision) {
-        return awardDecisionRepository.save(awardDecision);
+        return awardRepository.save(awardDecision);
     }
 
 }

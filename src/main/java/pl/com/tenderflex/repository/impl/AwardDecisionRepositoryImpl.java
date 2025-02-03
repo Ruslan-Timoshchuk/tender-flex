@@ -13,7 +13,7 @@ import pl.com.tenderflex.repository.AwardDecisionRepository;
 @RequiredArgsConstructor
 public class AwardDecisionRepositoryImpl implements AwardDecisionRepository {
 
-    public static final String ADD_NEW_AWARD_QUERY = "INSERT INTO awards(tender_id, award_file_id) VALUES (?, ?)";
+    public static final String ADD_NEW_AWARD_DECISION_QUERY = "INSERT INTO awards(tender_id, award_file_id) VALUES (?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,7 +21,7 @@ public class AwardDecisionRepositoryImpl implements AwardDecisionRepository {
     public AwardDecision save(AwardDecision award) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_AWARD_QUERY, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(ADD_NEW_AWARD_DECISION_QUERY, new String[] { "id" });
             statement.setInt(1, award.getTender().getId());
             statement.setInt(2, award.getFileMetadata().getId());
             return statement;
