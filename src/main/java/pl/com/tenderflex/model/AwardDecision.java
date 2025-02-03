@@ -9,6 +9,6 @@ public class AwardDecision {
 
     private Integer id;
     private Tender tender;
-    private File awardFile;
+    private FileMetadata fileMetadata;
    
 }
