@@ -5,10 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AwardDecision {
+public class ContractType {
 
     private Integer id;
-    private Tender tender;
-    private FileMetadata fileMetadata;
-   
+    private String title;
+    
 }
