@@ -9,6 +9,6 @@ public class RejectDecision {
 
     private Integer id;
     private Tender tender;
-    private File rejectFile;
+    private FileMetadata fileMetadata;
     
 }
