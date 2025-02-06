@@ -1,6 +1,6 @@
 CREATE TABLE contracts (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    tender_id INTEGER NOT NULL REFERENCES tenders(id),
+    tender_id INTEGER UNIQUE REFERENCES tenders(id) ON DELETE CASCADE,
     offer_id INTEGER REFERENCES offers(id),
     contract_type_id INTEGER NOT NULL REFERENCES contract_types(id),
     min_price INTEGER NOT NULL,
