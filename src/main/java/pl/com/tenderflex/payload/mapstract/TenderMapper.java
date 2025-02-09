@@ -8,7 +8,7 @@ import pl.com.tenderflex.payload.request.TenderRequest;
 import pl.com.tenderflex.payload.response.TenderResponse;
 
 @Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class, ContractMapper.class,
-        AwardMapper.class, RejectMapper.class })
+        AwardDecisionMapper.class, RejectDecisionMapper.class })
 public interface TenderMapper {
 
     @Mapping(target = "publicationDate", source = "publication", dateFormat = "yyyy-MM-dd")

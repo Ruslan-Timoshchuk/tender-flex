@@ -8,6 +8,6 @@ public record TenderRequest(
         String publication, 
         String offerSubmissionDeadline,
         ContractRequest contract,
-        AwardDecisionRequest award,
-        RejectDecisionRequest reject) {
+        AwardDecisionRequest awardDecision,
+        RejectDecisionRequest rejectDecision) {
 }
