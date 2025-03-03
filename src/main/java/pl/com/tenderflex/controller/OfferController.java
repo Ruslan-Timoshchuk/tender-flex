@@ -24,14 +24,14 @@ import pl.com.tenderflex.service.RoleBasedActionExecutor;
 @RequiredArgsConstructor
 public class OfferController {
 
-    public static final String URI_OFFERS = "/api/offers";
-    public static final String URI_OFFERS_ID = "/api/offers/{id}";
-    public static final String URI_OFFERS_BIDDER_PAGE = "/api/offers/bidder/page";
-    public static final String URI_OFFERS_CONTRACTOR_PAGE = "/api/offers/contractor/page";
-    public static final String URI_OFFERS_PAGE = "/api/offers/page";
-    public static final String URI_OFFERS_COUNT_USER = "/api/offers/count";
-    public static final String URI_OFFERS_COUNT_TENDER = "/api/offers/count/{tender-id}";
-    public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/offers/status/{user-id}/{tender-id}";
+    public static final String URI_OFFERS = "/api/v1/offers";
+    public static final String URI_OFFERS_ID = "/api/v1/offers/{id}";
+    public static final String URI_OFFERS_BIDDER_PAGE = "/api/v1/offers/bidder/page";
+    public static final String URI_OFFERS_CONTRACTOR_PAGE = "/api/v1/offers/contractor/page";
+    public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
+    public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
+    public static final String URI_OFFERS_COUNT_TENDER = "/api/offers/v1/count/{tender-id}";
+    public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/v1/offers/status/{user-id}/{tender-id}";
 
     private final OfferService offerService;
     private final RoleBasedActionExecutor roleBasedActionExecutor;
