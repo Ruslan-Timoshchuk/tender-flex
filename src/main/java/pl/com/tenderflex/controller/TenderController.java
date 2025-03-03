@@ -1,6 +1,7 @@
 package pl.com.tenderflex.controller;
 
 import static pl.com.tenderflex.security.SecurityRoles.*;
+import static org.springframework.http.MediaType.*;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ import pl.com.tenderflex.service.TenderService;
 public class TenderController {
 
     public static final String URI_TENDERS = "";
-    public static final String URI_TENDERS_ALL = "/all";
+    public static final String URI_TENDERS_PAGE = "/page";
     public static final String URI_TENDERS_ID = "/{id}";
     public static final String URI_TENDERS_COUNT = "/count";
     
@@ -33,13 +34,13 @@ public class TenderController {
     private final RoleBasedActionExecutor roleBasedActionExecutor;
     
     @Secured(CONTRACTOR)
-    @PostMapping(URI_TENDERS)
+    @PostMapping(value = URI_TENDERS, consumes = APPLICATION_JSON_VALUE)
     public TenderResponse create(@RequestBody TenderRequest tenderRequest) {
          return tenderService.save(tenderRequest);
     }
     
     @Secured({ CONTRACTOR, BIDDER })
-    @GetMapping(URI_TENDERS_ALL)
+    @GetMapping(URI_TENDERS_PAGE)
     public Page<TenderResponse> findPage(@AuthenticationPrincipal User user,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
