@@ -1,6 +1,6 @@
-package pl.com.tenderflex.model;
+package pl.com.tenderflex.model.enums;
 
-public enum OfferStatus {
+public enum EOfferStatus {
     
     OFFER_HAS_NOT_SENT, 
     OFFER_SENT_TO_CONTRACTOR, 

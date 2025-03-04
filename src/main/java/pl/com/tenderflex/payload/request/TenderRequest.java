@@ -1,6 +1,7 @@
 package pl.com.tenderflex.payload.request;
 
 public record TenderRequest(
+        Integer id,
         Integer contractorId, 
         CompanyProfileRequest companyProfile,
         CpvRequest cpv,

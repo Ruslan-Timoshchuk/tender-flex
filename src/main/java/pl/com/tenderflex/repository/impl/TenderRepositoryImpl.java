@@ -36,7 +36,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String TENDER_COLUMNS_SQL_PART_QUERY = """
             tender.id AS tender_id, tender.language, tender.procedure_type, tender.description, 
             tender.global_status, tender.publication_date, tender.offer_submission_deadline,     
-            contractor_profile.id AS company_profile_id, contractor_profile.official_name AS contractor_official_name,
+            contractor_profile.id AS contractor_profile_id, contractor_profile.official_name AS contractor_official_name,
             contractor_profile.registration_number AS contractor_registration_number,
             contractor_country.id AS contractor_country_id, contractor_country.name AS contractor_country_name,
             contractor_country.iso_code AS contractor_country_iso_code, contractor_country.phone_code AS contractor_country_phone_code,

@@ -30,7 +30,7 @@ public class OfferController {
     public static final String URI_OFFERS_CONTRACTOR_PAGE = "/api/v1/offers/contractor/page";
     public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
-    public static final String URI_OFFERS_COUNT_TENDER = "/api/offers/v1/count/{tender-id}";
+    public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
     public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/v1/offers/status/{user-id}/{tender-id}";
 
     private final OfferService offerService;

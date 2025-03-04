@@ -30,14 +30,13 @@ public class TenderMapper implements RowMapper<Tender> {
     public static final String TENDER_PROCEDURE_LANGUAGE = "language";
      
     // Contractor country of Company Profile
-    public static final String CONTRACTOR_COUNTRIES_TABLE_NAME = "contractor_country";
     public static final String CONTRACTOR_PROFILE_COUNTRY_ID = "contractor_country_id";
     public static final String CONTRACTOR_PROFILE_COUNTRY_NAME = "contractor_country_name";
     public static final String CONTRACTOR_PROFILE_COUNTRY_ISO_CODE = "contractor_country_iso_code";
     public static final String CONTRACTOR_PROFILE_COUNTRY_PHONE_CODE = "contractor_country_phone_code";
     
     // Contractor Company Profile
-    public static final String CONTRACTOR_PROFILE_ID = "company_profile_id";
+    public static final String CONTRACTOR_PROFILE_ID = "contractor_profile_id";
     public static final String CONTRACTOR_PROFILE_OFFICIAL_NAME = "contractor_official_name";
     public static final String CONTRACTOR_PROFILE_REGISTRATION_NUMBER = "contractor_registration_number";
     public static final String CONTRACTOR_PROFILE_CITY = "contractor_city";
@@ -75,8 +74,7 @@ public class TenderMapper implements RowMapper<Tender> {
                                           PROFILE_CITY, CONTRACTOR_PROFILE_CITY, 
                                           CONTACT_FIRST_NAME, CONTRACTOR_CONTACT_FIRST_NAME, 
                                           CONTACT_LAST_NAME, CONTRACTOR_CONTACT_LAST_NAME, 
-                                          CONTACT_PHONE_NUMBER, CONTRACTOR_CONTACT_PHONE_NUMBER
-                             )); 
+                                          CONTACT_PHONE_NUMBER, CONTRACTOR_CONTACT_PHONE_NUMBER)); 
         return Tender
                 .builder()
                 .id(resultSet.getInt(TENDER_ID))
