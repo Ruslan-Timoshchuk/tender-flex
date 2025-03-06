@@ -2,9 +2,8 @@ package pl.com.tenderflex.payload.response;
 
 public record TenderResponse(
         Integer id, 
-        CompanyProfileResponse companyProfile, 
-        String procedure, 
-        String language, 
+        CompanyProfileResponse companyProfile,
+        ProcedureResponse procedure, 
         CpvResponse cpv,
         String description, 
         String publicationDate, 

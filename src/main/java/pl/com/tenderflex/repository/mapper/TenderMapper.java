@@ -55,10 +55,7 @@ public class TenderMapper implements RowMapper<Tender> {
   
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Tender tender = mapTender(resultSet);
-        tender.setAwardDecision(awardMapper.mapAward(resultSet));
-        tender.setRejectDecision(rejectMapper.mapReject(resultSet));
-        return tender;
+        return mapTender(resultSet);
     }
     
     public Tender mapTender(ResultSet resultSet) throws SQLException {
@@ -84,6 +81,8 @@ public class TenderMapper implements RowMapper<Tender> {
                 .description(resultSet.getString(TENDER_DESCRIPTION))
                 .globalStatus(ETenderStatus.valueOf(resultSet.getString(TENDER_GLOBAL_STATUS)))
                 .contract(contractMapper.mapContract(resultSet))
+                .awardDecision(awardMapper.mapAward(resultSet))
+                .rejectDecision(rejectMapper.mapReject(resultSet))
                 .publicationDate(resultSet.getObject(TENDER_PUBLICATION_DATE, LocalDate.class))
                 .offerSubmissionDeadline(resultSet.getObject(OFFER_SUBMISSION_DEADLINE, LocalDate.class))
                 .build();
