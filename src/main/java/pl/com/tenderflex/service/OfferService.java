@@ -1,6 +1,5 @@
 package pl.com.tenderflex.service;
 
-import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
@@ -9,7 +8,7 @@ import pl.com.tenderflex.payload.response.OfferStatusResponse;
 
 public interface OfferService {
 
-    void create(OfferRequest offer);
+    OfferResponse create(OfferRequest offer);
 
     OfferResponse findById(Integer offerId);
 

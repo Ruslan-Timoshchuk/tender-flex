@@ -1,26 +1,20 @@
 package pl.com.tenderflex.service.impl;
 
-import static pl.com.tenderflex.model.ERole.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
-import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.exception.UnauthorizedAccessException;
-import pl.com.tenderflex.model.User;
+import pl.com.tenderflex.model.CompanyProfile;
+import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.enums.EOfferStatus;
 import pl.com.tenderflex.payload.Page;
-import pl.com.tenderflex.payload.iresponse.OfferDetails;
-import pl.com.tenderflex.payload.iresponse.response.DecisionResponse;
-import pl.com.tenderflex.payload.iresponse.response.OfferInListResponse;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
-import pl.com.tenderflex.payload.request.AwardDecisionRequest;
-import pl.com.tenderflex.payload.request.DecisionRequest;
-import pl.com.tenderflex.payload.request.OfferDetailsRequest;
-import pl.com.tenderflex.payload.request.RejectDecisionRequest;
+import pl.com.tenderflex.payload.request.OfferRequest;
+import pl.com.tenderflex.payload.response.OfferCountResponse;
+import pl.com.tenderflex.payload.response.OfferResponse;
+import pl.com.tenderflex.payload.response.OfferStatusResponse;
+import pl.com.tenderflex.repository.OfferRepository;
+import pl.com.tenderflex.service.CompanyProfileService;
 import pl.com.tenderflex.service.OfferService;
-import java.util.Collection;
-import org.springframework.security.core.GrantedAuthority;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +22,20 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
-    private final TenderRepository tenderRepository;
-    private final GrantedAuthorityRoleRepository roleRepository;
+    private final CompanyProfileService companyProfileService;
 
     @Override
     @Transactional
-    public void createOffer(OfferDetailsRequest offerDetailsRequest, User bidder) {
-        offerRepository.create(offerMapper.newOfferRequestToOffer(offerDetailsRequest, bidder));
+    public OfferResponse create(OfferRequest offerRequest) {
+        Offer offer = offerMapper.toEntity(offerRequest);
+        CompanyProfile companyProfile = companyProfileService.create(offer.getCompanyProfile());
+        offer.setCompanyProfile(companyProfile);
+        offer.setGlobalStatus(EOfferStatus.OFFER_SENT_TO_CONTRACTOR);
+        return offerMapper.toResponse(offerRepository.save(offer), offer.getGlobalStatus());
     }
 
     @Override
-    public Page<OfferInListResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
         Integer totalPages = 1;
@@ -49,14 +46,12 @@ public class OfferServiceImpl implements OfferService {
             }
         }
         return new Page<>(currentPage, totalPages,
-                offerRepository.getPageByBidder(bidderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offer -> offerMapper.offerToOfferInListResponse(offer, offer.getOfferStatusBidder()))
-                        .toList());
+                offerRepository.findByBidderWithPagination(bidderId, offersPerPage, amountOffersToSkip).stream()
+                        .map(offer -> offerMapper.toResponse(offer, offer.getGlobalStatus())).toList());
     }
 
     @Override
-    public Page<OfferInListResponse> getOffersByContractor(Integer contractorId, Integer currentPage,
-            Integer offersPerPage) {
+    public Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByContractor(contractorId);
         Integer totalPages = 1;
@@ -66,58 +61,46 @@ public class OfferServiceImpl implements OfferService {
                 totalPages++;
             }
         }
-        return new Page<>(currentPage, totalPages,
-                offerRepository.getPageByContractor(contractorId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offer -> offerMapper.offerToOfferInListResponse(offer, offer.getOfferStatusContractor()))
-                        .toList());
+        return new Page<>(currentPage, totalPages, offerRepository
+                .findByContractorWithPagination(contractorId, offersPerPage, amountOffersToSkip).stream().map(offer -> {
+                    EOfferStatus contractorStatus = offer.getGlobalStatus();
+                    if (offer.getGlobalStatus() != null) {
+                        if (offer.getGlobalStatus() == EOfferStatus.OFFER_SENT_TO_CONTRACTOR) {
+                            contractorStatus = EOfferStatus.OFFER_RECEIVED;
+                        } else if (offer.getGlobalStatus() == EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR) {
+                            contractorStatus = EOfferStatus.OFFER_SELECTED;
+                        }
+                    }
+                    return offerMapper.toResponse(offer, contractorStatus);
+                }).toList());
     }
 
     @Override
-    public OfferDetails getOfferDetails(Integer offerId, Collection<GrantedAuthority> authorities) {
-        if (authorities.contains(roleRepository.getByName(CONTRACTOR))) {
-            return offerMapper.offerToOfferDetailsContractorResponse(offerRepository.getById(offerId));
-        } else if (authorities.contains(roleRepository.getByName(BIDDER))) {
-            return offerMapper.offerToOfferDetailsBidderResponse(offerRepository.getById(offerId));
-        }
-        throw new UnauthorizedAccessException("User does not have the required role to access this resource");
+    public OfferResponse findById(Integer offerId) {
+        Offer offer = offerRepository.findById(offerId);
+        return offerMapper.toResponse(offer, offer.getGlobalStatus());
     }
 
     @Override
-    public void addAwardDecisionFile(AwardDecisionRequest award) {
-        Integer stageStatus = 2;
-        offerRepository.addAwardDecision(award.getAwardDecisionFileName(), stageStatus, award.getOfferId());
+    public OfferCountResponse countByBidder(Integer bidderId) {
+        return new OfferCountResponse(offerRepository.countOffersByBidder(bidderId));
     }
 
     @Override
-    public void addRejectDecisionFile(RejectDecisionRequest reject) {
-        Integer stageStatus = 5;
-        offerRepository.addRejectDecision(reject.getRejectDecisionFileName(), stageStatus, reject.getOfferId());
+    public OfferCountResponse countByContractor(Integer contractorId) {
+        return new OfferCountResponse(offerRepository.countOffersByContractor(contractorId));
     }
 
     @Override
-    @Transactional
-    public DecisionResponse saveApproveDecision(DecisionRequest decision) {
-        String rejectDecisionFileName = tenderRepository.getRejectDecisionFileNameByTender(decision.getTenderId());
-        Integer tenderStatus = 2;
-        tenderRepository.updateTenderStatus(tenderStatus, decision.getTenderId());
-        Integer otherOffersStatus = 5;
-        Integer statusOfActiveOffers = 2;
-        offerRepository.updateOffersStatus(otherOffersStatus, rejectDecisionFileName, decision.getTenderId(),
-                statusOfActiveOffers, decision.getOfferId());
-        Integer offerStatus = 3;
-        offerRepository.updateOfferStatus(offerStatus, decision.getOfferId());
-        return new DecisionResponse(decision.getOfferId(), "Contract approved by Bidder");
+    public OfferCountResponse countByTender(Integer tenderId) {
+        return new OfferCountResponse(offerRepository.countOffersByTender(tenderId));
     }
 
     @Override
-    public DecisionResponse saveDeclineDecision(DecisionRequest decision) {
-        Integer activeOfferStatus = 2;
-        if (offerRepository.countActiveOffersByTender(decision.getTenderId(), activeOfferStatus) == 1) {
-            Integer statusId = 2;
-            tenderRepository.updateTenderStatus(statusId, decision.getTenderId());
-        }
-        Integer statusId = 4;
-        offerRepository.updateOfferStatus(statusId, decision.getOfferId());
-        return new DecisionResponse(decision.getOfferId(), "Contract declined by Bidder");
+    public OfferStatusResponse checkOfferStatus(Integer userId, Integer tenderId) {
+        return offerRepository.findOfferByTenderAndBidder(tenderId, userId)
+                .map(offer -> new OfferStatusResponse(offer.getId(), offer.getGlobalStatus()))
+                .orElse(new OfferStatusResponse(0, EOfferStatus.OFFER_HAS_NOT_SENT));
     }
+
 }

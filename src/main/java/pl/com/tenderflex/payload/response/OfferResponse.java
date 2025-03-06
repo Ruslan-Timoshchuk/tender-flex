@@ -2,8 +2,11 @@ package pl.com.tenderflex.payload.response;
 
 public record OfferResponse(
         Integer id, 
-        Integer companyProfileId, 
-        Integer price, 
-        String date, 
-        String status) {
+        TenderResponse tender,
+        CompanyProfileResponse companyProfile,
+        String status,
+        Integer bidPrice,
+        CurrencyResponse currency,
+        String publication, 
+        FileMetadataResponse proposition) {
 }

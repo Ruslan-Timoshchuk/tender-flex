@@ -26,8 +26,6 @@ public class OfferController {
 
     public static final String URI_OFFERS = "/api/v1/offers";
     public static final String URI_OFFERS_ID = "/api/v1/offers/{id}";
-    public static final String URI_OFFERS_BIDDER_PAGE = "/api/v1/offers/bidder/page";
-    public static final String URI_OFFERS_CONTRACTOR_PAGE = "/api/v1/offers/contractor/page";
     public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
     public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
@@ -48,20 +46,14 @@ public class OfferController {
         return offerService.findById(id);
     }
 
-    @Secured(BIDDER)
-    @GetMapping(URI_OFFERS_BIDDER_PAGE)
-    public Page<OfferResponse> getAllByBidder(@AuthenticationPrincipal(expression = "id") Integer bidderId,
+    @Secured({ BIDDER, CONTRACTOR })
+    @GetMapping(URI_OFFERS_PAGE)
+    public Page<OfferResponse> findPage(@AuthenticationPrincipal User user,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
-        return offerService.getOffersByBidder(bidderId, currentPage, offersPerPage);
-    }
-
-    @Secured(CONTRACTOR)
-    @GetMapping(URI_OFFERS_CONTRACTOR_PAGE)
-    public Page<OfferResponse> getAllByContractor(@AuthenticationPrincipal(expression = "id") Integer contractorId,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer offersPerPage) {
-        return offerService.getOffersByContractor(contractorId, currentPage, offersPerPage);
+        return roleBasedActionExecutor.executeRoleBasedAction(user,
+                contractor -> offerService.getOffersByContractor(user.getId(), currentPage, offersPerPage),
+                bidder -> offerService.getOffersByBidder(user.getId(), currentPage, offersPerPage));
     }
 
     @Secured({ CONTRACTOR, BIDDER })
