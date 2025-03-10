@@ -26,44 +26,12 @@ public class OfferRepositoryImpl implements OfferRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(OfferRepositoryImpl.class);
     
     public static final String EXECUTING_SQL_QUERY_LOG = "Executing SQL Query: {}";
-    public static final String ADD_NEW_OFFER_QUERY = """
-            INSERT INTO offers(bidder_id, tender_id, company_profile_id, global_status, 
-                               bid_price, currency_id, publication_date, proposition_file_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
     public static final String SELECT_BY_ID_PATTERN_QUERY = "SELECT %s, %s FROM offers offer %s %s WHERE offer.id = ?";
     public static final String SELECT_BY_TENDER_AND_BIDDER_PATTERN_QUERY = "SELECT %s, %s FROM offers offer %s %s WHERE offer.tender_id = ? AND bidder_id = ?";
-    public static final String GET_OFFERS_BY_BIDDER_QUERY = "SELECT o.id, bidder_id, tender_id, official_name, registration_number, "
-            + "country_id, country_name, city, first_name, last_name, phone_number, bid_price, currency_id, currency_type, publication_date, "
-            + "document_name, offer_status_bidder, offer_status_contractor "
-            + "FROM offers o "
-            + "LEFT JOIN countries co ON co.id = o.country_id "
-            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
-            + "WHERE bidder_id = ? LIMIT ? OFFSET ?";
-    public static final String GET_OFFERS_BY_CONTRACTOR_QUERY = "SELECT o.id, bidder_id, tender_id, o.official_name, o.registration_number, "
-            + "o.country_id, country_name, o.city, o.first_name, o.last_name, o.phone_number, bid_price, o.currency_id, currency_type, o.publication_date, "
-            + "document_name, offer_status_bidder, offer_status_contractor "
-            + "FROM offers o "
-            + "LEFT JOIN countries c ON c.id = o.country_id "
-            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
-            + "LEFT JOIN tenders t ON t.id = tender_id "
-            + "WHERE contractor_id = ? LIMIT ? OFFSET ?";
-    public static final String GET_OFFERS_BY_TENDER_QUERY = "SELECT o.id, bidder_id, tender_id, o.official_name, o.registration_number, "
-            + "o.country_id, country_name, o.city, o.first_name, o.last_name, o.phone_number, bid_price, o.currency_id, currency_type, "
-            + "o.publication_date, document_name, offer_status_bidder, offer_status_contractor "
-            + "FROM offers o "
-            + "LEFT JOIN countries c ON c.id = o.country_id "
-            + "LEFT JOIN currencies cur ON cur.id = o.currency_id "
-            + "WHERE o.tender_id = ?";
-    public static final String COUNT_OFFERS_BY_BIDDER = "SELECT count(id) FROM offers WHERE bidder_id = ?";
-    public static final String COUNT_OFFERS_BY_CONTRACTOR = "SELECT count(o.id) FROM offers o LEFT JOIN tenders t ON o.tender_id = t.id WHERE contractor_id = ?";
-    public static final String COUNT_OFFERS_BY_TENDER = "SELECT count(os.id) FROM offers os WHERE os.tender_id = ?";
- 
-    public static final String ADD_AWARD_DECISION_QUERY = "UPDATE offers SET award_decision_name = ?, status_id = ? WHERE id = ?";
-    public static final String ADD_REJECT_DECISION_QUERY = "UPDATE offers SET reject_decision_name = ?, status_id = ? WHERE id = ?";
-    public static final String UPDATE_OFFER_STATUS_QUERY = "UPDATE offers SET status_id = ? WHERE id = ?";
-    public static final String UPDATE_OFFERS_STATUS_QUERY = "UPDATE offers SET status_id = ?, "
-            + "reject_decision_name = ? WHERE tender_id = ? AND status_id <= ? AND id != ?";
-
+    public static final String SELECT_PAGE_BY_BIDDER_PATTERN_QUERY = "SELECT %s, %s FROM offers offer %s %s WHERE bidder_id = ? LIMIT ? OFFSET ?";
+    public static final String SELECT_PAGE_BY_CONTRACTOR_PATTERN_QUERY = "SELECT %s, %s FROM offers offer %s %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
+    public static final String SELECT_PAGE_BY_TENDER_PATTERN_QUERY = "SELECT %s, %s FROM offers offer %s %s WHERE offer.tender_id = ? LIMIT ? OFFSET ?";
+   
     public static final String OFFER_COLUMNS_SQL_PART_QUERY = """
             offer.id AS offer_id, offer.global_status AS offer_global_status, 
             offer.bid_price AS offer_bid_price, offer.publication_date AS offer_publication_date,
@@ -83,6 +51,14 @@ public class OfferRepositoryImpl implements OfferRepository {
             LEFT JOIN files proposition_file ON proposition_file.id = offer.proposition_file_id
             LEFT JOIN tenders tender ON tender.id = offer.tender_id""";
     
+    public static final String ADD_NEW_OFFER_QUERY = """
+            INSERT INTO offers(bidder_id, tender_id, company_profile_id, global_status, 
+                               bid_price, currency_id, publication_date, proposition_file_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
+    public static final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
+    public static final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = "SELECT count(o.id) FROM offers o LEFT JOIN tenders t ON o.tender_id = t.id WHERE contractor_id = ?";
+    public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(os.id) FROM offers os WHERE os.tender_id = ?";
+ 
     private final JdbcTemplate jdbcTemplate;
     private final OfferMapper offerMapper;
 
@@ -106,36 +82,45 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
     
     @Override
-    public Set<Offer>getPageByBidder(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_BIDDER_QUERY, offerMapper, bidderId, amountOffers,
+    public Set<Offer> findByBidderWithPagination(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip) {
+        String sqlQuery = format(SELECT_PAGE_BY_BIDDER_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
+                TENDER_COLUMNS_SQL_PART_QUERY, OFFER_JOIN_TABLES_SQL_PART_QUERY, TENDER_JOIN_TABLES_SQL_PART_QUERY);
+        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
+        return jdbcTemplate.query(sqlQuery, offerMapper, bidderId, amountOffers,
                 amountOffersToSkip).stream().collect(toSet());
     }
 
     @Override
-    public Set<Offer> getPageByContractor(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip) {
-        return jdbcTemplate.query(GET_OFFERS_BY_CONTRACTOR_QUERY, offerMapper, contractorId, amountOffers,
+    public Set<Offer> findByContractorWithPagination(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip) { 
+        String sqlQuery = format(SELECT_PAGE_BY_CONTRACTOR_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
+                TENDER_COLUMNS_SQL_PART_QUERY, OFFER_JOIN_TABLES_SQL_PART_QUERY, TENDER_JOIN_TABLES_SQL_PART_QUERY);
+        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
+        return jdbcTemplate.query(sqlQuery, offerMapper, contractorId, amountOffers,
                 amountOffersToSkip).stream().collect(toSet());
     }
     
     @Override
-    public Set<Offer> getByTender(Integer tenderId) {
-        return jdbcTemplate.query(GET_OFFERS_BY_TENDER_QUERY, offerMapper, tenderId).stream()
+    public Set<Offer> findByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
+        String sqlQuery = format(SELECT_PAGE_BY_TENDER_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
+                TENDER_COLUMNS_SQL_PART_QUERY, OFFER_JOIN_TABLES_SQL_PART_QUERY, TENDER_JOIN_TABLES_SQL_PART_QUERY);
+        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
+        return jdbcTemplate.query(sqlQuery, offerMapper, tenderId).stream()
                 .collect(toSet());
     }
 
     @Override
     public Integer countOffersByBidder(Integer bidderId) {
-        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_BIDDER, Integer.class, bidderId);
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_BIDDER_QUERY, Integer.class, bidderId);
     }
 
     @Override
     public Integer countOffersByContractor(Integer contractorId) {
-        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_CONTRACTOR, Integer.class, contractorId);
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
     }
 
     @Override
     public Integer countOffersByTender(Integer tenderId) {
-        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER, Integer.class, tenderId);
+        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER_QUERY, Integer.class, tenderId);
     }
    
     @Override
@@ -154,24 +139,4 @@ public class OfferRepositoryImpl implements OfferRepository {
         return ofNullable(singleResult(jdbcTemplate.query(sqlQuery, offerMapper, tenderId, bidderId)));
     }
         
-    @Override
-    public void addAwardDecision(String awardDecision, Integer stageStatus, Integer offerId) {
-        jdbcTemplate.update(ADD_AWARD_DECISION_QUERY, awardDecision, stageStatus, offerId);
-    }
-
-    @Override
-    public void addRejectDecision(String rejectDecision, Integer stageStatus, Integer offerId) {
-        jdbcTemplate.update(ADD_REJECT_DECISION_QUERY, rejectDecision, stageStatus, offerId);
-    }
-
-    @Override
-    public void updateOfferStatus(Integer statusId, Integer offerId) {
-        jdbcTemplate.update(UPDATE_OFFER_STATUS_QUERY, statusId, offerId);
-    }
-
-    @Override
-    public void updateOffersStatus(Integer statusId, String rejectDecisionName, Integer tenderId,
-            Integer statusOfActiveOffers, Integer offerId) {
-        jdbcTemplate.update(UPDATE_OFFERS_STATUS_QUERY, statusId, rejectDecisionName, tenderId, statusOfActiveOffers, offerId);
-    }
 }

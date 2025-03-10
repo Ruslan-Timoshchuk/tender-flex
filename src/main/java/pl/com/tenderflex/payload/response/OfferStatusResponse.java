@@ -1,8 +1,8 @@
 package pl.com.tenderflex.payload.response;
 
-import pl.com.tenderflex.model.OfferStatus;
+import pl.com.tenderflex.model.enums.EOfferStatus;
 
 public record OfferStatusResponse(
         Integer offerId, 
-        OfferStatus status) {
+        EOfferStatus status) {
 }
