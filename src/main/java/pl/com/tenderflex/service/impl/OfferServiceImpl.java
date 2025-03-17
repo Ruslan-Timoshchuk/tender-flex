@@ -3,6 +3,7 @@ package pl.com.tenderflex.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.exception.OfferNotFoundException;
 import pl.com.tenderflex.model.CompanyProfile;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.enums.EOfferStatus;
@@ -78,6 +79,13 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public OfferResponse findById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
+        return offerMapper.toResponse(offer, offer.getGlobalStatus());
+    }
+
+    @Override
+    public OfferResponse findByBidderAndTender(Integer userId, Integer tenderId) {
+        Offer offer = offerRepository.findOfferByTenderAndBidder(tenderId, userId)
+                .orElseThrow(() -> new OfferNotFoundException(userId, tenderId));
         return offerMapper.toResponse(offer, offer.getGlobalStatus());
     }
 

@@ -26,6 +26,7 @@ public class OfferController {
 
     public static final String URI_OFFERS = "/api/v1/offers";
     public static final String URI_OFFERS_ID = "/api/v1/offers/{id}";
+    public static final String URI_OFFERS_BIDDER_ID_TENDER_ID = "/api/v1/offers/{user-id}/{tender-id}";
     public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
     public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
@@ -44,6 +45,13 @@ public class OfferController {
     @GetMapping(URI_OFFERS_ID)
     public OfferResponse findById(@PathVariable("id") Integer id) {
         return offerService.findById(id);
+    }
+    
+    @Secured(BIDDER)
+    @GetMapping(URI_OFFERS_BIDDER_ID_TENDER_ID)
+    public OfferResponse findByBidderAndTender(@PathVariable("user-id") Integer userId,
+            @PathVariable("tender-id") Integer tenderId) {
+        return offerService.findByBidderAndTender(userId, tenderId);
     }
 
     @Secured({ BIDDER, CONTRACTOR })
@@ -76,5 +84,5 @@ public class OfferController {
             @PathVariable("tender-id") Integer tenderId) {
         return offerService.checkOfferStatus(userId, tenderId);
     }
-
+    
 }
