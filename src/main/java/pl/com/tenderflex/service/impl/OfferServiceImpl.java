@@ -36,7 +36,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferResponse> findPageByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByBidder(bidderId);
         Integer totalPages = 1;
@@ -52,7 +52,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
+    public Page<OfferResponse> findPageByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage) {
         Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
         Integer allOffersAmount = offerRepository.countOffersByContractor(contractorId);
         Integer totalPages = 1;
@@ -76,6 +76,31 @@ public class OfferServiceImpl implements OfferService {
                 }).toList());
     }
 
+    @Override
+    public Page<OfferResponse> findPageByTender(Integer tenderId, Integer currentPage, Integer offersPerPage) {
+        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
+        Integer allOffersAmount = offerRepository.countOffersByTender(tenderId);
+        Integer totalPages = 1;
+        if (allOffersAmount >= offersPerPage) {
+            totalPages = allOffersAmount / offersPerPage;
+            if (allOffersAmount % offersPerPage > 0) {
+                totalPages++;
+            }
+        }
+        return new Page<>(currentPage, totalPages, offerRepository
+                .findByTenderWithPagination(tenderId, offersPerPage, amountOffersToSkip).stream().map(offer -> {
+                    EOfferStatus contractorStatus = offer.getGlobalStatus();
+                    if (offer.getGlobalStatus() != null) {
+                        if (offer.getGlobalStatus() == EOfferStatus.OFFER_SENT_TO_CONTRACTOR) {
+                            contractorStatus = EOfferStatus.OFFER_RECEIVED;
+                        } else if (offer.getGlobalStatus() == EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR) {
+                            contractorStatus = EOfferStatus.OFFER_SELECTED;
+                        }
+                    }
+                    return offerMapper.toResponse(offer, contractorStatus);
+                }).toList());
+    }
+    
     @Override
     public OfferResponse findById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);

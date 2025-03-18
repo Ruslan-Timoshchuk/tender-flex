@@ -2,7 +2,6 @@ package pl.com.tenderflex.repository;
 
 import java.util.Optional;
 import java.util.Set;
-
 import pl.com.tenderflex.model.Offer;
 
 public interface OfferRepository {
@@ -13,6 +12,8 @@ public interface OfferRepository {
     
     Set<Offer> findByContractorWithPagination(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
     
+    Set<Offer> findByTenderWithPagination(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
+    
     Integer countOffersByBidder(Integer bidderId);
     
     Integer countOffersByContractor(Integer contractorId);
@@ -22,7 +23,5 @@ public interface OfferRepository {
     Offer findById(Integer offerId);
 
     Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
-
-    Set<Offer> findByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
 
 }

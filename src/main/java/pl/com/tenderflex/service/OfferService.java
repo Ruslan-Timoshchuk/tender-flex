@@ -14,9 +14,11 @@ public interface OfferService {
     
     OfferResponse findByBidderAndTender(Integer userId, Integer tenderId);
 
-    Page<OfferResponse> getOffersByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
+    Page<OfferResponse> findPageByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
-    Page<OfferResponse> getOffersByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
+    Page<OfferResponse> findPageByContractor(Integer contractorId, Integer currentPage, Integer offersPerPage);
+    
+    Page<OfferResponse> findPageByTender(Integer tenderId, Integer currentPage, Integer offersPerPage);
 
     OfferCountResponse countByBidder(Integer bidderId);
     

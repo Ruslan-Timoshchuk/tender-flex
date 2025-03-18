@@ -100,11 +100,12 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
     
     @Override
-    public Set<Offer> findByTender(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
+    public Set<Offer> findByTenderWithPagination(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip) {
         String sqlQuery = format(SELECT_PAGE_BY_TENDER_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
                 TENDER_COLUMNS_SQL_PART_QUERY, OFFER_JOIN_TABLES_SQL_PART_QUERY, TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, offerMapper, tenderId).stream()
+        return jdbcTemplate.query(sqlQuery, offerMapper, tenderId, amountOffers,
+                amountOffersToSkip).stream()
                 .collect(toSet());
     }
 

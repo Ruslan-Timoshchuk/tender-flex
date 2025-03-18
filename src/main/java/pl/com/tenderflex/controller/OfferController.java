@@ -28,6 +28,7 @@ public class OfferController {
     public static final String URI_OFFERS_ID = "/api/v1/offers/{id}";
     public static final String URI_OFFERS_BIDDER_ID_TENDER_ID = "/api/v1/offers/{user-id}/{tender-id}";
     public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
+    public static final String URI_OFFERS_PAGE_TENDER_ID = "/api/v1/offers/page/{tender-id}";
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
     public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
     public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/v1/offers/status/{user-id}/{tender-id}";
@@ -60,8 +61,16 @@ public class OfferController {
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return roleBasedActionExecutor.executeRoleBasedAction(user,
-                contractor -> offerService.getOffersByContractor(user.getId(), currentPage, offersPerPage),
-                bidder -> offerService.getOffersByBidder(user.getId(), currentPage, offersPerPage));
+                contractor -> offerService.findPageByContractor(user.getId(), currentPage, offersPerPage),
+                bidder -> offerService.findPageByBidder(user.getId(), currentPage, offersPerPage));
+    }
+    
+    @Secured({ BIDDER, CONTRACTOR })
+    @GetMapping(URI_OFFERS_PAGE_TENDER_ID)
+    public Page<OfferResponse> findPage(@PathVariable("tender-id") Integer tenderId,
+            @RequestParam(defaultValue = "1") Integer currentPage,
+            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+        return offerService.findPageByTender(tenderId, currentPage, offersPerPage);
     }
 
     @Secured({ CONTRACTOR, BIDDER })
