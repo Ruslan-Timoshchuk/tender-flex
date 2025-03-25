@@ -11,8 +11,6 @@ public interface OfferService {
     OfferResponse create(OfferRequest offer);
 
     OfferResponse findById(Integer offerId);
-    
-    OfferResponse findByBidderAndTender(Integer userId, Integer tenderId);
 
     Page<OfferResponse> findPageByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
     

@@ -57,11 +57,5 @@ public class ExceptionHandlerAdvice {
             MissingServletRequestPartException exception) {
         return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
-
-    @ExceptionHandler(OfferNotFoundException.class)
-    @ResponseStatus(NOT_FOUND)
-    public ExceptionHandlerResponse handleOfferNotFoundException(OfferNotFoundException exception) {
-        return new ExceptionHandlerResponse(now(), NOT_FOUND.value(), NOT_FOUND, exception.getMessage());
-    }
     
 }
