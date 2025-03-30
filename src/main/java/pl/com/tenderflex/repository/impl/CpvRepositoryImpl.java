@@ -16,7 +16,7 @@ public class CpvRepositoryImpl implements CpvRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CpvRepositoryImpl.class);
     
-    public static final String FIND_ALL_CPVS_QUERY = "SELECT id AS cpv_id, code AS cpv_code, summary AS cpv_summary FROM cpvs";
+    public static final String FIND_ALL_CPVS_QUERY = "SELECT id AS cpv_id, code, summary FROM cpvs";
       
     private final JdbcTemplate jdbcTemplate;
     private final CpvMapper cpvMapper;

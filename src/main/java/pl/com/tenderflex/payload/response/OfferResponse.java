@@ -2,7 +2,7 @@ package pl.com.tenderflex.payload.response;
 
 public record OfferResponse(
         Integer id, 
-        TenderResponse tender,
+        Integer tenderId,
         CompanyProfileResponse companyProfile,
         String status,
         Integer bidPrice,

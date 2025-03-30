@@ -1,6 +1,5 @@
 package pl.com.tenderflex.repository.mapper;
 
-import static pl.com.tenderflex.repository.mapper.CurrencyMapper.*;
 import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,10 +15,7 @@ public class ContractMapper {
     
     public static final String CONTRACT_ID = "contract_id";
     public static final String MIN_PRICE = "min_price";
-    public static final String MAX_PRICE = "max_price";
-    public static final String CONTRACT_CURRENCY_ID = "contract_currency_id";
-    public static final String CONTRACT_CURRENCY_CODE = "contract_currency_code";
-    public static final String CONTRACT_CURRENCY_SYMBOL = "contract_currency_symbol";
+    public static final String MAX_PRICE = "max_price";  
     public static final String CONTRACT_FILE_ID = "contract_file_id";
     public static final String CONTRACT_FILE_NAME = "contract_file_name";
     public static final String CONTRACT_FILE_CONTENT_TYPE = "contract_file_content_type";
@@ -38,10 +34,7 @@ public class ContractMapper {
                 .contractType(contractTypeMapper.mapContractType(resultSet))
                 .minPrice(resultSet.getInt(MIN_PRICE))
                 .maxPrice(resultSet.getInt(MAX_PRICE))
-                .currency(currencyMapper.mapCurrency(resultSet, 
-                        Map.of(CURRENCY_ID, CONTRACT_CURRENCY_ID, 
-                               CURRENCY_CODE, CONTRACT_CURRENCY_CODE,
-                               CURRENCY_SYMBOL, CONTRACT_CURRENCY_SYMBOL)))
+                .currency(currencyMapper.mapCurrency(resultSet))
                 .fileMetadata(fileMeatadataMapper.
                         mapFileMetadata(resultSet, 
                                 Map.of(FILE_ID, CONTRACT_FILE_ID,

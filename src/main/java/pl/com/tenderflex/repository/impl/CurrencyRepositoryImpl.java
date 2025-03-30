@@ -16,7 +16,7 @@ public class CurrencyRepositoryImpl implements CurrencyRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CurrencyRepositoryImpl.class);
 
-    public static final String FIND_ALL_CURRENCIES_QUERY = "SELECT id, code, symbol FROM currencies";
+    public static final String FIND_ALL_CURRENCIES_QUERY = "SELECT id AS currency_id, code, symbol FROM currencies";
 
     private final JdbcTemplate jdbcTemplate;
     private final CurrencyMapper currencyMapper;

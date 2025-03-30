@@ -34,18 +34,14 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String SELECT_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s LIMIT ? OFFSET ?";
     public static final String SELECT_CONTRACTOR_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String TENDER_COLUMNS_SQL_PART_QUERY = """
-            tender.id AS tender_id, tender.language, tender.procedure_type, tender.description, 
-            tender.global_status, tender.publication_date, tender.offer_submission_deadline,     
-            contractor_profile.id AS contractor_profile_id, contractor_profile.official_name AS contractor_official_name,
-            contractor_profile.registration_number AS contractor_registration_number,
-            contractor_country.id AS contractor_country_id, contractor_country.name AS contractor_country_name,
-            contractor_country.iso_code AS contractor_country_iso_code, contractor_country.phone_code AS contractor_country_phone_code,
-            contractor_profile.city AS contractor_city, contractor_profile.contact_first_name AS contractor_contact_first_name,
-            contractor_profile.contact_last_name AS contractor_contact_last_name, contractor_profile.contact_phone_number AS contractor_contact_phone_number,
-            tender.cpv_id, cpv.code AS cpv_code, cpv.summary AS cpv_summary, 
-            contract.id AS contract_id, contract_type.id AS contract_type_id, contract_type.title AS contract_type_name, contract.min_price,
-            contract.max_price, currency.id AS contract_currency_id, currency.code AS contract_currency_code, currency.symbol AS contract_currency_symbol, 
-            contract_file.id AS contract_file_id, contract_file.name AS contract_file_name, contract_file.content_type AS contract_file_content_type,
+            tender.id, tender.language, tender.procedure_type, tender.description, tender.global_status, tender.publication_date, 
+            tender.offer_submission_deadline, tender.company_profile_id, company_profile.official_name, 
+            company_profile.registration_number, company_profile.country_id, country.name, country.iso_code, country.phone_code,
+            company_profile.city, company_profile.contact_first_name, company_profile.contact_last_name, 
+            company_profile.contact_phone_number, tender.cpv_id, cpv.code, cpv.summary, 
+            contract.id AS contract_id, contract.contract_type_id, contract_type.title AS contract_type_name, contract.min_price,
+            contract.max_price, contract.currency_id, currency.code, currency.symbol, contract_file.id AS contract_file_id, 
+            contract_file.name AS contract_file_name, contract_file.content_type AS contract_file_content_type, 
             contract_file.aws_s3_file_key AS contract_aws_s3_file_key, contract.signed_deadline, contract.signed_date, 
             award.id AS award_id, award_file.id AS award_file_id, award_file.name AS award_file_name, 
             award_file.content_type AS award_file_content_type, award_file.aws_s3_file_key AS award_aws_s3_file_key,
@@ -53,8 +49,8 @@ public class TenderRepositoryImpl implements TenderRepository {
             reject_file.content_type AS reject_file_content_type, reject_file.aws_s3_file_key AS reject_aws_s3_file_key""";
     public static final String TENDER_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN cpvs cpv ON cpv.id = tender.cpv_id
-            LEFT JOIN company_profiles contractor_profile ON contractor_profile.id = tender.company_profile_id
-            LEFT JOIN countries contractor_country ON contractor_country.id = contractor_profile.country_id
+            LEFT JOIN company_profiles company_profile ON company_profile.id = tender.company_profile_id
+            LEFT JOIN countries country ON country.id = company_profile.country_id
             LEFT JOIN contracts contract ON contract.tender_id = tender.id
             LEFT JOIN contract_types contract_type ON contract_type.id = contract.contract_type_id
             LEFT JOIN currencies currency ON currency.id = contract.currency_id
@@ -63,8 +59,6 @@ public class TenderRepositoryImpl implements TenderRepository {
             LEFT JOIN files award_file ON award_file.id = award.award_file_id
             LEFT JOIN rejects reject ON reject.tender_id = tender.id
             LEFT JOIN files reject_file ON reject_file.id = reject.reject_file_id""";
-           
-    public static final String UPDATE_TENDER_QUERY = "";
     
     private final JdbcTemplate jdbcTemplate;
     private final TenderMapper tenderMapper;

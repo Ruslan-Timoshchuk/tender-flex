@@ -10,8 +10,8 @@ import pl.com.tenderflex.model.Cpv;
 public class CpvMapper implements RowMapper<Cpv> {
 
     public static final String CPV_ID = "cpv_id";
-    public static final String CPV_CODE = "cpv_code";
-    public static final String CPV_SUMMARY = "cpv_summary";
+    public static final String CPV_CODE = "code";
+    public static final String CPV_SUMMARY = "summary";
     
     @Override
     public Cpv mapRow(ResultSet resultSet, int rowNum) throws SQLException {
