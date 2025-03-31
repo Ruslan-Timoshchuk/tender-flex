@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
-import pl.com.tenderflex.dao.UserRepository;
 import pl.com.tenderflex.model.User;
+import pl.com.tenderflex.repository.GrantedAuthorityRoleRepository;
+import pl.com.tenderflex.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
@@ -18,8 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.getByEmail(email);
-        user.setAuthorities(roleRepository.getByUser(user.getId()));
+        User user = userRepository.findByEmail(email);
+        user.setAuthorities(roleRepository.findByUser(user.getId()));
         return user;
     }
+    
 }

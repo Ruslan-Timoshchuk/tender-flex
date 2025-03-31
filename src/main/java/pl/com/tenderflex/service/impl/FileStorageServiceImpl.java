@@ -1,22 +1,20 @@
 package pl.com.tenderflex.service.impl;
 
 import static java.util.UUID.*;
-import static com.amazonaws.HttpMethod.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.Date;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.FileRepository;
-import pl.com.tenderflex.model.File;
-import pl.com.tenderflex.payload.iresponse.response.FileMetadataResponse;
-import pl.com.tenderflex.payload.iresponse.response.MultipartFileResponse;
-import pl.com.tenderflex.payload.mapstract.FileMapper;
+import pl.com.tenderflex.model.FileMetadata;
+import pl.com.tenderflex.payload.mapstract.FileMetadataMapper;
+import pl.com.tenderflex.payload.response.FileMetadataResponse;
+import pl.com.tenderflex.repository.FileRepository;
 import pl.com.tenderflex.service.FileStorageService;
 
 @Service
@@ -27,11 +25,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     
     @Value("${bucket.name}")
     private String bucketName;
-    @Value("${exp.time.presigned.url}")
-    private Integer expTimePresignedUrl;
     private final AmazonS3 amazonS3Client;
     private final FileRepository fileRepository;
-    private final FileMapper fileMapper;
+    private final FileMetadataMapper fileMapper;
 
     @Override
     @Transactional
@@ -48,25 +44,19 @@ public class FileStorageServiceImpl implements FileStorageService {
             fileKey.append(fileExtension);
         }
         amazonS3Client.putObject(bucketName, fileKey.toString(), file.getInputStream(), metadata);
-        return fileMapper.fileToFileDetailsResponse(
+        return fileMapper.toResponse(
                 fileRepository.save(
-                        File
+                        FileMetadata
                           .builder()
                           .name(originalFilename)
                           .contentType(file.getContentType())
                           .awsS3fileKey(fileKey.toString())
                           .build()));
     }
-
+     
     @Override
-    public MultipartFileResponse getPresignedUrl(String fileKey) {
-        Date expiration = new Date();
-        long expTimeMillis = expiration.getTime();
-        expTimeMillis += expTimePresignedUrl;
-        expiration.setTime(expTimeMillis); 
-        GeneratePresignedUrlRequest presignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileKey)
-                .withMethod(GET)
-                .withExpiration(expiration);
-      return MultipartFileResponse.builder().fileUrl(amazonS3Client.generatePresignedUrl(presignedUrlRequest)).build();
+    public Resource findByKey(String key) throws IOException {
+        return new ByteArrayResource(amazonS3Client.getObject(bucketName, key).getObjectContent().readAllBytes());
     }
+
 }

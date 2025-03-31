@@ -17,8 +17,8 @@ public class Tender {
     private String description;
     private ETenderStatus globalStatus; 
     private Contract contract;
-    private AwardDecision award;
-    private RejectDecision reject;
+    private AwardDecision awardDecision;
+    private RejectDecision rejectDecision;
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
         

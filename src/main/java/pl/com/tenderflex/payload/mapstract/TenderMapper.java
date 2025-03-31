@@ -8,18 +8,13 @@ import pl.com.tenderflex.payload.request.TenderRequest;
 import pl.com.tenderflex.payload.response.TenderResponse;
 
 @Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class, ContractMapper.class,
-        AwardMapper.class, RejectMapper.class })
+        AwardDecisionMapper.class, RejectDecisionMapper.class })
 public interface TenderMapper {
 
     @Mapping(target = "publicationDate", source = "publication", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "yyyy-MM-dd")
     Tender toEntity(TenderRequest tenderRequest);
 
-    @Mapping(target = "id", source = "tender.id")
-    @Mapping(target = "companyProfile", source = "tender.companyProfile")
-    @Mapping(target = "procedure", source = "tender.procedure.type")
-    @Mapping(target = "language", source = "tender.procedure.language")
-    @Mapping(target = "description", source = "tender.description")
     @Mapping(target = "publicationDate", source = "tender.publicationDate", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerSubmissionDeadline", source = "tender.offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "status", source = "status")

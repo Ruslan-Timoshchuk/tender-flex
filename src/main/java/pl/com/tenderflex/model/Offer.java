@@ -3,6 +3,7 @@ package pl.com.tenderflex.model;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
+import pl.com.tenderflex.model.enums.EOfferStatus;
 
 @Data
 @Builder
@@ -10,12 +11,12 @@ public class Offer {
 
     private Integer id;
     private Integer bidderId;
-    private Submission submission;
-    private CompanyDetails bidderCompanyDetails;
-    private ContactPerson contactPerson;
+    private Tender tender;
+    private CompanyProfile companyProfile;
+    private EOfferStatus globalStatus;
     private Integer bidPrice;
     private Currency currency;
-    private LocalDate publicationDate;
-    private File proposition;
+    private LocalDate publication;
+    private FileMetadata proposition;
  
 }

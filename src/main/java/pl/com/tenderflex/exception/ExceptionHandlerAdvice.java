@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-
 import com.amazonaws.AmazonServiceException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
 
@@ -26,14 +24,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(UNAUTHORIZED)
     public ExceptionHandlerResponse handleEmptyResultDataAccessException(EmptyResultDataAccessException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST,
-                "The user with that email is not exists");
-    }
-
-    @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ExceptionHandlerResponse handleDataAccessException(DataAccessException exception) {
-        return new ExceptionHandlerResponse(now(), INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR, exception.getMessage());
+        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(CookiesNotPresentException.class)
@@ -66,4 +57,5 @@ public class ExceptionHandlerAdvice {
             MissingServletRequestPartException exception) {
         return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
     }
+    
 }

@@ -1,4 +1,4 @@
-package pl.com.tenderflex.config;
+package pl.com.tenderflex.security;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,7 +75,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+  
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -88,4 +88,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+    
 }

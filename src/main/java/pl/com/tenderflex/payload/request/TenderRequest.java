@@ -1,6 +1,7 @@
 package pl.com.tenderflex.payload.request;
 
 public record TenderRequest(
+        Integer id,
         Integer contractorId, 
         CompanyProfileRequest companyProfile,
         CpvRequest cpv,
@@ -8,6 +9,6 @@ public record TenderRequest(
         String publication, 
         String offerSubmissionDeadline,
         ContractRequest contract,
-        AwardDecisionRequest award,
-        RejectDecisionRequest reject) {
+        AwardDecisionRequest awardDecision,
+        RejectDecisionRequest rejectDecision) {
 }

@@ -9,10 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
 import pl.com.tenderflex.model.GrantedAuthorityRole;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.model.enums.ERole;
+import pl.com.tenderflex.repository.GrantedAuthorityRoleRepository;
 import pl.com.tenderflex.service.GrantedAuthorityRoleService;
 
 @Service
@@ -25,12 +25,12 @@ public class GrantedAuthorityRoleServiceImpl implements GrantedAuthorityRoleServ
     
     @Override
     public GrantedAuthorityRole getRole(ERole roleName) {
-        return roleCache.computeIfAbsent(roleName, userRole -> roleRepository.getByName(roleName));
+        return roleCache.computeIfAbsent(roleName, userRole -> roleRepository.findByName(roleName));
     }
     
     @Override
     public List<GrantedAuthorityRole> getAllByUser(Integer userId) {
-        return roleRepository.getByUser(userId);
+        return roleRepository.findByUser(userId);
     }
     
     @Override

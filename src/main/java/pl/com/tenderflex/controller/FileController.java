@@ -1,6 +1,9 @@
 package pl.com.tenderflex.controller;
 
+import static pl.com.tenderflex.security.SecurityRoles.*;
+import static org.springframework.http.MediaType.*;
 import java.io.IOException;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.exception.FileNotExistsException;
-import pl.com.tenderflex.payload.iresponse.response.FileMetadataResponse;
-import pl.com.tenderflex.payload.iresponse.response.MultipartFileResponse;
+import pl.com.tenderflex.payload.response.FileMetadataResponse;
 import pl.com.tenderflex.service.FileStorageService;
 
 @RestController
@@ -20,10 +22,13 @@ import pl.com.tenderflex.service.FileStorageService;
 @RequiredArgsConstructor
 public class FileController {
 
+    public static final String URI_FILES = "";
+    public static final String URI_FILES_KEY = "/{key}";
+    
     private final FileStorageService fileStorageService;
 
-    @Secured({ "CONTRACTOR", "BIDDER" })
-    @PostMapping
+    @Secured({ CONTRACTOR, BIDDER })
+    @PostMapping(value = URI_FILES, consumes = MULTIPART_FORM_DATA_VALUE)
     public FileMetadataResponse uploadFile(@RequestParam MultipartFile file)
             throws IOException {
         if (file.getOriginalFilename() == null) {
@@ -31,10 +36,11 @@ public class FileController {
         }
         return fileStorageService.upload(file);
     }
-
-    @Secured({ "CONTRACTOR", "BIDDER" })
-    @GetMapping("/location/{document_name}")
-    public MultipartFileResponse getPresignedUrl(@PathVariable("document_name") String documentName) {
-        return fileStorageService.getPresignedUrl(documentName);
+    
+    @Secured({ CONTRACTOR, BIDDER })
+    @GetMapping(value = URI_FILES_KEY, produces = APPLICATION_PDF_VALUE)
+    public Resource findByKey(@PathVariable("key") String key) throws IOException {
+        return fileStorageService.findByKey(key);
     }
+    
 }

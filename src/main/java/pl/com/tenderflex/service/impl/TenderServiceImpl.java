@@ -1,53 +1,85 @@
 package pl.com.tenderflex.service.impl;
 
-import static pl.com.tenderflex.model.ETenderStatus.*;
-import static pl.com.tenderflex.model.EOfferStatus.*;
-import static pl.com.tenderflex.model.ERole.BIDDER;
-import static pl.com.tenderflex.model.ERole.CONTRACTOR;
-import java.util.Collection;
-import java.util.List;
-import org.springframework.security.core.GrantedAuthority;
+import static pl.com.tenderflex.model.enums.ELanguage.*;
+import static pl.com.tenderflex.model.enums.EProcedure.*;
+import static pl.com.tenderflex.model.enums.ETenderStatus.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.dao.GrantedAuthorityRoleRepository;
-import pl.com.tenderflex.dao.OfferRepository;
-import pl.com.tenderflex.dao.TenderRepository;
-import pl.com.tenderflex.exception.UnauthorizedAccessException;
+import pl.com.tenderflex.model.AwardDecision;
+import pl.com.tenderflex.model.CompanyProfile;
+import pl.com.tenderflex.model.Contract;
+import pl.com.tenderflex.model.Procedure;
+import pl.com.tenderflex.model.RejectDecision;
 import pl.com.tenderflex.model.Tender;
-import pl.com.tenderflex.model.User;
+import pl.com.tenderflex.model.enums.ETenderStatus;
 import pl.com.tenderflex.payload.Page;
-import pl.com.tenderflex.payload.iresponse.TenderDetails;
-import pl.com.tenderflex.payload.iresponse.response.TenderInListResponse;
-import pl.com.tenderflex.payload.mapstract.OfferMapper;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
-import pl.com.tenderflex.payload.request.TenderDetailsRequest;
+import pl.com.tenderflex.payload.request.TenderRequest;
+import pl.com.tenderflex.payload.response.TenderCountResponse;
+import pl.com.tenderflex.payload.response.TenderResponse;
+import pl.com.tenderflex.repository.TenderRepository;
+import pl.com.tenderflex.service.AwardDecisionService;
+import pl.com.tenderflex.service.CompanyProfileService;
+import pl.com.tenderflex.service.ContractService;
+import pl.com.tenderflex.service.RejectDecisionService;
 import pl.com.tenderflex.service.TenderService;
-
+ 
 @Service
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
 
     private final TenderMapper tenderMapper;
-    private final OfferMapper offerMapper;
     private final TenderRepository tenderRepository;
-    private final OfferRepository offerRepository;
-    private final GrantedAuthorityRoleRepository roleRepository;
+    private final CompanyProfileService companyProfileService;
+    private final ContractService contractService;
+    private final AwardDecisionService awardService;
+    private final RejectDecisionService rejectService;
 
     @Override
     @Transactional
-    public void createTender(TenderDetailsRequest tenderDetailsRequest, User contractor) {
-        Tender tender = tenderMapper.tenderDetailsRequestToTender(tenderDetailsRequest);
-        tender.setContractor(contractor);
-        tender.setStatus(TENDER_IN_PROGRESS);
-        tenderRepository.create(tender);
+    public TenderResponse save(TenderRequest tenderRequest) {
+        Tender tender = tenderMapper.toEntity(tenderRequest);       
+        CompanyProfile contractorProfile = companyProfileService.create(tender.getCompanyProfile());   
+        tender.setCompanyProfile(contractorProfile);
+        tender.setProcedure(Procedure
+                .builder()
+                .type(OPEN_PROCEDURE)
+                .language(ENGLISH)
+                .build());
+        tender.setGlobalStatus(TENDER_IN_PROGRESS);     
+        tender = tenderRepository.save(tender);
+        Contract contract = tender.getContract();
+        contractService.create(contract);
+        AwardDecision award = tender.getAwardDecision();
+        awardService.create(award);
+        RejectDecision reject = tender.getRejectDecision();  
+        rejectService.create(reject);
+        return tenderMapper.toResponse(tender, tender.getGlobalStatus());
     }
 
     @Override
-    public Page<TenderInListResponse<Integer>> getContractorPage(Integer contractorId, Integer currentPage,
-            Integer tendersPerPage) {
+    public Page<TenderResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage) {
+        Integer countTendersToSkip = (currentPage - 1) * tendersPerPage;
+        Integer allTendersCount = tenderRepository.countTendersByContractor(userId);
+        Integer totalPages = 1;
+        if (allTendersCount >= tendersPerPage) {
+            totalPages = allTendersCount / tendersPerPage;
+            if (allTendersCount % tendersPerPage > 0) {
+                totalPages++;
+            }
+        }
+        return new Page<>(currentPage, totalPages, tenderRepository
+                .findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip).stream().map(tender -> {
+                    ETenderStatus status = tender.getGlobalStatus();
+                    return tenderMapper.toResponse(tender, status);
+                }).toList());
+    }
+
+    @Override
+    public Page<TenderResponse> findWithPagination(Integer currentPage, Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
-        Integer allTendersAmount = tenderRepository.countTendersByContractor(contractorId);
+        Integer allTendersAmount = tenderRepository.countTenders();
         Integer totalPages = 1;
         if (allTendersAmount >= tendersPerPage) {
             totalPages = allTendersAmount / tendersPerPage;
@@ -55,43 +87,28 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        List<TenderInListResponse<Integer>> tenders = tenderRepository
-                .getByContractor(contractorId, tendersPerPage, amountTendersToSkip).stream().map(tender -> tenderMapper
-                        .tenderToContractorTenderResponse(tender, offerRepository.countOffersByTender(tender.getId())))
-                .toList();
-        return new Page<>(currentPage, totalPages, tenders);
+        return new Page<>(currentPage, totalPages,
+                tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip).stream().map(tender -> {
+                    ETenderStatus status = tender.getGlobalStatus();
+                    return tenderMapper.toResponse(tender, status);
+                }).toList());
     }
 
     @Override
-    public Page<TenderInListResponse<String>> getBidderPage(Integer bidderId, Integer currentPage,
-            Integer tendersPerPage) {
-        Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
-        Integer allTendersAmount = tenderRepository.countAllTenders();
-        Integer totalPages = 1;
-        if (allTendersAmount >= tendersPerPage) {
-            totalPages = allTendersAmount / tendersPerPage;
-            if (allTendersAmount % tendersPerPage > 0) {
-                totalPages++;
-            }
-        }
-        return new Page<>(currentPage, totalPages, tenderRepository.getTendersPage(tendersPerPage, amountTendersToSkip)
-                .stream()
-                .map(tender -> tenderMapper.tenderToBidderTenderResponse(tender,
-                        offerRepository.findOfferByTenderAndBidder(tender.getId(), bidderId)
-                                .map(offer -> offer.getOfferStatusBidder().name()).orElse(OFFER_HAS_NOT_SENT.name())))
-                .toList());
+    public TenderResponse findById(Integer tenderId) {
+        Tender tender = tenderRepository.findById(tenderId);
+        ETenderStatus status = tender.getGlobalStatus();
+        return tenderMapper.toResponse(tender, status);
     }
 
     @Override
-    public TenderDetails getTenderDetails(Integer tenderId, Collection<GrantedAuthority> authorities) {
-        if (authorities.contains(roleRepository.getByName(CONTRACTOR))) {
-            return tenderMapper.tenderToTenderDetailsContractorResponse(tenderRepository.getById(tenderId),
-                    offerRepository.getByTender(tenderId).stream().map(
-                            offer -> offerMapper.offerToOfferInListResponse(offer, offer.getOfferStatusContractor()))
-                            .toList());
-        } else if (authorities.contains(roleRepository.getByName(BIDDER))) {
-            return tenderMapper.tenderToTenderDetailsBidderResponse(tenderRepository.getById(tenderId));
-        }
-        throw new UnauthorizedAccessException("User does not have the required role to access this resource");
+    public TenderCountResponse countAll() {
+        return new TenderCountResponse(tenderRepository.countTenders());
     }
+
+    @Override
+    public TenderCountResponse countByContractor(Integer userId) {
+        return new TenderCountResponse(tenderRepository.countTendersByContractor(userId));
+    }
+
 }
