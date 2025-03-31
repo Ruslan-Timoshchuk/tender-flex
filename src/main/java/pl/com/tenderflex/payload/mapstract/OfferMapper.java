@@ -7,7 +7,7 @@ import pl.com.tenderflex.model.enums.EOfferStatus;
 import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferResponse;
 
-@Mapper(componentModel = "spring", uses = { TenderMapper.class, CpvMapper.class, CompanyProfileMapper.class, CurrencyMapper.class,
+@Mapper(componentModel = "spring", uses = { TenderMapper.class, CompanyProfileMapper.class, CurrencyMapper.class,
         FileMetadataMapper.class })
 public interface OfferMapper {
 
