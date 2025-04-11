@@ -6,4 +6,6 @@ public interface ContractRepository {
 
     Contract save(Contract contract);
     
+    Contract findById(Integer id);
+    
 }

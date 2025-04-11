@@ -1,17 +1,20 @@
 package pl.com.tenderflex.repository.mapper;
 
 import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.*;
+import static  pl.com.tenderflex.repository.mapper.OfferMapper.OFFER_ID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
+import pl.com.tenderflex.model.Offer;
 
 @Component
 @RequiredArgsConstructor
-public class ContractMapper {
+public class ContractMapper implements RowMapper<Contract> {
     
     public static final String CONTRACT_ID = "contract_id";
     public static final String MIN_PRICE = "min_price";
@@ -27,10 +30,15 @@ public class ContractMapper {
     private final CurrencyMapper currencyMapper;
     private final FileMeatadataMapper fileMeatadataMapper;
      
-    public Contract mapContract(ResultSet resultSet) throws SQLException {
+    @Override
+    public Contract mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return Contract
                 .builder()
                 .id(resultSet.getInt(CONTRACT_ID))
+                .offer(Offer
+                        .builder()
+                        .id(resultSet.getObject(OFFER_ID, Integer.class))
+                        .build())
                 .contractType(contractTypeMapper.mapContractType(resultSet))
                 .minPrice(resultSet.getInt(MIN_PRICE))
                 .maxPrice(resultSet.getInt(MAX_PRICE))

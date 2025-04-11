@@ -16,7 +16,7 @@ import pl.com.tenderflex.model.enums.EOfferStatus;
 @RequiredArgsConstructor
 public class OfferMapper implements RowMapper<Offer> {
     
-    public static final String OFFER_ID = "id";
+    public static final String OFFER_ID = "offer_id";
     public static final String TENDER_ID = "tender_id";
     public static final String GLOBAL_STATUS = "global_status"; 
     public static final String BID_PRICE = "bid_price";  

@@ -110,5 +110,5 @@ public class TenderServiceImpl implements TenderService {
     public TenderCountResponse countByContractor(Integer userId) {
         return new TenderCountResponse(tenderRepository.countTendersByContractor(userId));
     }
-
+    
 }

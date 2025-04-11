@@ -32,7 +32,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String SELECT_PAGE_BY_TENDER_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE offer.tender_id = ? LIMIT ? OFFSET ?";
 
     public static final String OFFER_COLUMNS_SQL_PART_QUERY = """
-            offer.id, offer.tender_id, offer.global_status, offer.bid_price, offer.publication_date, 
+            offer.id AS offer_id, offer.tender_id, offer.global_status, offer.bid_price, offer.publication_date, 
             offer.company_profile_id, company_profile.official_name, company_profile.registration_number, 
             company_profile.country_id, country.name, country.iso_code, country.phone_code, company_profile.city, 
             company_profile.contact_first_name, company_profile.contact_last_name, company_profile.contact_phone_number,
