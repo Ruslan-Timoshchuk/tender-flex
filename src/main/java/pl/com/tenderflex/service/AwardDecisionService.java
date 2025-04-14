@@ -4,6 +4,8 @@ import pl.com.tenderflex.model.AwardDecision;
 
 public interface AwardDecisionService {
 
-    AwardDecision create(AwardDecision awardDecision);
+    AwardDecision save(AwardDecision awardDecision);
+
+    AwardDecision findById(Integer id);
     
 }

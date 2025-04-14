@@ -4,13 +4,14 @@ import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.AwardDecision;
 
 @Component
 @RequiredArgsConstructor
-public class AwardDecisionMapper {
+public class AwardDecisionMapper implements RowMapper<AwardDecision> {
 
     public static final String AWARD_DECISION_ID = "award_id";
     public static final String AWARD_FILE_ID = "award_file_id";
@@ -19,6 +20,11 @@ public class AwardDecisionMapper {
     public static final String AWARD_FILE_AWS3_KEY = "award_aws_s3_file_key";
     
     private final FileMeatadataMapper fileMapper;
+
+    @Override
+    public AwardDecision mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return mapAward(resultSet);
+    } 
     
     public AwardDecision mapAward(ResultSet resultSet) throws SQLException {
         return AwardDecision
@@ -30,6 +36,6 @@ public class AwardDecisionMapper {
                                 FILE_CONTENT_TYPE, AWARD_FILE_CONTENT_TYPE,
                                 FILE_AWS3_KEY, AWARD_FILE_AWS3_KEY)))
                  .build();
-    }  
-    
+    }
+ 
 }
