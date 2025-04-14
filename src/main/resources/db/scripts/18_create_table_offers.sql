@@ -8,5 +8,6 @@ CREATE TABLE offers (
     currency_id INTEGER NOT NULL REFERENCES currencies(id),
     publication_date TIMESTAMP NOT NULL,
     proposition_file_id INTEGER NOT NULL REFERENCES files(id),
+    award_decision_id INTEGER REFERENCES awards(id),
     reject_decision_id INTEGER REFERENCES rejects(id)
 );
