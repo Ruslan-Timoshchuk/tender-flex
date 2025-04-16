@@ -13,6 +13,7 @@ import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.payload.response.OfferStatusResponse;
 import pl.com.tenderflex.repository.OfferRepository;
+import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.CompanyProfileService;
 import pl.com.tenderflex.service.OfferService;
 
@@ -23,6 +24,7 @@ public class OfferServiceImpl implements OfferService {
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
     private final CompanyProfileService companyProfileService;
+    private final AwardDecisionService awardDecisionService;
 
     @Override
     @Transactional
@@ -31,7 +33,8 @@ public class OfferServiceImpl implements OfferService {
         CompanyProfile companyProfile = companyProfileService.create(offer.getCompanyProfile());
         offer.setCompanyProfile(companyProfile);
         offer.setGlobalStatus(EOfferStatus.OFFER_SENT_TO_CONTRACTOR);
-        return offerMapper.toResponse(offerRepository.save(offer), offer.getGlobalStatus());
+        return offerMapper.toResponse(offerRepository.save(offer), offer.getGlobalStatus(), hasAwardDecision(offer),
+                hasRejectDecision(offer));
     }
 
     @Override
@@ -47,7 +50,9 @@ public class OfferServiceImpl implements OfferService {
         }
         return new Page<>(currentPage, totalPages,
                 offerRepository.findByBidderWithPagination(bidderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offer -> offerMapper.toResponse(offer, offer.getGlobalStatus())).toList());
+                        .map(offer -> offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
+                                hasRejectDecision(offer)))
+                        .toList());
     }
 
     @Override
@@ -71,7 +76,8 @@ public class OfferServiceImpl implements OfferService {
                             contractorStatus = EOfferStatus.OFFER_SELECTED;
                         }
                     }
-                    return offerMapper.toResponse(offer, contractorStatus);
+                    return offerMapper.toResponse(offer, contractorStatus, hasAwardDecision(offer),
+                            hasRejectDecision(offer));
                 }).toList());
     }
 
@@ -96,14 +102,16 @@ public class OfferServiceImpl implements OfferService {
                             contractorStatus = EOfferStatus.OFFER_SELECTED;
                         }
                     }
-                    return offerMapper.toResponse(offer, contractorStatus);
+                    return offerMapper.toResponse(offer, contractorStatus, hasAwardDecision(offer),
+                            hasRejectDecision(offer));
                 }).toList());
     }
-    
+
     @Override
     public OfferResponse findById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
-        return offerMapper.toResponse(offer, offer.getGlobalStatus());
+        return offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
+                hasRejectDecision(offer));
     }
 
     @Override
@@ -128,4 +136,20 @@ public class OfferServiceImpl implements OfferService {
                 .orElse(new OfferStatusResponse(0, EOfferStatus.OFFER_HAS_NOT_SENT));
     }
 
+    @Override
+    public Offer selectWinningOffer(Integer offerId, Integer awardId) {
+        Offer offer = offerRepository.findById(offerId);
+        offer.setAwardDecision(awardDecisionService.findById(awardId));
+        offer.setGlobalStatus(EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR);
+        offerRepository.update(offer);
+        return offer;
+    }
+
+    private Boolean hasAwardDecision(Offer offer) {
+        return offer.getAwardDecision().getId() != null;
+    }
+
+    private Boolean hasRejectDecision(Offer offer) {
+        return offer.getRejectDecision().getId() != null;
+    }
 }

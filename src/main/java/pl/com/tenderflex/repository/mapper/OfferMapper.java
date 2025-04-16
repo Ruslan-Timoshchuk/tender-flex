@@ -1,6 +1,8 @@
 package pl.com.tenderflex.repository.mapper;
 
 import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.*;
+import static pl.com.tenderflex.repository.mapper.AwardDecisionMapper.AWARD_DECISION_ID;
+import static pl.com.tenderflex.repository.mapper.RejectDecisionMapper.REJECT_DECISION_ID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -8,7 +10,9 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.AwardDecision;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.RejectDecision;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.enums.EOfferStatus;
 
@@ -50,6 +54,14 @@ public class OfferMapper implements RowMapper<Offer> {
                                         FILE_NAME, PROPOSITION_FILE_NAME,
                                         FILE_CONTENT_TYPE, PROPOSITION_FILE_CONTENT_TYPE,
                                         FILE_AWS3_KEY, PROPOSITION_FILE_AWS3_KEY)))
+                 .awardDecision(AwardDecision
+                                  .builder()
+                                  .id(resultSet.getObject(AWARD_DECISION_ID, Integer.class))
+                                  .build())
+                 .rejectDecision(RejectDecision
+                                   .builder()
+                                   .id(resultSet.getObject(REJECT_DECISION_ID, Integer.class))
+                                   .build())
                .build();
     }
     

@@ -32,13 +32,14 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String SELECT_PAGE_BY_TENDER_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE offer.tender_id = ? LIMIT ? OFFSET ?";
 
     public static final String OFFER_COLUMNS_SQL_PART_QUERY = """
-            offer.id AS offer_id, offer.tender_id, offer.global_status, offer.bid_price, offer.publication_date, 
-            offer.company_profile_id, company_profile.official_name, company_profile.registration_number, 
-            company_profile.country_id, country.name, country.iso_code, country.phone_code, company_profile.city, 
+            offer.id AS offer_id, offer.tender_id, offer.global_status, offer.bid_price, offer.publication_date,
+            offer.company_profile_id, company_profile.official_name, company_profile.registration_number,
+            company_profile.country_id, country.name, country.iso_code, country.phone_code, company_profile.city,
             company_profile.contact_first_name, company_profile.contact_last_name, company_profile.contact_phone_number,
-            offer.currency_id, currency.code, currency.symbol, proposition_file.id AS proposition_file_id, 
-            proposition_file.name AS proposition_file_name, proposition_file.content_type AS proposition_file_content_type, 
-            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key""";
+            offer.currency_id, currency.code, currency.symbol, proposition_file.id AS proposition_file_id,
+            proposition_file.name AS proposition_file_name, proposition_file.content_type AS proposition_file_content_type,
+            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key,
+            offer.award_decision_id AS award_id, offer.reject_decision_id AS reject_id""";
     public static final String OFFER_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN company_profiles company_profile ON company_profile.id = offer.company_profile_id
             LEFT JOIN countries country ON country.id = company_profile.country_id
@@ -50,6 +51,10 @@ public class OfferRepositoryImpl implements OfferRepository {
             INSERT INTO offers(bidder_id, tender_id, company_profile_id, global_status,
                                bid_price, currency_id, publication_date, proposition_file_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
+    public static final String UPDATE_OFFER_QUERY = """
+            UPDATE offers
+            SET global_status = ?, award_decision_id = ?, reject_decision_id = ?
+            WHERE id = ?""";
     public static final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
     public static final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = "SELECT count(o.id) FROM offers o LEFT JOIN tenders t ON o.tender_id = t.id WHERE contractor_id = ?";
     public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(os.id) FROM offers os WHERE os.tender_id = ?";
@@ -74,6 +79,12 @@ public class OfferRepositoryImpl implements OfferRepository {
         }, keyHolder);
         offer.setId(keyHolder.getKeyAs(Integer.class));
         return offer;
+    }
+
+    @Override
+    public void update(Offer offer) {
+        jdbcTemplate.update(UPDATE_OFFER_QUERY, offer.getGlobalStatus().name(), offer.getAwardDecision().getId(),
+                offer.getRejectDecision().getId(), offer.getId());
     }
 
     @Override
