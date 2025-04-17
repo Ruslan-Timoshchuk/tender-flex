@@ -6,4 +6,6 @@ public interface RejectDecisionService {
 
     RejectDecision save(RejectDecision rejectDecision);
 
+    RejectDecision findById(Integer id);
+
 }

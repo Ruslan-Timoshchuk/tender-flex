@@ -5,9 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.CompanyProfile;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.RejectDecision;
 import pl.com.tenderflex.model.enums.EOfferStatus;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
+import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
@@ -16,6 +18,7 @@ import pl.com.tenderflex.repository.OfferRepository;
 import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.CompanyProfileService;
 import pl.com.tenderflex.service.OfferService;
+import pl.com.tenderflex.service.RejectDecisionService;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final CompanyProfileService companyProfileService;
     private final AwardDecisionService awardDecisionService;
+    private final RejectDecisionService rejectDecisionService;
 
     @Override
     @Transactional
@@ -145,11 +149,23 @@ public class OfferServiceImpl implements OfferService {
         return offer;
     }
 
+    @Override
+    @Transactional
+    public OfferResponse rejectOffer(OfferRejectionRequest offerRejectionRequest) {
+        Offer offer = offerRepository.findById(offerRejectionRequest.offerId());
+        RejectDecision rejectDecision = rejectDecisionService.findById(offerRejectionRequest.rejectId());
+        offer.setRejectDecision(rejectDecision);
+        offer.setGlobalStatus(EOfferStatus.OFFER_REJECTED_BY_CONTRACTOR);
+        offerRepository.update(offer);
+        return offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
+                hasRejectDecision(offer));
+    }
+    
     private Boolean hasAwardDecision(Offer offer) {
-        return offer.getAwardDecision().getId() != null;
+        return offer.getAwardDecision() != null && offer.getAwardDecision().getId() != null;
     }
 
     private Boolean hasRejectDecision(Offer offer) {
-        return offer.getRejectDecision().getId() != null;
+        return offer.getRejectDecision() != null && offer.getRejectDecision().getId() != null;
     }
 }

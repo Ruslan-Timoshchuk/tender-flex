@@ -20,7 +20,6 @@ public class ContractServiceImpl implements ContractService {
     private final ContractMapper contractMapper;
 
     @Override
-    @Transactional
     public Contract save(Contract contract) {
         contract.setHasSigned(false);
         return contractRepository.save(contract);
@@ -31,18 +30,19 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = contractRepository.findById(id);
         return contractMapper.toResponse(contract, hasOffer(contract));
     }
-    
+
     @Override
     @Transactional
     public ContractResponse initiateContractSigning(InitiateContractSigningRequest contractSigningRequest) {
         Contract contract = contractRepository.findById(contractSigningRequest.contractId());
-        contract.setOffer(offerService.selectWinningOffer(contractSigningRequest.offerId(), contractSigningRequest.awardId()));
+        contract.setOffer(
+                offerService.selectWinningOffer(contractSigningRequest.offerId(), contractSigningRequest.awardId()));
         contractRepository.update(contract);
-        return contractMapper.toResponse(contract, hasOffer(contract)); 
+        return contractMapper.toResponse(contract, hasOffer(contract));
     }
-    
+
     private Boolean hasOffer(Contract contract) {
-        return contract.getOffer().getId() != null;
+        return contract.getOffer() != null && contract.getOffer().getId() != null;
     }
-    
+
 }

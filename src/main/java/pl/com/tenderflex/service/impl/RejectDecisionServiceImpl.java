@@ -19,4 +19,9 @@ public class RejectDecisionServiceImpl implements RejectDecisionService {
         return rejectRepository.save(rejectDecision);
     }
 
+    @Override
+    public RejectDecision findById(Integer id) {
+        return rejectRepository.findById(id);
+    }
+
 }
