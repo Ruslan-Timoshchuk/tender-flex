@@ -18,5 +18,7 @@ public class Offer {
     private Currency currency;
     private LocalDate publication;
     private FileMetadata proposition;
+    private AwardDecision awardDecision;
+    private RejectDecision rejectDecision;
  
 }

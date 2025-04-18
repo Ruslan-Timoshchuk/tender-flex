@@ -8,5 +8,6 @@ CREATE TABLE contracts (
     currency_id INTEGER NOT NULL REFERENCES currencies(id),
     file_id INTEGER NOT NULL REFERENCES files(id),
     signed_deadline TIMESTAMP NOT NULL,
+    has_signed BOOLEAN NOT NULL,
     signed_date TIMESTAMP
 );

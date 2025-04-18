@@ -6,4 +6,6 @@ public interface AwardDecisionRepository {
 
     AwardDecision save(AwardDecision award);
     
+    AwardDecision findById(Integer id);
+    
 }

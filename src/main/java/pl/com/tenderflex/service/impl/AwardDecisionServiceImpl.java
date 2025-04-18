@@ -15,8 +15,13 @@ public class AwardDecisionServiceImpl implements AwardDecisionService {
 
     @Override
     @Transactional
-    public AwardDecision create(AwardDecision awardDecision) {
+    public AwardDecision save(AwardDecision awardDecision) {
         return awardRepository.save(awardDecision);
+    }
+
+    @Override
+    public AwardDecision findById(Integer id) {
+        return awardRepository.findById(id);
     }
 
 }

@@ -1,7 +1,9 @@
 package pl.com.tenderflex.repository.mapper;
 
+import static pl.com.tenderflex.repository.mapper.ContractMapper.CONTRACT_ID;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Procedure;
 import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.enums.ELanguage;
@@ -26,7 +28,6 @@ public class TenderMapper implements RowMapper<Tender> {
 
     private final CompanyProfileMapper companyProfileMapper;
     private final CpvMapper cpvMapper;
-    private final ContractMapper contractMapper;
     private final AwardDecisionMapper awardMapper;
     private final RejectDecisionMapper rejectMapper;
   
@@ -44,7 +45,10 @@ public class TenderMapper implements RowMapper<Tender> {
                 .cpv(cpvMapper.mapCpv(resultSet))
                 .description(resultSet.getString(TENDER_DESCRIPTION))
                 .globalStatus(ETenderStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
-                .contract(contractMapper.mapContract(resultSet))
+                .contract(Contract
+                           .builder()
+                           .id(resultSet.getObject(CONTRACT_ID, Integer.class))
+                           .build())
                 .awardDecision(awardMapper.mapAward(resultSet))
                 .rejectDecision(rejectMapper.mapReject(resultSet))
                 .publicationDate(resultSet.getObject(PUBLICATION_DATE, LocalDate.class))

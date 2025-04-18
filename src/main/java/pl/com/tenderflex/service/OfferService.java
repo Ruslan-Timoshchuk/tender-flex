@@ -1,6 +1,8 @@
 package pl.com.tenderflex.service;
 
+import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
@@ -25,5 +27,9 @@ public interface OfferService {
     OfferCountResponse countByTender(Integer tenderId);
 
     OfferStatusResponse checkOfferStatus(Integer userId, Integer tenderId);
+
+    Offer selectWinningOffer(Integer offerId, Integer awardId);
+
+    OfferResponse rejectOffer(OfferRejectionRequest offerRejectionRequest);
     
 }

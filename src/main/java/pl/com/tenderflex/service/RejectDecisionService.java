@@ -4,6 +4,8 @@ import pl.com.tenderflex.model.RejectDecision;
 
 public interface RejectDecisionService {
 
-    RejectDecision create(RejectDecision rejectDecision);
+    RejectDecision save(RejectDecision rejectDecision);
+
+    RejectDecision findById(Integer id);
 
 }

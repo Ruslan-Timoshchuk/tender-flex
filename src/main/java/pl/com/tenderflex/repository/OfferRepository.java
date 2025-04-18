@@ -8,6 +8,8 @@ public interface OfferRepository {
 
     Offer save(Offer offer);
     
+    void update(Offer offer);
+    
     Set<Offer> findByBidderWithPagination(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
     
     Set<Offer> findByContractorWithPagination(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);

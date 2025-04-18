@@ -3,6 +3,7 @@ package pl.com.tenderflex.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static pl.com.tenderflex.security.SecurityRoles.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
+import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
@@ -31,6 +33,7 @@ public class OfferController {
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
     public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
     public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/v1/offers/status/{user-id}/{tender-id}";
+    public static final String URI_OFFERS_REJECT = "/api/v1/offers/reject";
 
     private final OfferService offerService;
     private final RoleBasedActionExecutor roleBasedActionExecutor;
@@ -84,6 +87,12 @@ public class OfferController {
     public OfferStatusResponse checkOfferStatus(@PathVariable("user-id") Integer userId,
             @PathVariable("tender-id") Integer tenderId) {
         return offerService.checkOfferStatus(userId, tenderId);
+    }
+    
+    @Secured(CONTRACTOR)
+    @PatchMapping(URI_OFFERS_REJECT)
+    public OfferResponse rejectOffer(@RequestBody OfferRejectionRequest offerRejectionRequest) {
+        return offerService.rejectOffer(offerRejectionRequest);
     }
     
 }

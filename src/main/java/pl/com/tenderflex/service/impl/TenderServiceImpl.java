@@ -50,11 +50,11 @@ public class TenderServiceImpl implements TenderService {
         tender.setGlobalStatus(TENDER_IN_PROGRESS);     
         tender = tenderRepository.save(tender);
         Contract contract = tender.getContract();
-        contractService.create(contract);
+        contractService.save(contract);
         AwardDecision award = tender.getAwardDecision();
-        awardService.create(award);
+        awardService.save(award);
         RejectDecision reject = tender.getRejectDecision();  
-        rejectService.create(reject);
+        rejectService.save(reject);
         return tenderMapper.toResponse(tender, tender.getGlobalStatus());
     }
 
@@ -110,5 +110,5 @@ public class TenderServiceImpl implements TenderService {
     public TenderCountResponse countByContractor(Integer userId) {
         return new TenderCountResponse(tenderRepository.countTendersByContractor(userId));
     }
-
+    
 }

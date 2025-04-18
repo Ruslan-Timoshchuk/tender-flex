@@ -7,13 +7,14 @@ import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.FILE_NAME;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.RejectDecision;
 
 @Component
 @RequiredArgsConstructor
-public class RejectDecisionMapper {
+public class RejectDecisionMapper implements RowMapper<RejectDecision> {
 
     public static final String REJECT_DECISION_ID = "reject_id";
     public static final String REJECT_FILE_ID = "reject_file_id";
@@ -22,6 +23,11 @@ public class RejectDecisionMapper {
     public static final String REJECT_FILE_AWS3_KEY = "reject_aws_s3_file_key";
     
     private final FileMeatadataMapper fileMapper;
+    
+    @Override
+    public RejectDecision mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return mapReject(resultSet);
+    }  
     
     public RejectDecision mapReject(ResultSet resultSet) throws SQLException {
         return RejectDecision
@@ -33,6 +39,6 @@ public class RejectDecisionMapper {
                                FILE_CONTENT_TYPE, REJECT_FILE_CONTENT_TYPE,
                                FILE_AWS3_KEY, REJECT_FILE_AWS3_KEY)))
                 .build();
-    }  
-    
+    }
+
 }
