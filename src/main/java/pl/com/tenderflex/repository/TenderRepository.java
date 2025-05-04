@@ -17,4 +17,6 @@ public interface TenderRepository {
 
     Tender findById(Integer tenderId);
 
+    void update(Tender tender);
+
 }
