@@ -1,8 +1,7 @@
 package pl.com.tenderflex.payload.request;
 
 public record OfferRequest(
-        Integer bidderId,
-        TenderRequest tender,      
+        Integer bidderId,  
         CompanyProfileRequest companyProfile,
         Integer bidPrice, 
         CurrencyRequest currency,

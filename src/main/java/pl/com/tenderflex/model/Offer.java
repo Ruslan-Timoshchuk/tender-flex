@@ -12,6 +12,7 @@ public class Offer {
     private Integer id;
     private Integer bidderId;
     private Tender tender;
+    private Contract contract;
     private CompanyProfile companyProfile;
     private EOfferStatus globalStatus;
     private Integer bidPrice;
