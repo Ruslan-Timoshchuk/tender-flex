@@ -1,44 +1,58 @@
 package pl.com.tenderflex.service.impl;
 
+import static java.time.LocalDate.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
+import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.payload.mapstract.ContractMapper;
-import pl.com.tenderflex.payload.request.InitiateContractSigningRequest;
 import pl.com.tenderflex.payload.response.ContractResponse;
 import pl.com.tenderflex.repository.ContractRepository;
 import pl.com.tenderflex.service.ContractService;
-import pl.com.tenderflex.service.OfferService;
 
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository contractRepository;
-    private final OfferService offerService;
     private final ContractMapper contractMapper;
 
     @Override
-    public Contract save(Contract contract) {
-        contract.setHasSigned(false);
+    public Contract save(Contract contract, Tender tender) {
+        contract.setTender(tender);
         return contractRepository.save(contract);
     }
 
     @Override
-    public ContractResponse findById(Integer id) {
+    public Contract findById(Integer id) {
+        return contractRepository.findById(id);
+    }
+
+    @Override
+    public ContractResponse findDetailsById(Integer id) {
         Contract contract = contractRepository.findById(id);
         return contractMapper.toResponse(contract, hasOffer(contract));
     }
 
     @Override
-    @Transactional
-    public ContractResponse initiateContractSigning(InitiateContractSigningRequest contractSigningRequest) {
-        Contract contract = contractRepository.findById(contractSigningRequest.contractId());
-        contract.setOffer(
-                offerService.selectWinningOffer(contractSigningRequest.offerId(), contractSigningRequest.awardId()));
+    public void update(Contract contract) {
         contractRepository.update(contract);
-        return contractMapper.toResponse(contract, hasOffer(contract));
+    }
+
+    @Override
+    public Contract initiateContractSigning(Contract contract, Offer offer) {
+        contract.setOffer(offer);
+        contractRepository.update(contract);
+        return contract;
+    }
+
+    @Override
+    public Contract signContract(Contract contract) {
+        contract.setHasSigned(true);
+        contract.setSignedDate(now());
+        contractRepository.update(contract);
+        return contract;
     }
 
     private Boolean hasOffer(Contract contract) {

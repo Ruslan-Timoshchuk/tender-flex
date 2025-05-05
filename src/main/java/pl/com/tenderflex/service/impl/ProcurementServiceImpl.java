@@ -16,9 +16,11 @@ import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
 import pl.com.tenderflex.payload.request.ProcurementRequest;
+import pl.com.tenderflex.payload.request.SigningContractRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
 import pl.com.tenderflex.payload.response.ProcurementResponse;
+import pl.com.tenderflex.payload.response.SigningContractResponse;
 import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.ContractService;
 import pl.com.tenderflex.service.OfferService;
@@ -52,7 +54,7 @@ public class ProcurementServiceImpl implements ProcurementService {
                 .save(rejectDecisionMapper.toEntity(procurementRequest.rejectDecision()), tender);
         return new ProcurementResponse(tender.getId(), contract.getId(), awardDecision.getId(), rejectDecision.getId());
     }
-    
+
     @Override
     @Transactional
     public OfferSubmissionResponse sendNewOffer(OfferSubmissionRequest offerSubmissionRequest) {
@@ -61,7 +63,7 @@ public class ProcurementServiceImpl implements ProcurementService {
         offer = offerService.save(tender, offer);
         return new OfferSubmissionResponse(offer.getId());
     }
-    
+
     @Override
     @Transactional
     public AwardResultResponse makeAnAwardDecision(AwardOfferRequest awardOfferRequest) {
@@ -71,6 +73,17 @@ public class ProcurementServiceImpl implements ProcurementService {
                 .initiateContractSigning(contractService.findById(awardOfferRequest.contractId()), offer);
         return new AwardResultResponse(contract.getId(), offer.getAwardDecision().getId(), offer.getId(),
                 offer.getGlobalStatus().name());
+    }
+
+    @Override
+    public SigningContractResponse approveContract(SigningContractRequest signingContractRequest) {
+        Contract contract = contractService.findById(signingContractRequest.contractId());
+        contract = contractService.signContract(contract);
+        Offer winningOffer = offerService.findById(contract.getOffer().getId());
+        RejectDecision rejectDecision = rejectDecisionService.findById(signingContractRequest.rejectId());
+        offerService.rejectUnsuitableOffers(winningOffer, rejectDecision);
+        tenderService.closeTheTender(tenderService.findById(contract.getTender().getId()));
+        return new SigningContractResponse(contract.getId(), contract.isHasSigned());
     }
 
 }

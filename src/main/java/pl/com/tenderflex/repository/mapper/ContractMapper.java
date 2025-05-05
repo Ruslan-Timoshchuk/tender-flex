@@ -1,6 +1,7 @@
 package pl.com.tenderflex.repository.mapper;
 
 import static pl.com.tenderflex.repository.mapper.FileMeatadataMapper.*;
+import static pl.com.tenderflex.repository.mapper.TenderMapper.TENDER_ID;
 import static  pl.com.tenderflex.repository.mapper.OfferMapper.OFFER_ID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Offer;
+import pl.com.tenderflex.model.Tender;
 
 @Component
 @RequiredArgsConstructor
@@ -35,6 +37,10 @@ public class ContractMapper implements RowMapper<Contract> {
         return Contract
                 .builder()
                 .id(resultSet.getInt(CONTRACT_ID))
+                .tender(Tender
+                          .builder()
+                          .id(resultSet.getObject(TENDER_ID, Integer.class))
+                          .build())
                 .offer(Offer
                         .builder()
                         .id(resultSet.getObject(OFFER_ID, Integer.class))

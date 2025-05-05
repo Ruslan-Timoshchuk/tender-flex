@@ -34,7 +34,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String SELECT_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s LIMIT ? OFFSET ?";
     public static final String SELECT_CONTRACTOR_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String TENDER_COLUMNS_SQL_PART_QUERY = """
-            tender.id, tender.language, tender.procedure_type, tender.description, tender.global_status, tender.publication_date,
+            tender.id AS tender_id, tender.language, tender.procedure_type, tender.description, tender.global_status, tender.publication_date,
             tender.offer_submission_deadline, tender.company_profile_id, company_profile.official_name,
             company_profile.registration_number, company_profile.country_id, country.name, country.iso_code, country.phone_code,
             company_profile.city, company_profile.contact_first_name, company_profile.contact_last_name,

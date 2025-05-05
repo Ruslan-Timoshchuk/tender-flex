@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
 import pl.com.tenderflex.payload.request.ProcurementRequest;
+import pl.com.tenderflex.payload.request.SigningContractRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
 import pl.com.tenderflex.payload.response.ProcurementResponse;
+import pl.com.tenderflex.payload.response.SigningContractResponse;
 import pl.com.tenderflex.service.ProcurementService;
 
 @RestController
@@ -23,6 +25,7 @@ public class ProcurementController {
     public static final String URI_PROCUREMENTS = "/api/v1/procurements";
     public static final String URI_PROCUREMENTS_SEND_OFFER = "/api/v1/procurements/send-offer";
     public static final String URI_PROCUREMENTS_AWARD_OFFER = "/api/v1/procurements/award-offer";
+    public static final String URI_PROCUREMENTS_CONTRACT_SIGN = "/api/v1/procurements/contract-sign";
 
     private final ProcurementService procurementService;
 
@@ -42,6 +45,12 @@ public class ProcurementController {
     @PatchMapping(value = URI_PROCUREMENTS_AWARD_OFFER, consumes = APPLICATION_JSON_VALUE)
     public AwardResultResponse makeAnAwardDecision(@RequestBody AwardOfferRequest awardOfferRequest) {
         return procurementService.makeAnAwardDecision(awardOfferRequest);
+    }
+
+    @Secured(BIDDER)
+    @PatchMapping(value = URI_PROCUREMENTS_CONTRACT_SIGN, consumes = APPLICATION_JSON_VALUE)
+    public SigningContractResponse approveContract(@RequestBody SigningContractRequest signingContractRequest) {
+        return procurementService.approveContract(signingContractRequest);
     }
 
 }
