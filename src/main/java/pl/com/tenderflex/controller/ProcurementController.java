@@ -34,7 +34,7 @@ public class ProcurementController {
 
     @Secured(BIDDER)
     @PostMapping(value = URI_PROCUREMENTS_SEND_OFFER, consumes = APPLICATION_JSON_VALUE)
-    public OfferSubmissionResponse create(@RequestBody OfferSubmissionRequest offerSubmissionRequest) {
+    public OfferSubmissionResponse sendNewOffer(@RequestBody OfferSubmissionRequest offerSubmissionRequest) {
         return procurementService.sendNewOffer(offerSubmissionRequest);
     }
 
