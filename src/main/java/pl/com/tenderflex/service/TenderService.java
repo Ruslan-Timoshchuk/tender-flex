@@ -9,7 +9,9 @@ public interface TenderService {
 
     Tender save(Tender tender);
 
-    TenderResponse findById(Integer tenderId);
+    Tender findById(Integer id);
+    
+    TenderResponse findDetailsById(Integer id);
 
     TenderCountResponse countAll();
 
@@ -19,6 +21,6 @@ public interface TenderService {
 
     Page<TenderResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
-    void closeTheTender(Tender tender);
+    Tender closeTheTender(Tender tender);
 
 }

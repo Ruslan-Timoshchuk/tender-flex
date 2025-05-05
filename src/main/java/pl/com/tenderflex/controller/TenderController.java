@@ -40,8 +40,8 @@ public class TenderController {
 
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping(URI_TENDERS_ID)
-    public TenderResponse findById(@PathVariable("id") Integer tenderId) {
-        return tenderService.findById(tenderId);
+    public TenderResponse findDetailsById(@PathVariable("id") Integer tenderId) {
+        return tenderService.findDetailsById(tenderId);
     }
     
     @Secured({ CONTRACTOR, BIDDER })
