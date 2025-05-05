@@ -26,4 +26,6 @@ public interface OfferRepository {
 
     Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
 
+    Set<Offer> findAllByTender(Integer id);
+
 }

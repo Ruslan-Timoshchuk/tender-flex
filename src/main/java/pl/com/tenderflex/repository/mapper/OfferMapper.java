@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.AwardDecision;
+import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.RejectDecision;
 import pl.com.tenderflex.model.Tender;
@@ -22,6 +23,7 @@ public class OfferMapper implements RowMapper<Offer> {
     
     public static final String OFFER_ID = "offer_id";
     public static final String TENDER_ID = "tender_id";
+    public static final String CONTRACT_ID = "contract_id";
     public static final String GLOBAL_STATUS = "global_status"; 
     public static final String BID_PRICE = "bid_price";  
     public static final String PUBLICATION_DATE = "publication_date";             
@@ -43,6 +45,10 @@ public class OfferMapper implements RowMapper<Offer> {
                            .builder()
                            .id(resultSet.getInt(TENDER_ID))
                            .build())
+                 .contract(Contract
+                             .builder()
+                             .id(resultSet.getObject(CONTRACT_ID, Integer.class))
+                             .build())
                  .companyProfile(companyProfileMapper.mapCompanyProfile(resultSet))
                  .globalStatus(EOfferStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
                  .bidPrice(resultSet.getInt(BID_PRICE))

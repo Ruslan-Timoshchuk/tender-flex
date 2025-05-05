@@ -14,10 +14,12 @@ import pl.com.tenderflex.payload.mapstract.OfferMapper;
 import pl.com.tenderflex.payload.mapstract.RejectDecisionMapper;
 import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
+import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
 import pl.com.tenderflex.payload.request.ProcurementRequest;
 import pl.com.tenderflex.payload.request.SigningContractRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
+import pl.com.tenderflex.payload.response.OfferRejectionResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
 import pl.com.tenderflex.payload.response.ProcurementResponse;
 import pl.com.tenderflex.payload.response.SigningContractResponse;
@@ -76,6 +78,7 @@ public class ProcurementServiceImpl implements ProcurementService {
     }
 
     @Override
+    @Transactional
     public SigningContractResponse approveContract(SigningContractRequest signingContractRequest) {
         Contract contract = contractService.findById(signingContractRequest.contractId());
         contract = contractService.signContract(contract);
@@ -86,4 +89,13 @@ public class ProcurementServiceImpl implements ProcurementService {
         return new SigningContractResponse(contract.getId(), contract.isHasSigned());
     }
 
+    @Override
+    @Transactional
+    public OfferRejectionResponse rejectUnsuitableOffer(OfferRejectionRequest offerRejectionRequest) {
+        Offer offer = offerService.findById(offerRejectionRequest.offerId());
+        RejectDecision rejectDecision = rejectDecisionService.findById(offerRejectionRequest.rejectId());
+        offerService.rejectOffer(offer, rejectDecision);
+        return new OfferRejectionResponse(offer.getId(), offer.getGlobalStatus().name());
+    }
+    
 }

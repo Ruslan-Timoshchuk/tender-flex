@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
+import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
 import pl.com.tenderflex.payload.request.ProcurementRequest;
 import pl.com.tenderflex.payload.request.SigningContractRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
+import pl.com.tenderflex.payload.response.OfferRejectionResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
 import pl.com.tenderflex.payload.response.ProcurementResponse;
 import pl.com.tenderflex.payload.response.SigningContractResponse;
@@ -26,6 +28,7 @@ public class ProcurementController {
     public static final String URI_PROCUREMENTS_SEND_OFFER = "/api/v1/procurements/send-offer";
     public static final String URI_PROCUREMENTS_AWARD_OFFER = "/api/v1/procurements/award-offer";
     public static final String URI_PROCUREMENTS_CONTRACT_SIGN = "/api/v1/procurements/contract-sign";
+    public static final String URI_PROCUREMENTS_OFFER_REJECT = "/api/v1/procurements/offer-reject";
 
     private final ProcurementService procurementService;
 
@@ -51,6 +54,12 @@ public class ProcurementController {
     @PatchMapping(value = URI_PROCUREMENTS_CONTRACT_SIGN, consumes = APPLICATION_JSON_VALUE)
     public SigningContractResponse approveContract(@RequestBody SigningContractRequest signingContractRequest) {
         return procurementService.approveContract(signingContractRequest);
+    }
+
+    @Secured(CONTRACTOR)
+    @PatchMapping(value = URI_PROCUREMENTS_OFFER_REJECT, consumes = APPLICATION_JSON_VALUE)
+    public OfferRejectionResponse rejectOffer(@RequestBody OfferRejectionRequest offerRejectionRequest) {
+        return procurementService.rejectUnsuitableOffer(offerRejectionRequest);
     }
 
 }

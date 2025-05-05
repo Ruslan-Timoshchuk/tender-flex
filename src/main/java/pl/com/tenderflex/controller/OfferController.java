@@ -1,12 +1,8 @@
 package pl.com.tenderflex.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static pl.com.tenderflex.security.SecurityRoles.*;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.payload.Page;
-import pl.com.tenderflex.payload.request.OfferRejectionRequest;
-import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.payload.response.OfferStatusResponse;
@@ -26,28 +20,22 @@ import pl.com.tenderflex.service.RoleBasedActionExecutor;
 @RequiredArgsConstructor
 public class OfferController {
 
-    public static final String URI_OFFERS = "/api/v1/offers";
     public static final String URI_OFFERS_ID = "/api/v1/offers/{id}";
     public static final String URI_OFFERS_PAGE = "/api/v1/offers/page";
     public static final String URI_OFFERS_PAGE_TENDER_ID = "/api/v1/offers/page/{tender-id}";
     public static final String URI_OFFERS_COUNT_USER = "/api/v1/offers/count";
     public static final String URI_OFFERS_COUNT_TENDER = "/api/v1/offers/count/{tender-id}";
     public static final String URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID = "/api/v1/offers/status/{user-id}/{tender-id}";
-    public static final String URI_OFFERS_REJECT = "/api/v1/offers/reject";
+    public static final String URL_OFFERS_SELECT_OFFER = "/api/v1/offers/winning-offer";
+    public static final String URL_OFFERS_SIGN_CONTRACT = "/api/v1/offers/sign-contact";
 
     private final OfferService offerService;
     private final RoleBasedActionExecutor roleBasedActionExecutor;
 
-    @Secured(BIDDER)
-    @PostMapping(value = URI_OFFERS, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody OfferRequest offer) {
-        offerService.create(offer);
-    }
-
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping(URI_OFFERS_ID)
-    public OfferResponse findById(@PathVariable("id") Integer id) {
-        return offerService.findById(id);
+    public OfferResponse findDetailsById(@PathVariable("id") Integer id) {
+        return offerService.findDetailsById(id);
     }
 
     @Secured({ BIDDER, CONTRACTOR })
@@ -86,13 +74,7 @@ public class OfferController {
     @GetMapping(URI_OFFERS_STATUS_BIDDER_ID_TENDER_ID)
     public OfferStatusResponse checkOfferStatus(@PathVariable("user-id") Integer userId,
             @PathVariable("tender-id") Integer tenderId) {
-        return offerService.checkOfferStatus(userId, tenderId);
-    }
-    
-    @Secured(CONTRACTOR)
-    @PatchMapping(URI_OFFERS_REJECT)
-    public OfferResponse rejectOffer(@RequestBody OfferRejectionRequest offerRejectionRequest) {
-        return offerService.rejectOffer(offerRejectionRequest);
+        return offerService.checkOfferStatus(tenderId, userId);
     }
     
 }
