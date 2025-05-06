@@ -16,13 +16,13 @@ import pl.com.tenderflex.payload.mapstract.TenderMapper;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
 import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
-import pl.com.tenderflex.payload.request.ProcurementRequest;
-import pl.com.tenderflex.payload.request.SigningContractRequest;
+import pl.com.tenderflex.payload.request.InitiateProcurementRequest;
+import pl.com.tenderflex.payload.request.CompleteProcurementRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
 import pl.com.tenderflex.payload.response.OfferRejectionResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
-import pl.com.tenderflex.payload.response.ProcurementResponse;
-import pl.com.tenderflex.payload.response.SigningContractResponse;
+import pl.com.tenderflex.payload.response.ProcurementInitiationResponse;
+import pl.com.tenderflex.payload.response.ProcurementCompletionResponse;
 import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.ContractService;
 import pl.com.tenderflex.service.OfferService;
@@ -47,14 +47,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 
     @Override
     @Transactional
-    public ProcurementResponse initiateProcurement(ProcurementRequest procurementRequest) {
-        Tender tender = tenderService.save(tenderMapper.toEntity(procurementRequest.tender()));
-        Contract contract = contractService.save(contractMapper.toEntity(procurementRequest.contract()), tender);
+    public ProcurementInitiationResponse initiateProcurement(InitiateProcurementRequest initiateProcurementRequest) {
+        Tender tender = tenderService.save(tenderMapper.toEntity(initiateProcurementRequest.tender()));
+        Contract contract = contractService.save(contractMapper.toEntity(initiateProcurementRequest.contract()), tender);
         AwardDecision awardDecision = awardDecisionService
-                .save(awardDecisionMapper.toEntity(procurementRequest.awardDecision()), tender);
+                .save(awardDecisionMapper.toEntity(initiateProcurementRequest.awardDecision()), tender);
         RejectDecision rejectDecision = rejectDecisionService
-                .save(rejectDecisionMapper.toEntity(procurementRequest.rejectDecision()), tender);
-        return new ProcurementResponse(tender.getId(), contract.getId(), awardDecision.getId(), rejectDecision.getId());
+                .save(rejectDecisionMapper.toEntity(initiateProcurementRequest.rejectDecision()), tender);
+        return new ProcurementInitiationResponse(tender.getId(), contract.getId(), awardDecision.getId(), rejectDecision.getId());
     }
 
     @Override
@@ -79,14 +79,14 @@ public class ProcurementServiceImpl implements ProcurementService {
 
     @Override
     @Transactional
-    public SigningContractResponse approveContract(SigningContractRequest signingContractRequest) {
-        Contract contract = contractService.findById(signingContractRequest.contractId());
+    public ProcurementCompletionResponse completeProcurement(CompleteProcurementRequest completeProcurementRequest) {
+        Contract contract = contractService.findById(completeProcurementRequest.contractId());
         contract = contractService.signContract(contract);
         Offer winningOffer = offerService.findById(contract.getOffer().getId());
-        RejectDecision rejectDecision = rejectDecisionService.findById(signingContractRequest.rejectId());
+        RejectDecision rejectDecision = rejectDecisionService.findById(completeProcurementRequest.rejectId());
         offerService.rejectUnsuitableOffers(winningOffer, rejectDecision);
         tenderService.closeTheTender(tenderService.findById(contract.getTender().getId()));
-        return new SigningContractResponse(contract.getId(), contract.isHasSigned());
+        return new ProcurementCompletionResponse(contract.getId(), contract.isHasSigned());
     }
 
     @Override

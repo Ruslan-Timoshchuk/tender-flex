@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.payload.request.AwardOfferRequest;
 import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
-import pl.com.tenderflex.payload.request.ProcurementRequest;
-import pl.com.tenderflex.payload.request.SigningContractRequest;
+import pl.com.tenderflex.payload.request.InitiateProcurementRequest;
+import pl.com.tenderflex.payload.request.CompleteProcurementRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
 import pl.com.tenderflex.payload.response.OfferRejectionResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
-import pl.com.tenderflex.payload.response.ProcurementResponse;
-import pl.com.tenderflex.payload.response.SigningContractResponse;
+import pl.com.tenderflex.payload.response.ProcurementInitiationResponse;
+import pl.com.tenderflex.payload.response.ProcurementCompletionResponse;
 import pl.com.tenderflex.service.ProcurementService;
 
 @RestController
@@ -34,7 +34,7 @@ public class ProcurementController {
 
     @Secured(CONTRACTOR)
     @PostMapping(value = URI_PROCUREMENTS, consumes = APPLICATION_JSON_VALUE)
-    public ProcurementResponse initiateProcurement(@RequestBody ProcurementRequest procurementRequest) {
+    public ProcurementInitiationResponse initiateProcurement(@RequestBody InitiateProcurementRequest procurementRequest) {
         return procurementService.initiateProcurement(procurementRequest);
     }
 
@@ -52,8 +52,8 @@ public class ProcurementController {
 
     @Secured(BIDDER)
     @PatchMapping(value = URI_PROCUREMENTS_CONTRACT_SIGN, consumes = APPLICATION_JSON_VALUE)
-    public SigningContractResponse approveContract(@RequestBody SigningContractRequest signingContractRequest) {
-        return procurementService.approveContract(signingContractRequest);
+    public ProcurementCompletionResponse completeProcurement(@RequestBody CompleteProcurementRequest completeProcurementRequest) {
+        return procurementService.completeProcurement(completeProcurementRequest);
     }
 
     @Secured(CONTRACTOR)

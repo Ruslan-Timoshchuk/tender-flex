@@ -1,6 +1,6 @@
 package pl.com.tenderflex.payload.response;
 
-public record SigningContractResponse(
+public record ProcurementCompletionResponse(
         Integer contractId,
         boolean hasSigned) {
 }

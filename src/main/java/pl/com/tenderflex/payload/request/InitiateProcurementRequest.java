@@ -1,6 +1,6 @@
 package pl.com.tenderflex.payload.request;
 
-public record ProcurementRequest(
+public record InitiateProcurementRequest(
         TenderRequest tender,
         ContractRequest contract,
         AwardDecisionRequest awardDecision,
