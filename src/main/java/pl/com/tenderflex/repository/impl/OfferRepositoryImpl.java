@@ -30,6 +30,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String SELECT_PAGE_BY_BIDDER_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE bidder_id = ? LIMIT ? OFFSET ?";
     public static final String SELECT_PAGE_BY_CONTRACTOR_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String SELECT_PAGE_BY_TENDER_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE offer.tender_id = ? LIMIT ? OFFSET ?";
+    public static final String SELECT_ALL_BY_TENDER_PATTERN_QUERY = "SELECT %s FROM offers offer %s WHERE offer.tender_id = ?";
 
     public static final String OFFER_COLUMNS_SQL_PART_QUERY = """
             offer.id AS offer_id, offer.tender_id, offer.global_status, offer.bid_price, offer.publication_date,
@@ -38,14 +39,15 @@ public class OfferRepositoryImpl implements OfferRepository {
             company_profile.contact_first_name, company_profile.contact_last_name, company_profile.contact_phone_number,
             offer.currency_id, currency.code, currency.symbol, proposition_file.id AS proposition_file_id,
             proposition_file.name AS proposition_file_name, proposition_file.content_type AS proposition_file_content_type,
-            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key,
+            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key, contract.id AS contract_id,
             offer.award_decision_id AS award_id, offer.reject_decision_id AS reject_id""";
     public static final String OFFER_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN company_profiles company_profile ON company_profile.id = offer.company_profile_id
             LEFT JOIN countries country ON country.id = company_profile.country_id
             LEFT JOIN currencies currency ON currency.id = offer.currency_id
             LEFT JOIN files proposition_file ON proposition_file.id = offer.proposition_file_id
-            LEFT JOIN tenders tender ON tender.id = offer.tender_id""";
+            LEFT JOIN tenders tender ON tender.id = offer.tender_id
+            LEFT JOIN contracts contract ON contract.offer_id = offer.id""";
 
     public static final String ADD_NEW_OFFER_QUERY = """
             INSERT INTO offers(bidder_id, tender_id, company_profile_id, global_status,
@@ -115,6 +117,15 @@ public class OfferRepositoryImpl implements OfferRepository {
                 .collect(toSet());
     }
 
+    @Override
+    public Set<Offer> findAllByTender(Integer id) {
+        String sqlQuery = format(SELECT_ALL_BY_TENDER_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
+                OFFER_JOIN_TABLES_SQL_PART_QUERY);
+        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
+        return jdbcTemplate.query(sqlQuery, offerMapper, id).stream()
+                .collect(toSet());
+    }
+    
     @Override
     public Integer countOffersByBidder(Integer bidderId) {
         return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_BIDDER_QUERY, Integer.class, bidderId);

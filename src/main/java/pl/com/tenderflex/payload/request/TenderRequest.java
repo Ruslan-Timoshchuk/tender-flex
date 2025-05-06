@@ -7,8 +7,5 @@ public record TenderRequest(
         CpvRequest cpv,
         String description, 
         String publication, 
-        String offerSubmissionDeadline,
-        ContractRequest contract,
-        AwardDecisionRequest awardDecision,
-        RejectDecisionRequest rejectDecision) {
+        String offerSubmissionDeadline) {
 }

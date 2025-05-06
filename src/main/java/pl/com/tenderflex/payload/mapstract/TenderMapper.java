@@ -7,8 +7,7 @@ import pl.com.tenderflex.model.enums.ETenderStatus;
 import pl.com.tenderflex.payload.request.TenderRequest;
 import pl.com.tenderflex.payload.response.TenderResponse;
 
-@Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class, ContractMapper.class,
-        AwardDecisionMapper.class, RejectDecisionMapper.class })
+@Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class })
 public interface TenderMapper {
 
     @Mapping(target = "publicationDate", source = "publication", dateFormat = "yyyy-MM-dd")

@@ -28,7 +28,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             WHERE id = ?
             """;
     public static final String SELECT_BY_ID_QUERY = """
-            SELECT contract.id AS contract_id, contract.offer_id, contract.contract_type_id,
+            SELECT contract.id AS contract_id, contract.tender_id, contract.offer_id, contract.contract_type_id,
             contract_type.title AS contract_type_name, contract.min_price, contract.max_price,
             contract.currency_id, currency.code, currency.symbol, contract_file.id AS contract_file_id,
             contract_file.name AS contract_file_name, contract_file.content_type AS contract_file_content_type,
@@ -53,7 +53,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             statement.setInt(4, contract.getMaxPrice());
             statement.setInt(5, contract.getCurrency().getId());
             statement.setInt(6, contract.getFileMetadata().getId());
-            statement.setBoolean(7, contract.getHasSigned());
+            statement.setBoolean(7, contract.isHasSigned());
             statement.setObject(8, contract.getSignedDeadline());
             return statement;
         }, keyHolder);

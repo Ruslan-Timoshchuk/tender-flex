@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class TenderMapper implements RowMapper<Tender> {
     
-    public static final String TENDER_ID = "id";
+    public static final String TENDER_ID = "tender_id";
     public static final String TENDER_DESCRIPTION = "description";
     public static final String GLOBAL_STATUS = "global_status";
     public static final String PUBLICATION_DATE = "publication_date";

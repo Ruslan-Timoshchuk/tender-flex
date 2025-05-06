@@ -1,24 +1,24 @@
 package pl.com.tenderflex.service.impl;
 
+import static pl.com.tenderflex.model.enums.EOfferStatus.*;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import pl.com.tenderflex.model.AwardDecision;
 import pl.com.tenderflex.model.CompanyProfile;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.RejectDecision;
+import pl.com.tenderflex.model.Tender;
 import pl.com.tenderflex.model.enums.EOfferStatus;
 import pl.com.tenderflex.payload.Page;
 import pl.com.tenderflex.payload.mapstract.OfferMapper;
-import pl.com.tenderflex.payload.request.OfferRejectionRequest;
-import pl.com.tenderflex.payload.request.OfferRequest;
 import pl.com.tenderflex.payload.response.OfferCountResponse;
 import pl.com.tenderflex.payload.response.OfferResponse;
 import pl.com.tenderflex.payload.response.OfferStatusResponse;
 import pl.com.tenderflex.repository.OfferRepository;
-import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.CompanyProfileService;
 import pl.com.tenderflex.service.OfferService;
-import pl.com.tenderflex.service.RejectDecisionService;
 
 @Service
 @RequiredArgsConstructor
@@ -27,18 +27,14 @@ public class OfferServiceImpl implements OfferService {
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
     private final CompanyProfileService companyProfileService;
-    private final AwardDecisionService awardDecisionService;
-    private final RejectDecisionService rejectDecisionService;
 
     @Override
-    @Transactional
-    public OfferResponse create(OfferRequest offerRequest) {
-        Offer offer = offerMapper.toEntity(offerRequest);
+    public Offer save(Tender tender, Offer offer) {
+        offer.setTender(tender);
         CompanyProfile companyProfile = companyProfileService.create(offer.getCompanyProfile());
         offer.setCompanyProfile(companyProfile);
-        offer.setGlobalStatus(EOfferStatus.OFFER_SENT_TO_CONTRACTOR);
-        return offerMapper.toResponse(offerRepository.save(offer), offer.getGlobalStatus(), hasAwardDecision(offer),
-                hasRejectDecision(offer));
+        offer.setGlobalStatus(OFFER_SENT_TO_CONTRACTOR);
+        return offerRepository.save(offer);
     }
 
     @Override
@@ -74,10 +70,10 @@ public class OfferServiceImpl implements OfferService {
                 .findByContractorWithPagination(contractorId, offersPerPage, amountOffersToSkip).stream().map(offer -> {
                     EOfferStatus contractorStatus = offer.getGlobalStatus();
                     if (offer.getGlobalStatus() != null) {
-                        if (offer.getGlobalStatus() == EOfferStatus.OFFER_SENT_TO_CONTRACTOR) {
-                            contractorStatus = EOfferStatus.OFFER_RECEIVED;
-                        } else if (offer.getGlobalStatus() == EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR) {
-                            contractorStatus = EOfferStatus.OFFER_SELECTED;
+                        if (offer.getGlobalStatus() == OFFER_SENT_TO_CONTRACTOR) {
+                            contractorStatus = OFFER_RECEIVED;
+                        } else if (offer.getGlobalStatus() == OFFER_SELECTED_BY_CONTRACTOR) {
+                            contractorStatus = OFFER_SELECTED;
                         }
                     }
                     return offerMapper.toResponse(offer, contractorStatus, hasAwardDecision(offer),
@@ -100,10 +96,10 @@ public class OfferServiceImpl implements OfferService {
                 .findByTenderWithPagination(tenderId, offersPerPage, amountOffersToSkip).stream().map(offer -> {
                     EOfferStatus contractorStatus = offer.getGlobalStatus();
                     if (offer.getGlobalStatus() != null) {
-                        if (offer.getGlobalStatus() == EOfferStatus.OFFER_SENT_TO_CONTRACTOR) {
-                            contractorStatus = EOfferStatus.OFFER_RECEIVED;
-                        } else if (offer.getGlobalStatus() == EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR) {
-                            contractorStatus = EOfferStatus.OFFER_SELECTED;
+                        if (offer.getGlobalStatus() == OFFER_SENT_TO_CONTRACTOR) {
+                            contractorStatus = OFFER_RECEIVED;
+                        } else if (offer.getGlobalStatus() == OFFER_SELECTED_BY_CONTRACTOR) {
+                            contractorStatus = OFFER_SELECTED;
                         }
                     }
                     return offerMapper.toResponse(offer, contractorStatus, hasAwardDecision(offer),
@@ -112,7 +108,17 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferResponse findById(Integer offerId) {
+    public Set<Offer> findAllByTender(Integer tenderId) {
+        return offerRepository.findAllByTender(tenderId);
+    }
+
+    @Override
+    public Offer findById(Integer offerId) {
+        return offerRepository.findById(offerId);
+    }
+
+    @Override
+    public OfferResponse findDetailsById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
         return offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
                 hasRejectDecision(offer));
@@ -134,38 +140,60 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferStatusResponse checkOfferStatus(Integer userId, Integer tenderId) {
-        return offerRepository.findOfferByTenderAndBidder(tenderId, userId)
-                .map(offer -> new OfferStatusResponse(offer.getId(), offer.getGlobalStatus()))
-                .orElse(new OfferStatusResponse(0, EOfferStatus.OFFER_HAS_NOT_SENT));
+    public Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer userId) {
+        return offerRepository.findOfferByTenderAndBidder(tenderId, userId);
     }
 
     @Override
-    public Offer selectWinningOffer(Integer offerId, Integer awardId) {
-        Offer offer = offerRepository.findById(offerId);
-        offer.setAwardDecision(awardDecisionService.findById(awardId));
-        offer.setGlobalStatus(EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR);
+    public OfferStatusResponse checkOfferStatus(Integer tenderId, Integer userId) {
+        return offerRepository.findOfferByTenderAndBidder(tenderId, userId)
+                .map(offer -> new OfferStatusResponse(offer.getId(), offer.getGlobalStatus()))
+                .orElse(new OfferStatusResponse(0, OFFER_HAS_NOT_SENT));
+    }
+
+    @Override
+    public Offer selectWinningOffer(Offer offer, AwardDecision awardDecision) {
+        offer.setAwardDecision(awardDecision);
+        offer.setGlobalStatus(OFFER_SELECTED_BY_CONTRACTOR);
         offerRepository.update(offer);
         return offer;
     }
 
     @Override
-    @Transactional
-    public OfferResponse rejectOffer(OfferRejectionRequest offerRejectionRequest) {
-        Offer offer = offerRepository.findById(offerRejectionRequest.offerId());
-        RejectDecision rejectDecision = rejectDecisionService.findById(offerRejectionRequest.rejectId());
+    public Offer rejectOffer(Offer offer, RejectDecision rejectDecision) {
         offer.setRejectDecision(rejectDecision);
-        offer.setGlobalStatus(EOfferStatus.OFFER_REJECTED_BY_CONTRACTOR);
+        offer.setGlobalStatus(OFFER_REJECTED_BY_CONTRACTOR);
         offerRepository.update(offer);
-        return offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
-                hasRejectDecision(offer));
+        return offer;
     }
-    
-    private Boolean hasAwardDecision(Offer offer) {
+
+    @Override
+    public void rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision) {
+        winningOffer.setGlobalStatus(CONTRACT_APPROVED_BY_BIDDER);
+        offerRepository.update(winningOffer);
+        offerRepository.findAllByTender(winningOffer.getTender().getId()).stream()
+                .filter(offer -> !offer.equals(winningOffer))
+                .filter(offer -> !hasAwardDecision(offer))
+                .forEach(offerToBeRejected -> {
+                    offerToBeRejected.setGlobalStatus(OFFER_REJECTED_BY_CONTRACTOR);
+                    offerToBeRejected.setRejectDecision(rejectDecision);
+                    offerRepository.update(offerToBeRejected);
+                });
+    }
+
+    @Override
+    public boolean hasAwardDecision(Offer offer) {
         return offer.getAwardDecision() != null && offer.getAwardDecision().getId() != null;
     }
 
-    private Boolean hasRejectDecision(Offer offer) {
+    @Override
+    public boolean hasContract(Offer offer) {
+        return offer.getContract() != null && offer.getContract().getId() != null;
+    }
+    
+    @Override
+    public boolean hasRejectDecision(Offer offer) {
         return offer.getRejectDecision() != null && offer.getRejectDecision().getId() != null;
     }
+
 }
