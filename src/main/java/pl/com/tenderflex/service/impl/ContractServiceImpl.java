@@ -48,9 +48,18 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Contract signContract(Contract contract) {
+    public Contract sign(Contract contract) {
         contract.setHasSigned(true);
         contract.setSignedDate(now());
+        contractRepository.update(contract);
+        return contract;
+    }
+    
+    @Override
+    public Contract decline(Contract contract) {
+        contract.setOffer(Offer
+                            .builder()
+                            .build());
         contractRepository.update(contract);
         return contract;
     }

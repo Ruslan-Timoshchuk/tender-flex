@@ -17,11 +17,13 @@ import pl.com.tenderflex.payload.request.AwardOfferRequest;
 import pl.com.tenderflex.payload.request.OfferRejectionRequest;
 import pl.com.tenderflex.payload.request.OfferSubmissionRequest;
 import pl.com.tenderflex.payload.request.InitiateProcurementRequest;
-import pl.com.tenderflex.payload.request.CompleteProcurementRequest;
+import pl.com.tenderflex.payload.request.ProcurementCompletionRequest;
+import pl.com.tenderflex.payload.request.ProcurementRejectionRequest;
 import pl.com.tenderflex.payload.response.AwardResultResponse;
 import pl.com.tenderflex.payload.response.OfferRejectionResponse;
 import pl.com.tenderflex.payload.response.OfferSubmissionResponse;
 import pl.com.tenderflex.payload.response.ProcurementInitiationResponse;
+import pl.com.tenderflex.payload.response.ProcurementRejectionResponse;
 import pl.com.tenderflex.payload.response.ProcurementCompletionResponse;
 import pl.com.tenderflex.service.AwardDecisionService;
 import pl.com.tenderflex.service.ContractService;
@@ -49,12 +51,14 @@ public class ProcurementServiceImpl implements ProcurementService {
     @Transactional
     public ProcurementInitiationResponse initiateProcurement(InitiateProcurementRequest initiateProcurementRequest) {
         Tender tender = tenderService.save(tenderMapper.toEntity(initiateProcurementRequest.tender()));
-        Contract contract = contractService.save(contractMapper.toEntity(initiateProcurementRequest.contract()), tender);
+        Contract contract = contractService.save(contractMapper.toEntity(initiateProcurementRequest.contract()),
+                tender);
         AwardDecision awardDecision = awardDecisionService
                 .save(awardDecisionMapper.toEntity(initiateProcurementRequest.awardDecision()), tender);
         RejectDecision rejectDecision = rejectDecisionService
                 .save(rejectDecisionMapper.toEntity(initiateProcurementRequest.rejectDecision()), tender);
-        return new ProcurementInitiationResponse(tender.getId(), contract.getId(), awardDecision.getId(), rejectDecision.getId());
+        return new ProcurementInitiationResponse(tender.getId(), contract.getId(), awardDecision.getId(),
+                rejectDecision.getId());
     }
 
     @Override
@@ -79,11 +83,12 @@ public class ProcurementServiceImpl implements ProcurementService {
 
     @Override
     @Transactional
-    public ProcurementCompletionResponse completeProcurement(CompleteProcurementRequest completeProcurementRequest) {
-        Contract contract = contractService.findById(completeProcurementRequest.contractId());
-        contract = contractService.signContract(contract);
+    public ProcurementCompletionResponse completeProcurement(
+            ProcurementCompletionRequest procurementCompletionRequest) {
+        Contract contract = contractService.findById(procurementCompletionRequest.contractId());
+        contract = contractService.sign(contract);
         Offer winningOffer = offerService.findById(contract.getOffer().getId());
-        RejectDecision rejectDecision = rejectDecisionService.findById(completeProcurementRequest.rejectId());
+        RejectDecision rejectDecision = rejectDecisionService.findById(procurementCompletionRequest.rejectId());
         offerService.rejectUnsuitableOffers(winningOffer, rejectDecision);
         tenderService.closeTheTender(tenderService.findById(contract.getTender().getId()));
         return new ProcurementCompletionResponse(contract.getId(), contract.isHasSigned());
@@ -97,5 +102,17 @@ public class ProcurementServiceImpl implements ProcurementService {
         offerService.rejectOffer(offer, rejectDecision);
         return new OfferRejectionResponse(offer.getId(), offer.getGlobalStatus().name());
     }
-    
+
+    @Override
+    @Transactional
+    public ProcurementRejectionResponse rejectProcurement(ProcurementRejectionRequest procurementRejectionRequest) {
+        Contract contract = contractService.findById(procurementRejectionRequest.contractId());
+        Tender tender = tenderService.findById(contract.getTender().getId());
+        Offer offer = offerService.findById(contract.getOffer().getId());
+        contractService.decline(contract);
+        offer = offerService.handleOfferOnContractDecline(offer);
+        tender = tenderService.closeTenderIfNoPendingOffers(tender);
+        return new ProcurementRejectionResponse(tender.getGlobalStatus().name(), offer.getGlobalStatus().name());
+    }
+
 }

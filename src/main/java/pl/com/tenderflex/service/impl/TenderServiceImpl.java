@@ -33,11 +33,7 @@ public class TenderServiceImpl implements TenderService {
     public Tender save(Tender tender) {
         CompanyProfile contractorProfile = companyProfileService.create(tender.getCompanyProfile());
         tender.setCompanyProfile(contractorProfile);
-        tender.setProcedure(Procedure
-                              .builder()
-                              .type(OPEN_PROCEDURE)
-                              .language(ENGLISH)
-                              .build());
+        tender.setProcedure(Procedure.builder().type(OPEN_PROCEDURE).language(ENGLISH).build());
         tender.setGlobalStatus(TENDER_IN_PROGRESS);
         tender = tenderRepository.save(tender);
         return tender;
@@ -78,7 +74,7 @@ public class TenderServiceImpl implements TenderService {
                 tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip).stream().map(tender -> {
                     ETenderStatus tenderStatus = tender.getGlobalStatus();
                     Optional<Offer> foundlOffer = offerService.findOfferByTenderAndBidder(tender.getId(), userId);
-                    if (tenderStatus.equals(TENDER_IN_PROGRESS) && foundlOffer.isPresent()) {      
+                    if (tenderStatus.equals(TENDER_IN_PROGRESS) && foundlOffer.isPresent()) {
                         Offer offer = foundlOffer.get();
                         if (!offerService.hasContract(offer) && offerService.hasAwardDecision(offer)
                                 || offerService.hasRejectDecision(offer)) {
@@ -115,6 +111,18 @@ public class TenderServiceImpl implements TenderService {
     public Tender closeTheTender(Tender tender) {
         tender.setGlobalStatus(TENDER_CLOSED);
         tenderRepository.update(tender);
+        return tender;
+    }
+
+    @Override
+    public Tender closeTenderIfNoPendingOffers(Tender tender) {
+        boolean noPendingOffers = offerService.findAllByTender(tender.getId()).stream()
+                .filter(offer -> !offerService.hasAwardDecision(offer) && !offerService.hasRejectDecision(offer))
+                .toList().isEmpty();
+        if (noPendingOffers) {
+            tender.setGlobalStatus(TENDER_CLOSED);
+            tenderRepository.update(tender);
+        }
         return tender;
     }
 

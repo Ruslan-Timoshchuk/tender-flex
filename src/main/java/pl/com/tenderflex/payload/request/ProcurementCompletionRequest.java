@@ -1,6 +1,6 @@
 package pl.com.tenderflex.payload.request;
 
-public record CompleteProcurementRequest(
+public record ProcurementCompletionRequest(
         Integer contractId, 
         Integer rejectId) {
 }

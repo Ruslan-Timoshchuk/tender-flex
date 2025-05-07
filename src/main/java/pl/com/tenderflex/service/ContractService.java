@@ -15,8 +15,10 @@ public interface ContractService {
 
     void update(Contract contract);
 
-    Contract signContract(Contract contract);
+    Contract sign(Contract contract);
 
     Contract initiateContractSigning(Contract contract, Offer offer);
+
+    Contract decline(Contract contract);
  
 }
