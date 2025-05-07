@@ -42,11 +42,13 @@ public interface OfferService {
     Offer rejectOffer(Offer offer, RejectDecision rejectDecision);
 
     void rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
+    
+    Offer handleOfferOnContractDecline(Offer offer);
 
     boolean hasAwardDecision(Offer offer);
 
     boolean hasContract(Offer offer);
 
-    boolean hasRejectDecision(Offer offer);
+    boolean hasRejectDecision(Offer offer);  
 
 }

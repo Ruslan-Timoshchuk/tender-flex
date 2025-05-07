@@ -196,4 +196,11 @@ public class OfferServiceImpl implements OfferService {
         return offer.getRejectDecision() != null && offer.getRejectDecision().getId() != null;
     }
 
+    @Override
+    public Offer handleOfferOnContractDecline(Offer offer) {
+        offer.setGlobalStatus(CONTRACT_DECLINED_BY_BIDDER);
+        offerRepository.update(offer);
+        return offer;
+    }
+
 }

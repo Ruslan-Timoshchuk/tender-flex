@@ -23,4 +23,6 @@ public interface TenderService {
 
     Tender closeTheTender(Tender tender);
 
+    Tender closeTenderIfNoPendingOffers(Tender tender);
+
 }
