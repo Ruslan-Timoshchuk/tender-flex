@@ -16,6 +16,6 @@ public interface OfferMapper {
 
     @Mapping(target = "tenderId", source = "offer.tender.id")
     @Mapping(target = "publication", source = "offer.publication", dateFormat = "dd/MM/yyyy")
-    OfferResponse toResponse(Offer offer, EOfferStatus status, Boolean hasAwardDecision, Boolean hasRejectDecision);
+    OfferResponse toResponse(Offer offer, EOfferStatus status, boolean hasAwardDecision, boolean hasRejectDecision);
 
 }

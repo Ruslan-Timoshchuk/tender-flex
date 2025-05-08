@@ -41,7 +41,7 @@ public interface OfferService {
 
     Offer rejectOffer(Offer offer, RejectDecision rejectDecision);
 
-    void rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
+    Offer rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
     
     Offer handleOfferOnContractDecline(Offer offer);
 
