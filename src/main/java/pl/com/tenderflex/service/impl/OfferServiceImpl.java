@@ -168,7 +168,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision) {
+    public Offer rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision) {
         winningOffer.setGlobalStatus(CONTRACT_APPROVED_BY_BIDDER);
         offerRepository.update(winningOffer);
         offerRepository.findAllByTender(winningOffer.getTender().getId()).stream()
@@ -179,6 +179,7 @@ public class OfferServiceImpl implements OfferService {
                     offerToBeRejected.setRejectDecision(rejectDecision);
                     offerRepository.update(offerToBeRejected);
                 });
+        return winningOffer;
     }
 
     @Override
@@ -190,7 +191,7 @@ public class OfferServiceImpl implements OfferService {
     public boolean hasContract(Offer offer) {
         return offer.getContract() != null && offer.getContract().getId() != null;
     }
-    
+
     @Override
     public boolean hasRejectDecision(Offer offer) {
         return offer.getRejectDecision() != null && offer.getRejectDecision().getId() != null;

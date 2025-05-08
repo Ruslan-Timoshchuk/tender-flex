@@ -9,6 +9,6 @@ public record OfferResponse(
         CurrencyResponse currency,
         String publication,
         FileMetadataResponse proposition,
-        Boolean hasAwardDecision,
-        Boolean hasRejectDecision) {
+        boolean hasAwardDecision,
+        boolean hasRejectDecision) {
 }
