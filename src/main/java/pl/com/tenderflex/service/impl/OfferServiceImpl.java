@@ -198,7 +198,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer handleOfferOnContractDecline(Offer offer) {
+    public Offer handleOnContractDecline(Offer offer) {
         offer.setGlobalStatus(CONTRACT_DECLINED_BY_BIDDER);
         offerRepository.update(offer);
         return offer;

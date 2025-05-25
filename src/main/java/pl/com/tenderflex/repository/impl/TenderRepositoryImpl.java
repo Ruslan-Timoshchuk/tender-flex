@@ -131,7 +131,7 @@ public class TenderRepositoryImpl implements TenderRepository {
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
         return jdbcTemplate
-                .query(sqlQuery, tenderMapper, status, currentDate).stream()
+                .query(sqlQuery, tenderMapper, status.name(), currentDate).stream()
                 .collect(toSet());
     }
 

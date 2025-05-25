@@ -111,18 +111,18 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Tender closeTheTender(Tender tender) {
+    public Tender close(Tender tender) {
         tender.setGlobalStatus(TENDER_CLOSED);
         tenderRepository.update(tender);
         return tender;
     }
 
     @Override
-    public Tender closeTenderIfNoPendingOffers(Tender tender) {
-        boolean noPendingOffers = offerService.findAllByTender(tender.getId()).stream()
+    public Tender closeIfHasNoPendingOffers(Tender tender) {
+        boolean hasNoPendingOffers = offerService.findAllByTender(tender.getId()).stream()
                 .filter(offer -> !offerService.hasAwardDecision(offer) && !offerService.hasRejectDecision(offer))
                 .toList().isEmpty();
-        if (noPendingOffers) {
+        if (hasNoPendingOffers) {
             tender.setGlobalStatus(TENDER_CLOSED);
             tenderRepository.update(tender);
         }
@@ -133,7 +133,7 @@ public class TenderServiceImpl implements TenderService {
     @Transactional
     public void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate) {
         tenderRepository.findActiveWhereSubmissionIsExpired(status, currentDate)
-                .forEach(this::closeTenderIfNoPendingOffers);
+                .forEach(this::closeIfHasNoPendingOffers);
     }
 
 }

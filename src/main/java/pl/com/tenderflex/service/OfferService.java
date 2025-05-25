@@ -43,7 +43,7 @@ public interface OfferService {
 
     Offer rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
     
-    Offer handleOfferOnContractDecline(Offer offer);
+    Offer handleOnContractDecline(Offer offer);
 
     boolean hasAwardDecision(Offer offer);
 

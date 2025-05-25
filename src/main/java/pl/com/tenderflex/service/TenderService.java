@@ -23,9 +23,9 @@ public interface TenderService {
 
     Page<TenderResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
-    Tender closeTheTender(Tender tender);
+    Tender close(Tender tender);
 
-    Tender closeTenderIfNoPendingOffers(Tender tender);
+    Tender closeIfHasNoPendingOffers(Tender tender);
 
     void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate);
 
