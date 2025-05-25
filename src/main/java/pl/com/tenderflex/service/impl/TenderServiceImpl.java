@@ -3,8 +3,11 @@ package pl.com.tenderflex.service.impl;
 import static pl.com.tenderflex.model.enums.ELanguage.*;
 import static pl.com.tenderflex.model.enums.EProcedure.*;
 import static pl.com.tenderflex.model.enums.ETenderStatus.*;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.CompanyProfile;
 import pl.com.tenderflex.model.Offer;
@@ -108,22 +111,29 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Tender closeTheTender(Tender tender) {
+    public Tender close(Tender tender) {
         tender.setGlobalStatus(TENDER_CLOSED);
         tenderRepository.update(tender);
         return tender;
     }
 
     @Override
-    public Tender closeTenderIfNoPendingOffers(Tender tender) {
-        boolean noPendingOffers = offerService.findAllByTender(tender.getId()).stream()
+    public Tender closeIfHasNoPendingOffers(Tender tender) {
+        boolean hasNoPendingOffers = offerService.findAllByTender(tender.getId()).stream()
                 .filter(offer -> !offerService.hasAwardDecision(offer) && !offerService.hasRejectDecision(offer))
                 .toList().isEmpty();
-        if (noPendingOffers) {
+        if (hasNoPendingOffers) {
             tender.setGlobalStatus(TENDER_CLOSED);
             tenderRepository.update(tender);
         }
         return tender;
+    }
+
+    @Override
+    @Transactional
+    public void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate) {
+        tenderRepository.findActiveWhereSubmissionIsExpired(status, currentDate)
+                .forEach(this::closeIfHasNoPendingOffers);
     }
 
 }

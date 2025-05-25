@@ -1,8 +1,10 @@
 package pl.com.tenderflex.repository.impl;
 
 import static java.lang.String.*;
+import static java.util.stream.Collectors.toSet;
 import java.sql.PreparedStatement;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.enums.ETenderStatus;
 import pl.com.tenderflex.repository.TenderRepository;
 import pl.com.tenderflex.repository.mapper.TenderMapper;
 
@@ -33,6 +36,9 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String SELECT_BY_ID_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE tender.id = ?";
     public static final String SELECT_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s LIMIT ? OFFSET ?";
     public static final String SELECT_CONTRACTOR_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
+    public static final String SELECT_ACTIVE_WITH_EXPIRED_SUBMISSION_PATTERN_QUERY = """
+            SELECT %s FROM tenders tender %s
+            WHERE global_status = ? AND offer_submission_deadline <= ?""";
     public static final String TENDER_COLUMNS_SQL_PART_QUERY = """
             tender.id AS tender_id, tender.language, tender.procedure_type, tender.description, tender.global_status, tender.publication_date,
             tender.offer_submission_deadline, tender.company_profile_id, company_profile.official_name,
@@ -78,25 +84,27 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     @Override
     public void update(Tender tender) {
-        jdbcTemplate.update(UPDATE_TENDER_QUERY, tender.getProcedure().getType().name(), tender.getProcedure().getLanguage().name(),
-                tender.getCpv().getId(), tender.getDescription(), tender.getGlobalStatus().name(), tender.getId());
+        jdbcTemplate.update(UPDATE_TENDER_QUERY, tender.getProcedure().getType().name(),
+                tender.getProcedure().getLanguage().name(), tender.getCpv().getId(), tender.getDescription(),
+                tender.getGlobalStatus().name(), tender.getId());
     }
 
     @Override
-    public List<Tender> findWithPagination(Integer amountTenders, Integer amountTendersToSkip) {
+    public Set<Tender> findWithPagination(Integer amountTenders, Integer amountTendersToSkip) {
         String sqlQuery = format(SELECT_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL_PART_QUERY,
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, amountTenders, amountTendersToSkip);
+        return jdbcTemplate.query(sqlQuery, tenderMapper, amountTenders, amountTendersToSkip).stream().collect(toSet());
     }
 
     @Override
-    public List<Tender> findByContractorWithPagination(Integer contractorId, Integer amountTenders,
+    public Set<Tender> findByContractorWithPagination(Integer contractorId, Integer amountTenders,
             Integer amountTendersToSkip) {
         String sqlQuery = format(SELECT_CONTRACTOR_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL_PART_QUERY,
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, contractorId, amountTenders, amountTendersToSkip);
+        return jdbcTemplate.query(sqlQuery, tenderMapper, contractorId, amountTenders, amountTendersToSkip).stream()
+                .collect(toSet());
     }
 
     @Override
@@ -115,6 +123,16 @@ public class TenderRepositoryImpl implements TenderRepository {
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
         return jdbcTemplate.queryForObject(sqlQuery, tenderMapper, tenderId);
+    }
+
+    @Override
+    public Set<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate currentDate) {
+        String sqlQuery = format(SELECT_ACTIVE_WITH_EXPIRED_SUBMISSION_PATTERN_QUERY, TENDER_COLUMNS_SQL_PART_QUERY,
+                TENDER_JOIN_TABLES_SQL_PART_QUERY);
+        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
+        return jdbcTemplate
+                .query(sqlQuery, tenderMapper, status.name(), currentDate).stream()
+                .collect(toSet());
     }
 
 }
