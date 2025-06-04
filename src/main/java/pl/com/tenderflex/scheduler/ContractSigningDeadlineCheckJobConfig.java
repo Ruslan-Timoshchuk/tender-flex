@@ -13,20 +13,23 @@ public class ContractSigningDeadlineCheckJobConfig {
 
     @Bean
     public JobDetail signingDeadlineCheckJobDetail() {
-        return JobBuilder.newJob().ofType(ContractSigningDeadlineCheckJob.class)
-          .storeDurably()
-          .withIdentity("ContractSigningDeadlineCheckJob")  
-          .withDescription("Checks expired signing contract deadlines")
-          .build();
+        return JobBuilder
+                 .newJob()
+                 .ofType(ContractSigningDeadlineCheckJob.class)
+                 .storeDurably()
+                 .withIdentity("ContractSigningDeadlineCheckJob")  
+                 .withDescription("Checks for contracts with expired signing deadlines")
+                 .build();
     }
-    
+
     @Bean
     public Trigger deadlineTrigger() {
-        return TriggerBuilder.newTrigger()
-            .forJob(signingDeadlineCheckJobDetail())
-            .withIdentity("ContractDeadlineTrigger")
-            .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 0))
-            .build();
+        return TriggerBuilder
+                 .newTrigger()
+                 .forJob(signingDeadlineCheckJobDetail())
+                 .withIdentity("ContractSigningDeadlineTrigger")
+                 .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 0))
+                 .build();
     }
-    
+       
 }

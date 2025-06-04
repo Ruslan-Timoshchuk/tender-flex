@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
+import pl.com.tenderflex.model.enums.EContractStatus;
 import pl.com.tenderflex.repository.ContractRepository;
 import pl.com.tenderflex.repository.mapper.ContractMapper;
 
@@ -22,18 +23,16 @@ public class ContractRepositoryImpl implements ContractRepository {
 
     public static final String EXECUTING_SQL_QUERY_LOG = "Executing SQL Query: {}";
     public static final String ADD_NEW_CONTRACT_QUERY = """
-            INSERT INTO contracts(tender_id, contract_type_id, min_price, max_price, currency_id, file_id, has_signed, signed_deadline)
+            INSERT INTO contracts(tender_id, contract_type_id, min_price, max_price, currency_id, file_id, global_status, signed_deadline)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
     public static final String UPDATE_CONTRACT_QUERY = """
             UPDATE contracts
             SET offer_id = ?, contract_type_id = ?, min_price = ?, max_price = ?, currency_id = ?,
-            file_id = ?, has_signed = ?, signed_deadline = ?, signed_date = ?
+            file_id = ?, global_status = ?, signed_deadline = ?, signed_date = ?
             WHERE id = ?
             """;
     public static final String SELECT_BY_ID_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.id = ?";
-    public static final String SELECT_ALL_BY_IS_SIGNED_PATTERN_QUERY = """
-            SELECT %s FROM contracts contract %s
-            WHERE contract.offer_id IS NOT NULL AND contract.has_signed = ?""";
+    public static final String SELECT_ALL_BY_IS_SIGNED_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.global_status = ?";
     public static final String CONTRACT_COLUMNS_SQL_PART_QUERY = """
             contract.id AS contract_id, contract.tender_id, contract.offer_id, contract.contract_type_id,
             contract_type.title AS contract_type_name, contract.min_price, contract.max_price,
@@ -61,7 +60,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             statement.setInt(4, contract.getMaxPrice());
             statement.setInt(5, contract.getCurrency().getId());
             statement.setInt(6, contract.getFileMetadata().getId());
-            statement.setBoolean(7, contract.isHasSigned());
+            statement.setString(7, contract.getGlobalStatus().name());
             statement.setObject(8, contract.getSignedDeadline());
             return statement;
         }, keyHolder);
@@ -73,7 +72,7 @@ public class ContractRepositoryImpl implements ContractRepository {
     public void update(Contract contract) {
         jdbcTemplate.update(UPDATE_CONTRACT_QUERY, contract.getOffer().getId(), contract.getContractType().getId(),
                 contract.getMinPrice(), contract.getMaxPrice(), contract.getCurrency().getId(),
-                contract.getFileMetadata().getId(), contract.isHasSigned(), contract.getSignedDeadline(),
+                contract.getFileMetadata().getId(), contract.getGlobalStatus().name(), contract.getSignedDeadline(),
                 contract.getSignedDate(), contract.getId());
     }
 
@@ -86,11 +85,11 @@ public class ContractRepositoryImpl implements ContractRepository {
     }
 
     @Override
-    public Set<Contract> findAll(boolean hasSigned) {
+    public Set<Contract> findAll(EContractStatus globalStatus) {
         String sqlQuery = String.format(SELECT_ALL_BY_IS_SIGNED_PATTERN_QUERY, CONTRACT_COLUMNS_SQL_PART_QUERY,
                 CONTRACT_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, contractMapper, hasSigned).stream().collect(toSet());
+        return jdbcTemplate.query(sqlQuery, contractMapper, globalStatus.name()).stream().collect(toSet());
     }
 
 }

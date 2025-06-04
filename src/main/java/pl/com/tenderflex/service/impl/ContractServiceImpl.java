@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.enums.EContractStatus;
 import pl.com.tenderflex.payload.mapstract.ContractMapper;
 import pl.com.tenderflex.payload.response.ContractResponse;
 import pl.com.tenderflex.repository.ContractRepository;
@@ -23,6 +24,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Contract save(Contract contract, Tender tender) {
         contract.setTender(tender);
+        contract.setGlobalStatus(EContractStatus.DRAFT);
         return contractRepository.save(contract);
     }
 
@@ -38,20 +40,16 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public void update(Contract contract) {
-        contractRepository.update(contract);
-    }
-
-    @Override
     public Contract initiateContractSigning(Contract contract, Offer offer) {
         contract.setOffer(offer);
+        contract.setGlobalStatus(EContractStatus.PENDING_SIGNATURE);
         contractRepository.update(contract);
         return contract;
     }
 
     @Override
     public Contract sign(Contract contract) {
-        contract.setHasSigned(true);
+        contract.setGlobalStatus(EContractStatus.SIGNED);
         contract.setSignedDate(now());
         contractRepository.update(contract);
         return contract;
@@ -62,6 +60,7 @@ public class ContractServiceImpl implements ContractService {
         contract.setOffer(Offer
                             .builder()
                             .build());
+        contract.setGlobalStatus(EContractStatus.DRAFT);
         contractRepository.update(contract);
         return contract;
     }
@@ -79,8 +78,8 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Set<Contract> findAll(boolean hasSigned) {
-        return contractRepository.findAll(hasSigned);
+    public Set<Contract> findAll(EContractStatus globalStatus) {
+        return contractRepository.findAll(globalStatus);
     }
 
 }
