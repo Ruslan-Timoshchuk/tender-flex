@@ -13,20 +13,23 @@ public class TenderSubmissionJobConfig {
 
     @Bean
     public JobDetail tenderDeadlineCheckJobDetail() {
-        return JobBuilder.newJob().ofType(TenderSubmissionDeadlineCheckJob.class)
-          .storeDurably()
-          .withIdentity("TenderSubmissionDeadlineCheckJob")  
-          .withDescription("Checks expired tender submission deadlines")
-          .build();
+        return JobBuilder
+                 .newJob()
+                 .ofType(TenderSubmissionDeadlineCheckJob.class)
+                 .storeDurably()
+                 .withIdentity("TenderSubmissionDeadlineCheckJob")  
+                 .withDescription("Checks expired tender submission deadlines")
+                 .build();
     }
     
     @Bean
     public Trigger tenderDeadlineTrigger() {
-        return TriggerBuilder.newTrigger()
-            .forJob(tenderDeadlineCheckJobDetail())
-            .withIdentity("TenderDeadlineTrigger")
-            .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 0))
-            .build();
+        return TriggerBuilder
+                 .newTrigger()
+                 .forJob(tenderDeadlineCheckJobDetail())
+                 .withIdentity("TenderDeadlineTrigger")
+                 .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 0))
+                 .build();
     }
-    
+        
 }

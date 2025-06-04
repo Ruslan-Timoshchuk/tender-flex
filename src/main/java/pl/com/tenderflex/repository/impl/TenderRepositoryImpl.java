@@ -38,7 +38,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public static final String SELECT_CONTRACTOR_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String SELECT_ACTIVE_WITH_EXPIRED_SUBMISSION_PATTERN_QUERY = """
             SELECT %s FROM tenders tender %s
-            WHERE global_status = ? AND offer_submission_deadline <= ?""";
+            WHERE tender.global_status = ? AND offer_submission_deadline <= ?""";
     public static final String TENDER_COLUMNS_SQL_PART_QUERY = """
             tender.id AS tender_id, tender.language, tender.procedure_type, tender.description, tender.global_status, tender.publication_date,
             tender.offer_submission_deadline, tender.company_profile_id, company_profile.official_name,
