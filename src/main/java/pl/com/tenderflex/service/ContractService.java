@@ -1,5 +1,6 @@
 package pl.com.tenderflex.service;
 
+import java.util.Set;
 import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Tender;
@@ -20,5 +21,11 @@ public interface ContractService {
     Contract initiateContractSigning(Contract contract, Offer offer);
 
     Contract decline(Contract contract);
+
+    boolean hasOffer(Contract contract);
+
+    Set<Contract> findAll(boolean hasSigned);
+
+    void handleOnSigningDeadlinePassed(Contract contract);
  
 }

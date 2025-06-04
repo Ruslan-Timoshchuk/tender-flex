@@ -1,6 +1,8 @@
 package pl.com.tenderflex.service.impl;
 
 import static java.time.LocalDate.*;
+import java.time.LocalDate;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
@@ -64,8 +66,21 @@ public class ContractServiceImpl implements ContractService {
         return contract;
     }
 
-    private Boolean hasOffer(Contract contract) {
+    @Override
+    public void handleOnSigningDeadlinePassed(Contract contract) {
+        LocalDate extendedSignedDeadline = contract.getSignedDeadline().plusDays(7);
+        contract.setSignedDeadline(extendedSignedDeadline);
+        decline(contract);
+    }
+    
+    @Override
+    public boolean hasOffer(Contract contract) {
         return contract.getOffer() != null && contract.getOffer().getId() != null;
+    }
+
+    @Override
+    public Set<Contract> findAll(boolean hasSigned) {
+        return contractRepository.findAll(hasSigned);
     }
 
 }
