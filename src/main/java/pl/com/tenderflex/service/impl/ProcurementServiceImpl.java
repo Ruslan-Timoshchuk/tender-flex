@@ -91,7 +91,7 @@ public class ProcurementServiceImpl implements ProcurementService {
         RejectDecision rejectDecision = rejectDecisionService.findById(procurementCompletionRequest.rejectId());
         winningOffer = offerService.rejectUnsuitableOffers(winningOffer, rejectDecision);
         tenderService.close(tenderService.findById(contract.getTender().getId()));
-        return new ProcurementCompletionResponse(contract.getId(), contract.isHasSigned(),
+        return new ProcurementCompletionResponse(contract.getId(), contract.getGlobalStatus().name(),
                 winningOffer.getGlobalStatus().name());
     }
 
@@ -109,10 +109,10 @@ public class ProcurementServiceImpl implements ProcurementService {
     public ProcurementRejectionResponse rejectProcurement(ProcurementRejectionRequest procurementRejectionRequest) {
         Contract contract = contractService.findById(procurementRejectionRequest.contractId());
         Tender tender = tenderService.findById(contract.getTender().getId());
-        Offer offer = offerService.findById(contract.getOffer().getId());
+        Offer offer = offerService.findById(contract.getOffer().getId());        
         contractService.decline(contract);
         offer = offerService.handleOnContractDecline(offer);
-        tender = tenderService.closeIfHasNoPendingOffers(tender);
+        tender = tenderService.closeIfHasNoPendingOffers(tender);  
         return new ProcurementRejectionResponse(tender.getGlobalStatus().name(), offer.getGlobalStatus().name());
     }
 

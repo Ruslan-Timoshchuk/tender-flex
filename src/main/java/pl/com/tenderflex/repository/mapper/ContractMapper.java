@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.Contract;
 import pl.com.tenderflex.model.Offer;
 import pl.com.tenderflex.model.Tender;
+import pl.com.tenderflex.model.enums.EContractStatus;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class ContractMapper implements RowMapper<Contract> {
     public static final String CONTRACT_FILE_NAME = "contract_file_name";
     public static final String CONTRACT_FILE_CONTENT_TYPE = "contract_file_content_type";
     public static final String CONTRACT_FILE_AWS3_KEY = "contract_aws_s3_file_key"; 
+    public static final String GLOBAL_STATUS = "global_status";
     public static final String SIGNED_DEADLINE = "signed_deadline";
     public static final String SIGNED_DATE = "signed_date";
     
@@ -55,6 +57,7 @@ public class ContractMapper implements RowMapper<Contract> {
                                        FILE_NAME, CONTRACT_FILE_NAME,
                                        FILE_CONTENT_TYPE, CONTRACT_FILE_CONTENT_TYPE,
                                        FILE_AWS3_KEY, CONTRACT_FILE_AWS3_KEY)))
+                .globalStatus(EContractStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
                 .signedDeadline(resultSet.getObject(SIGNED_DEADLINE, LocalDate.class))
                 .signedDate(resultSet.getObject(SIGNED_DATE, LocalDate.class))
                 .build();

@@ -9,27 +9,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TenderSubmissionJobConfig {
+public class ContractSigningDeadlineCheckJobConfig {
 
     @Bean
-    public JobDetail tenderDeadlineCheckJobDetail() {
+    public JobDetail signingDeadlineCheckJobDetail() {
         return JobBuilder
                  .newJob()
-                 .ofType(TenderSubmissionDeadlineCheckJob.class)
+                 .ofType(ContractSigningDeadlineCheckJob.class)
                  .storeDurably()
-                 .withIdentity("TenderSubmissionDeadlineCheckJob")  
-                 .withDescription("Checks expired tender submission deadlines")
+                 .withIdentity("ContractSigningDeadlineCheckJob")  
+                 .withDescription("Checks for contracts with expired signing deadlines")
                  .build();
     }
-    
+
     @Bean
-    public Trigger tenderDeadlineTrigger() {
+    public Trigger deadlineTrigger() {
         return TriggerBuilder
                  .newTrigger()
-                 .forJob(tenderDeadlineCheckJobDetail())
-                 .withIdentity("TenderDeadlineTrigger")
+                 .forJob(signingDeadlineCheckJobDetail())
+                 .withIdentity("ContractSigningDeadlineTrigger")
                  .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(0, 0))
                  .build();
     }
-        
+       
 }

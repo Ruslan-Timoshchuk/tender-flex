@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import pl.com.tenderflex.model.CompanyProfile;
 import pl.com.tenderflex.model.Offer;

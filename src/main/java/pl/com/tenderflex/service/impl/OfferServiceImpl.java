@@ -203,5 +203,12 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.update(offer);
         return offer;
     }
+    
+    @Override
+    public Offer handleOnSigningDeadlinePassed(Offer offer) {
+        offer.setGlobalStatus(OFFER_REJECTED_BY_BIDDER);
+        offerRepository.update(offer);
+        return offer;
+    }
 
 }

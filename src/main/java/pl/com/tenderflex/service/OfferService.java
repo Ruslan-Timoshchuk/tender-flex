@@ -49,6 +49,8 @@ public interface OfferService {
 
     boolean hasContract(Offer offer);
 
-    boolean hasRejectDecision(Offer offer);  
+    boolean hasRejectDecision(Offer offer);
+
+    Offer handleOnSigningDeadlinePassed(Offer offer);  
 
 }
