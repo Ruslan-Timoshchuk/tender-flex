@@ -38,7 +38,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             contract_type.title AS contract_type_name, contract.min_price, contract.max_price,
             contract.currency_id, currency.code, currency.symbol, contract_file.id AS contract_file_id,
             contract_file.name AS contract_file_name, contract_file.content_type AS contract_file_content_type,
-            contract_file.aws_s3_file_key AS contract_aws_s3_file_key, contract.signed_deadline, contract.signed_date
+            contract_file.aws_s3_file_key AS contract_aws_s3_file_key, contract.global_status, contract.signed_deadline, contract.signed_date
             """;
     public static final String CONTRACT_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN contract_types contract_type ON contract_type.id = contract.contract_type_id
@@ -81,7 +81,7 @@ public class ContractRepositoryImpl implements ContractRepository {
         String sqlQuery = String.format(SELECT_BY_ID_PATTERN_QUERY, CONTRACT_COLUMNS_SQL_PART_QUERY,
                 CONTRACT_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.queryForObject(SELECT_BY_ID_PATTERN_QUERY, contractMapper, id);
+        return jdbcTemplate.queryForObject(sqlQuery, contractMapper, id);
     }
 
     @Override
