@@ -11,7 +11,8 @@ public interface ContractMapper {
 
     Contract toEntity(ContractRequest contractRequest);
 
+    @Mapping(target = "status", source = "globalStatus")
     @Mapping(target = "signedDeadline", source = "contract.signedDeadline", dateFormat = "dd/MM/yyyy")
-    ContractResponse toResponse(Contract contract, Boolean hasOffer);
+    ContractResponse toResponse(Contract contract);
 
 }
