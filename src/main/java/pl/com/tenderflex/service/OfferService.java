@@ -19,7 +19,9 @@ public interface OfferService {
     
     Offer findById(Integer offerId);
     
-    OfferResponse findDetailsById(Integer offerId);
+    OfferResponse findDetailsByBidder(Integer offerId); 
+    
+    OfferResponse findDetailsByContractor(Integer offerId); 
     
     Page<OfferResponse> findPageByBidder(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
@@ -51,6 +53,6 @@ public interface OfferService {
 
     boolean hasRejectDecision(Offer offer);
 
-    Offer handleOnSigningDeadlinePassed(Offer offer);  
+    Offer handleOnSigningDeadlinePassed(Offer offer);
 
 }

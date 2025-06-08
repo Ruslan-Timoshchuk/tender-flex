@@ -34,8 +34,9 @@ public class OfferController {
 
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping(URI_OFFERS_ID)
-    public OfferResponse findDetailsById(@PathVariable("id") Integer id) {
-        return offerService.findDetailsById(id);
+    public OfferResponse findDetailsById(@AuthenticationPrincipal User user, @PathVariable("id") Integer id) {
+        return roleBasedActionExecutor.executeRoleBasedAction(user,
+                contractor -> offerService.findDetailsByContractor(id), bidder -> offerService.findDetailsByBidder(id));
     }
 
     @Secured({ BIDDER, CONTRACTOR })

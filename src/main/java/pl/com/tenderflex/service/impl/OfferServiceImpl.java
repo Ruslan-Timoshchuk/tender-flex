@@ -118,9 +118,22 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferResponse findDetailsById(Integer offerId) {
+    public OfferResponse findDetailsByBidder(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
         return offerMapper.toResponse(offer, offer.getGlobalStatus(), hasAwardDecision(offer),
+                hasRejectDecision(offer));
+    }
+    
+    @Override
+    public OfferResponse findDetailsByContractor(Integer offerId) {
+        Offer offer = offerRepository.findById(offerId);
+        EOfferStatus status = offer.getGlobalStatus();
+        if (status.equals(EOfferStatus.OFFER_SENT_TO_CONTRACTOR)) {
+            status = EOfferStatus.OFFER_RECEIVED;
+        } else if (status.equals(EOfferStatus.OFFER_SELECTED_BY_CONTRACTOR)) {
+            status = EOfferStatus.OFFER_SELECTED;
+        }
+        return offerMapper.toResponse(offer, status, hasAwardDecision(offer),
                 hasRejectDecision(offer));
     }
 
