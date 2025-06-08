@@ -23,7 +23,7 @@ public class ContractSigningDeadlineCheckJob implements Job {
     @Transactional
     public void execute(JobExecutionContext context) throws JobExecutionException {
         contractService.findAll(EContractStatus.PENDING_SIGNATURE).stream()
-                .filter(contract -> contract.getSignedDate().isBefore(now())).forEach(contract -> {
+                .filter(contract -> contract.getSignedDeadline().isBefore(now())).forEach(contract -> {
                     Offer offer = offerService.findById(contract.getOffer().getId());
                     offerService.handleOnSigningDeadlinePassed(offer);
                     contractService.handleOnSigningDeadlinePassed(contract);
