@@ -36,7 +36,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public ContractResponse findDetailsById(Integer id) {
         Contract contract = contractRepository.findById(id);
-        return contractMapper.toResponse(contract, hasOffer(contract));
+        return contractMapper.toResponse(contract);
     }
 
     @Override
