@@ -1,5 +1,6 @@
 package com.flex.tender.config;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,11 +34,14 @@ public class SecurityConfig {
           .csrf(AbstractHttpConfigurer::disable)
           .cors(httpSecurityCorsConfigurer -> 
                   httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-          .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .sessionManagement(session -> 
+                               session
+                                 .sessionCreationPolicy(STATELESS))
           .anonymous(AbstractHttpConfigurer::disable)  
-          .authorizeHttpRequests(requests -> requests
-                                   .requestMatchers("/api/v1/auth/**").permitAll()
-                                   .anyRequest().authenticated())
+          .authorizeHttpRequests(requests -> 
+                                   requests
+                                     .requestMatchers("/api/v1/auth/**").permitAll()
+                                     .anyRequest().authenticated())
           .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
