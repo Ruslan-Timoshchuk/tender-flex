@@ -16,12 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.security.impl.JwtAuthenticationFilter;
+import com.flex.tender.controller.JwtAuthenticationFilter;
 
 @Configuration
-@RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Value("${allowed.origin.hosts}")
@@ -29,7 +27,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http, 
-                                                   final JwtAuthenticationFilter jwtAuthFilter) throws Exception {
+                                                   final JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
           .csrf(AbstractHttpConfigurer::disable)
           .cors(httpSecurityCorsConfigurer -> 
@@ -37,17 +35,16 @@ public class SecurityConfig {
           .sessionManagement(session -> 
                                session
                                  .sessionCreationPolicy(STATELESS))
-          .anonymous(AbstractHttpConfigurer::disable)  
           .authorizeHttpRequests(requests -> 
                                    requests
                                      .requestMatchers("/api/v1/auth/**").permitAll()
                                      .anyRequest().authenticated())
-          .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+          .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
-    GrantedAuthorityDefaults grantedAuthorityDefaults() {
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
     }
 
@@ -57,7 +54,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowedOrigins(List.of(allowedOriginHosts));

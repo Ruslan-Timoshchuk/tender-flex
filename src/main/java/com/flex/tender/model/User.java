@@ -1,7 +1,9 @@
-package pl.com.tenderflex.model;
+package com.flex.tender.model;
 
 import java.util.Collection;
+import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -23,8 +25,8 @@ public class User implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getAuthority())).toList();
     }
 
     @Override
