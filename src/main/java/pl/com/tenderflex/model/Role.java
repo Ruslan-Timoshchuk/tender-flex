@@ -1,8 +1,9 @@
 package pl.com.tenderflex.model;
 
+import com.flex.tender.model.enumeration.ERole;
+
 import lombok.Builder;
 import lombok.Data;
-import pl.com.tenderflex.model.enums.ERole;
 
 @Data
 @Builder

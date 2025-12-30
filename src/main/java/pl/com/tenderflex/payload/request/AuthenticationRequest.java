@@ -1,9 +1,11 @@
 package pl.com.tenderflex.payload.request;
 
-import javax.validation.constraints.NotEmpty;
-import lombok.Data;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class AuthenticationRequest {
 
     @NotEmpty(message = "Email cannot be empty")

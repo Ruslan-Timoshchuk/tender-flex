@@ -1,17 +1,19 @@
-package pl.com.tenderflex.repository.impl;
+package com.flex.tender.repository.impl;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.flex.tender.model.Authority;
+import com.flex.tender.model.enumeration.ERole;
+import com.flex.tender.repository.AuthorityRepository;
+import com.flex.tender.repository.mapper.AuthorityMapper;
+
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.model.GrantedAuthorityRole;
-import pl.com.tenderflex.model.enums.ERole;
-import pl.com.tenderflex.repository.GrantedAuthorityRoleRepository;
-import pl.com.tenderflex.repository.mapper.GrantedAuthorityRoleMapper;
 
 @Repository
 @RequiredArgsConstructor
-public class GrantedAuthorityRoleRepositoryImpl implements GrantedAuthorityRoleRepository {
+public class AuthorityRepositoryImpl implements AuthorityRepository {
 
     public static final String SELECT_BY_ID_QUERY = """
             SELECT id, role FROM roles LEFT JOIN user_roles ur ON ur.role_id = id
@@ -19,15 +21,15 @@ public class GrantedAuthorityRoleRepositoryImpl implements GrantedAuthorityRoleR
     public static final String SELECT_BY_NAME = "SELECT id, role FROM roles WHERE role = ?";
 
     private final JdbcTemplate jdbcTemplate;
-    private final GrantedAuthorityRoleMapper roleMapper;
+    private final AuthorityMapper roleMapper;
 
     @Override
-    public List<GrantedAuthorityRole> findByUser(Integer userId) {
+    public List<Authority> findByUser(Integer userId) {
         return jdbcTemplate.query(SELECT_BY_ID_QUERY, roleMapper, userId);
     }
 
     @Override
-    public GrantedAuthorityRole findByName(ERole role) {
+    public Authority findByName(ERole role) {
         return jdbcTemplate.queryForObject(SELECT_BY_NAME, roleMapper, role.name());
     }
 

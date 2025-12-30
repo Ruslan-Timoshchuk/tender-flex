@@ -1,4 +1,4 @@
-package pl.com.tenderflex.security;
+package com.flex.tender.service;
 
 import pl.com.tenderflex.payload.AuthenticationDetails;
 import pl.com.tenderflex.payload.request.AuthenticationRequest;
