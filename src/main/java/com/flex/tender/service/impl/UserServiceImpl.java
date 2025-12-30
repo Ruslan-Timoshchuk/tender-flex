@@ -1,23 +1,22 @@
-package pl.com.tenderflex.security.impl;
+package com.flex.tender.service.impl;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import com.flex.tender.model.User;
+import com.flex.tender.repository.UserRepository;
+import com.flex.tender.service.UserService;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.model.User;
 import pl.com.tenderflex.repository.GrantedAuthorityRoleRepository;
-import pl.com.tenderflex.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final GrantedAuthorityRoleRepository roleRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public User findByEmail(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         user.setAuthorities(roleRepository.findByUser(user.getId()));
         return user;

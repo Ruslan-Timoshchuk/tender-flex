@@ -1,6 +1,6 @@
-package pl.com.tenderflex.repository;
+package com.flex.tender.repository;
 
-import pl.com.tenderflex.model.User;
+import com.flex.tender.model.User;
 
 public interface UserRepository {
 

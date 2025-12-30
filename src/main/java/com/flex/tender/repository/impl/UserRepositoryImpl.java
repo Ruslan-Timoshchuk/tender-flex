@@ -1,11 +1,13 @@
-package pl.com.tenderflex.repository.impl;
+package com.flex.tender.repository.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.flex.tender.model.User;
+import com.flex.tender.repository.UserRepository;
+import com.flex.tender.repository.mapper.UserMapper;
+
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.model.User;
-import pl.com.tenderflex.repository.UserRepository;
-import pl.com.tenderflex.repository.mapper.UserMapper;
 
 @Repository
 @RequiredArgsConstructor

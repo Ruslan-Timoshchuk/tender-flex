@@ -1,10 +1,11 @@
-package pl.com.tenderflex.repository.mapper;
+package com.flex.tender.repository.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import pl.com.tenderflex.model.User;
+
+import com.flex.tender.model.User;
 
 @Component
 public class UserMapper implements RowMapper<User> {
