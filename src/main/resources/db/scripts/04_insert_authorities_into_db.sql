@@ -1,2 +1,2 @@
-INSERT INTO roles(role) 
+INSERT INTO authorities(title) 
 VALUES ('BIDDER'), ('CONTRACTOR'), ('ADMINISTRATOR')
