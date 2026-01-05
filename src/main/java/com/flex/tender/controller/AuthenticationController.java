@@ -1,42 +1,40 @@
 package com.flex.tender.controller;
 
+import static com.flex.tender.controller.constant.AuthenticationUrls.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.flex.tender.payload.AuthenticationDetails;
+import com.flex.tender.payload.request.AuthenticationRequest;
+import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.AuthenticationService;
-
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.AuthenticationDetails;
-import pl.com.tenderflex.payload.request.AuthenticationRequest;
-import pl.com.tenderflex.payload.response.AuthenticationResponse;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(AUTHENTICATION_MAIN)
 public class AuthenticationController {
 
-    public static final String URI_AUTHENTICATION_LOGIN = "/api/v1/auth/login";
-    
     private final AuthenticationService authenticationService;
 
-    @PostMapping(URI_AUTHENTICATION_LOGIN)
-    public AuthenticationResponse performAuthenticate(@RequestBody @Valid AuthenticationRequest request,
-            HttpServletResponse response, BindingResult bindingResult) {
+    @PostMapping(USER_LOGIN)
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody @Valid final AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadCredentialsException("Email and password should not be empty");
         }
-        AuthenticationDetails authenticationDetails = authenticationService.authenticate(request);
+        AuthenticationDetails authenticationDetails = authenticationService.authenticate(authenticationRequest);
         ResponseCookie jwtCookie = authenticationDetails.getJwtCookie();
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(authenticationDetails.getUserId(),
-                authenticationDetails.getRole());        
-        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-        return authenticationResponse;
+                authenticationDetails.getAuthorities());
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(authenticationResponse);
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package com.flex.tender.service;
 
-import pl.com.tenderflex.payload.AuthenticationDetails;
-import pl.com.tenderflex.payload.request.AuthenticationRequest;
+import com.flex.tender.payload.AuthenticationDetails;
+import com.flex.tender.payload.request.AuthenticationRequest;
 
 public interface AuthenticationService {
 

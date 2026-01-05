@@ -1,11 +1,12 @@
 package com.flex.tender.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import pl.com.tenderflex.payload.AuthenticationDetails;
-import pl.com.tenderflex.payload.request.AuthenticationRequest;
+import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.User;
+import com.flex.tender.payload.AuthenticationDetails;
+import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.service.AuthenticationService;
 import com.flex.tender.service.JwtService;
 import com.flex.tender.service.UserService;
@@ -18,10 +19,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
 
     @Override
-    public AuthenticationDetails authenticate(AuthenticationRequest request) {
-        User user = userService.findByEmail(request.getEmail());
-        String userRole = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElseThrow();
-        return new AuthenticationDetails(user.getId(), userRole, jwtService.generateJwtCookie(user));
+    public AuthenticationDetails authenticate(AuthenticationRequest authenticationRequest) {
+        User user = userService.findByEmail(authenticationRequest.getEmail());
+        List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        return new AuthenticationDetails(user.getId(), authorities, jwtService.generateJwtCookie(user));
     }
 
 }
