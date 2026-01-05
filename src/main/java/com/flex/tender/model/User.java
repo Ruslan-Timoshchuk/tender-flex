@@ -23,7 +23,7 @@ public class User {
     private List<Authority> authorities;
 
     public List<SimpleGrantedAuthority> getAuthorities() {
-        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getRole())).toList();
+        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getTitle().name())).toList();
     }
 
 }
