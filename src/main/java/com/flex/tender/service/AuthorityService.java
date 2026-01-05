@@ -1,16 +1,12 @@
 package com.flex.tender.service;
 
-import java.util.List;
-
 import com.flex.tender.model.Authority;
 import com.flex.tender.model.User;
-import com.flex.tender.model.enumeration.ERole;
+import com.flex.tender.model.enumeration.EAuthority;
 
 public interface AuthorityService {
 
-    public Authority getRole(ERole roleName);
-    
-    List<Authority> getAllByUser(Integer userId);
+    public Authority getRole(EAuthority roleName);
 
     boolean isContractor(User user);
 

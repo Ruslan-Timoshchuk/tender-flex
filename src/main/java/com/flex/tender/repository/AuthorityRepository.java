@@ -1,14 +1,13 @@
 package com.flex.tender.repository;
 
 import java.util.List;
-
 import com.flex.tender.model.Authority;
-import com.flex.tender.model.enumeration.ERole;
+import com.flex.tender.model.enumeration.EAuthority;
 
 public interface AuthorityRepository {
 
-    List<Authority> findByUser(Integer userId);
+    List<Authority> findAll();
 
-    Authority findByName(ERole name);
+    Authority findByName(EAuthority name);
     
 }

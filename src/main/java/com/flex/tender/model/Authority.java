@@ -1,6 +1,6 @@
 package com.flex.tender.model;
 
-import com.flex.tender.model.enumeration.ERole;
+import com.flex.tender.model.enumeration.EAuthority;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,6 @@ import lombok.RequiredArgsConstructor;
 public class Authority {
 
     private final Integer id;
-    private final ERole role;
-
-    public String getRole() {
-        return this.role.name();
-    }
-
+    private final EAuthority title;
+    
 }

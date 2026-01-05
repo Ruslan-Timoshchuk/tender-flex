@@ -1,6 +1,6 @@
 package com.flex.tender.model.enumeration;
 
-public enum ERole {
+public enum EAuthority {
 
     BIDDER, 
     CONTRACTOR, 
