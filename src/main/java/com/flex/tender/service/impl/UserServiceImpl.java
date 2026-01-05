@@ -7,17 +7,23 @@ import com.flex.tender.model.User;
 import com.flex.tender.repository.UserRepository;
 import com.flex.tender.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    public static final String LOG_MSG_ON_USER_RETRIEVAL_FAILED = "Unable to retrieve the user details";
 
     private final UserRepository userRepository;
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(format("User with email = %s is not found.", email)));
+        return userRepository.findByEmail(email).orElseThrow(() -> {
+            log.warn(LOG_MSG_ON_USER_RETRIEVAL_FAILED);
+            return new UsernameNotFoundException(format("User with email = %s is not found.", email));
+        });
     }
 
 }
