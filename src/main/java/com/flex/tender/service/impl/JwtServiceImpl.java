@@ -8,6 +8,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
+
+import com.flex.tender.exception.CookiesNotPresentException;
 import com.flex.tender.model.User;
 import com.flex.tender.service.JwtService;
 import io.jsonwebtoken.Claims;
@@ -17,7 +19,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import pl.com.tenderflex.exception.CookiesNotPresentException;
 
 @Service
 public class JwtServiceImpl implements JwtService {
