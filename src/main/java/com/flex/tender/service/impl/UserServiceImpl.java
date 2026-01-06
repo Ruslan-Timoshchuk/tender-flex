@@ -14,14 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    public static final String LOG_MSG_ON_USER_RETRIEVAL_FAILED = "Unable to retrieve the user details";
+    public static final String LOG_MSG_ON_USER_RETRIEVAL_FAILED = "User lookup failed for email = {}: the user is not found";
 
     private final UserRepository userRepository;
 
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> {
-            log.warn(LOG_MSG_ON_USER_RETRIEVAL_FAILED);
+            log.warn(LOG_MSG_ON_USER_RETRIEVAL_FAILED, email);
             return new UsernameNotFoundException(format("User with email = %s is not found.", email));
         });
     }
