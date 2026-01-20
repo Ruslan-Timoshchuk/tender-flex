@@ -8,7 +8,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
-
 import com.flex.tender.exception.CookiesNotPresentException;
 import com.flex.tender.model.User;
 import com.flex.tender.service.JwtService;
@@ -45,7 +44,7 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(User user) {
      return Jwts
         .builder()
-        .subject(user.getEmail())
+        .subject(String.valueOf(user.getId()))
         .claim(AUTHORITIES_CLAIM, user.getAuthorities())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationTokenMs))
@@ -86,8 +85,8 @@ public class JwtServiceImpl implements JwtService {
     }
     
     @Override
-    public String extractEmail(Claims claims) {
-        return claims.getSubject();
+    public Integer extractUserId(Claims claims) {
+        return Integer.valueOf(claims.getSubject());
     }
 
     @Override

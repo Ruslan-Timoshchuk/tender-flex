@@ -19,7 +19,7 @@ public interface JwtService {
 
     Claims extractClaims(String token);
 
-    String extractEmail(Claims claims);
+    Integer extractUserId(Claims claims);
     
     List<SimpleGrantedAuthority> extractAuthorities(Claims claims);
     

@@ -30,10 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
          final String jwt = jwtService.getJwtFromCookies(request);
             final Claims claims = jwtService.extractClaims(jwt);
             if (jwtService.isValid(jwt)) {
-               final String userEmail = jwtService.extractEmail(claims);
+               final Integer userId = jwtService.extractUserId(claims);
                 final List<SimpleGrantedAuthority> authorities = jwtService.extractAuthorities(claims);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userEmail, null, authorities);
+                        userId, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
