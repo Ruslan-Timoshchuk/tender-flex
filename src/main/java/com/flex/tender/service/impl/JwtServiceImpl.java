@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 import com.flex.tender.exception.CookiesNotPresentException;
 import com.flex.tender.model.User;
+import com.flex.tender.model.enumeration.EAuthority;
 import com.flex.tender.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -45,7 +46,11 @@ public class JwtServiceImpl implements JwtService {
      return Jwts
         .builder()
         .subject(String.valueOf(user.getId()))
-        .claim(AUTHORITIES_CLAIM, user.getAuthorities())
+        .claim(AUTHORITIES_CLAIM, 
+               user.getAuthorityTitles()
+                   .stream()
+                   .map(EAuthority::name)
+                   .toList())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationTokenMs))
         .signWith(get())

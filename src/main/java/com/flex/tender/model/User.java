@@ -1,8 +1,8 @@
 package com.flex.tender.model;
 
 import java.util.List;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.flex.tender.model.enumeration.EAuthority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +22,8 @@ public class User {
     private String password;
     private List<Authority> authorities;
 
-    public List<SimpleGrantedAuthority> getAuthorities() {
-        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getTitle().name())).toList();
+    public List<EAuthority> getAuthorityTitles() {
+        return authorities.stream().map(Authority::getTitle).toList();
     }
 
 }
