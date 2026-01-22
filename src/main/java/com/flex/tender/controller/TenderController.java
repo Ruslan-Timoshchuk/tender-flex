@@ -1,9 +1,8 @@
 package com.flex.tender.controller;
 
 import static com.flex.tender.controller.constant.SecuredAuthorities.*;
-import java.util.Collection;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,8 @@ import com.flex.tender.service.TenderService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("${api.base.path}/${api.v1}/${api.tenders.path}")
 @RequiredArgsConstructor
+@RequestMapping("${api.base.path}/${api.v1}/${api.tenders.path}")
 public class TenderController {
 
     public static final String URI_TENDERS_PAGE = "/page";
@@ -48,8 +47,9 @@ public class TenderController {
 
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping("/count")
-    public TenderCountResponse count(@AuthenticationPrincipal Integer userId,
-            @AuthenticationPrincipal(expression = "authorities") Collection<? extends GrantedAuthority> authorities) {
+    public TenderCountResponse count(Authentication authentication) {
+        final var userId = (Integer) authentication.getPrincipal();
+        final var authorities = authentication.getAuthorities();
         return tenderService.countByUserAuthority(userId, authorities);
     }
 

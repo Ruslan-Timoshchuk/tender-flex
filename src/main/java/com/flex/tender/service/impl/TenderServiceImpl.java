@@ -26,10 +26,15 @@ import com.flex.tender.service.CompanyProfileService;
 import com.flex.tender.service.OfferService;
 import com.flex.tender.service.TenderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
+
+    public static final String LOG_MSG_ON_COUNT_TENDERS_FORBIDDEN = 
+            "Failed to count tenders for userId = {}, authorities = {}: missing required authority";
 
     private final TenderMapper tenderMapper;
     private final TenderRepository tenderRepository;
@@ -112,6 +117,7 @@ public class TenderServiceImpl implements TenderService {
         } else if (authorityService.hasAuthority(authorities, EAuthority.BIDDER)) {
             return new TenderCountResponse(tenderRepository.countAll());
         } else {
+            log.warn(LOG_MSG_ON_COUNT_TENDERS_FORBIDDEN, userId, authorities);
             throw new AccessDeniedException(
                     "User does not have the required authority to count tenders"
                 );
