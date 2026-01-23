@@ -33,7 +33,8 @@ public class UserExtractor implements ResultSetExtractor<User> {
                            .lastName(resultSet.getString(USER_LAST_NAME))
                            .email(resultSet.getString(USER_EMAIL))
                            .password(resultSet.getString(USER_PASSWORD))
-                           .authorities(authorities).build();
+                           .authorities(authorities)
+                           .build();
             }
             if (nonNull(resultSet.getObject(AUTHORITY_ID))) {
                 authorities.add(authorityMapper.mapSingle(resultSet));
