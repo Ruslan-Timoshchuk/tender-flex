@@ -1,8 +1,7 @@
 package com.flex.tender.model;
 
-import java.util.List;
+import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.flex.tender.model.enumeration.EAuthority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,10 +19,6 @@ public class User {
     private String email;
     @JsonIgnore
     private String password;
-    private List<Authority> authorities;
-
-    public List<EAuthority> getAuthorityTitles() {
-        return authorities.stream().map(Authority::getTitle).toList();
-    }
+    private Set<Authority> authorities;
 
 }
