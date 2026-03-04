@@ -35,7 +35,7 @@ public class JwtClaimsExtractorImpl implements JwtClaimsExtractor {
     }
 
     @Override
-    public Set<SimpleGrantedAuthority> extractAuthorityNames(Claims claims) {
+    public Set<SimpleGrantedAuthority> extractAuthorities(Claims claims) {
         if (claims.get(AUTHORITIES) instanceof List<?> list) {
             return list.stream()
                        .map(String::valueOf)

@@ -10,6 +10,6 @@ public interface JwtClaimsExtractor {
 
     Integer extractUserId(Claims claims);
 
-    Set<SimpleGrantedAuthority> extractAuthorityNames(Claims claims);
+    Set<SimpleGrantedAuthority> extractAuthorities(Claims claims);
 
 }
