@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import com.flex.tender.service.AuthorityService;
 import com.flex.tender.service.JwtClaimsExtractor;
 import com.flex.tender.service.JwtCookiesService;
 import io.jsonwebtoken.Claims;
@@ -34,7 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtCookiesService jwtCookiesService;
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtClaimsExtractor jwtClaimsExtractor;
-    private final AuthorityService authorityService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -57,10 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private Authentication buildAuthenticationToken(String accessToken, WebAuthenticationDetails details) {
         final Claims claims = jwtClaimsExtractor.extractAccessTokenClaims(accessToken);
-        final String email = jwtClaimsExtractor.extractEmail(claims);
-        final Set<String> authorityNames = jwtClaimsExtractor.extractAuthorityNames(claims);
-        final Set<SimpleGrantedAuthority> authorities = authorityService.toGrantedAuthorities(authorityNames);
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
+        final Integer userId = jwtClaimsExtractor.extractUserId(claims);
+        final Set<SimpleGrantedAuthority> authorities = jwtClaimsExtractor.extractAuthorities(claims);
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId,
                 null, authorities);
         authenticationToken.setDetails(details);
         return authenticationToken;

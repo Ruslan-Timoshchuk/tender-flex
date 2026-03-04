@@ -4,22 +4,25 @@ import static java.lang.String.format;
 import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.util.StringUtils.startsWithIgnoreCase;
 import static java.util.Objects.nonNull;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.util.StringUtils;
 import com.flex.tender.exception.CookiesNotPresentException;
+import com.flex.tender.model.JwtAuthenticationToken;
 import com.flex.tender.service.JwtCookiesService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 
 public class JwtCookiesServiceImpl implements JwtCookiesService {
 
+    public static final String JWT_FORMAT = "%s %s";
     public static final String LIMIT_THE_SCOPE = "None";
     public static final String ABSOLUTE_API_PATH = "/";
-    public static final String SLASH_LINE = "/";
     public static final String BEARER_PREFIX = "Bearer";
     public static final String JWT_COOKIE_NOT_FOUND = "JWT token cookie with [name %s] was not found";
     public static final String COOKIES_NOT_PRESENT = "Cookies are not present";
@@ -30,15 +33,13 @@ public class JwtCookiesServiceImpl implements JwtCookiesService {
     private Integer jwtCookieMaxAgeSec;
     
     @Override
-    public ResponseCookie generateJwtCookie(String jwtToken) {
-        return ResponseCookie
-                .from(jwtCookieName, encode(jwtToken, UTF_8))
-                .httpOnly(true)
-                .secure(true)
-                .sameSite(LIMIT_THE_SCOPE)
-                .path(ABSOLUTE_API_PATH)
-                .maxAge(jwtCookieMaxAgeSec)
-                .build();
+    public HttpHeaders issueJwtCookie(JwtAuthenticationToken authenticationToken) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add(SET_COOKIE,
+                buildCookie(jwtCookieName,
+                        format(JWT_FORMAT, BEARER_PREFIX, authenticationToken.accessToken()),
+                        ABSOLUTE_API_PATH, jwtCookieMaxAgeSec));
+        return headers;
     }
     
     @Override
@@ -64,6 +65,18 @@ public class JwtCookiesServiceImpl implements JwtCookiesService {
         } else {
             throw new JwtException(COOKIES_NOT_PRESENT);
         }
+    }
+    
+    private String buildCookie(String name, String value, String path, Integer lifeTime) {
+        return ResponseCookie
+                 .from(name, encode(value, UTF_8))
+                 .httpOnly(true)
+                 .secure(true)
+                 .sameSite(LIMIT_THE_SCOPE)
+                 .path(path)
+                 .maxAge(lifeTime)
+                 .build()
+                 .toString();
     }
     
 }

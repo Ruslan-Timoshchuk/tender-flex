@@ -1,14 +1,15 @@
 package com.flex.tender.service;
 
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpHeaders;
+import com.flex.tender.model.JwtAuthenticationToken;
 import jakarta.servlet.http.Cookie;
 
 public interface JwtCookiesService {
 
     String extractJwt(Cookie[] cookies);
 
-    ResponseCookie generateJwtCookie(String jwtToken);
+    HttpHeaders issueJwtCookie(JwtAuthenticationToken authenticationToken);
 
     String extractJwtToken(Cookie[] cookies, String cookieName);
-
+ 
 }

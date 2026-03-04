@@ -14,7 +14,7 @@ import com.flex.tender.model.JwtAuthenticationToken;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.AuthenticationService;
-import com.flex.tender.service.JwtAuthenticationService;
+import com.flex.tender.service.JwtTokenGenerator;
 import com.flex.tender.service.JwtCookiesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final JwtAuthenticationService jwtAuthenticationService;
+    private final JwtTokenGenerator jwtTokenGenerator;
     private final JwtCookiesService jwtCookiesService;
 
     @PostMapping(USER_LOGIN)
@@ -35,7 +35,7 @@ public class AuthenticationController {
             throw new BadCredentialsException("Email and password should not be empty");
         }
         final AuthenticatedPrincipal authenticatedPrincipal = authenticationService.authenticate(credential);
-        final JwtAuthenticationToken authenticationToken = jwtAuthenticationService
+        final JwtAuthenticationToken authenticationToken = jwtTokenGenerator
                 .issueAuthenticationToken(authenticatedPrincipal);
         final HttpHeaders headers = jwtCookiesService.issueJwtCookie(authenticationToken);
         final AuthenticationResponse authenticationResponse = authenticationService
