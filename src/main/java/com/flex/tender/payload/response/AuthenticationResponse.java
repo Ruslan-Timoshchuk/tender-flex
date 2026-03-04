@@ -3,6 +3,6 @@ package com.flex.tender.payload.response;
 import java.util.List;
 
 public record AuthenticationResponse(
-        Integer userId, 
+        String email, 
         List<String> authorities) {
 }

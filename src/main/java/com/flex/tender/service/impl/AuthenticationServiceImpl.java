@@ -6,12 +6,12 @@ import java.util.List;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.flex.tender.model.AuthenticatedPrincipal;
 import com.flex.tender.model.User;
-import com.flex.tender.model.enumeration.EAuthority;
-import com.flex.tender.payload.AuthenticationDetails;
 import com.flex.tender.payload.request.AuthenticationRequest;
+import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.AuthenticationService;
-import com.flex.tender.service.JwtService;
+import com.flex.tender.service.AuthorityService;
 import com.flex.tender.service.UserService;
 
 @Slf4j
@@ -20,21 +20,31 @@ import com.flex.tender.service.UserService;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     public static final String LOG_MSG_ON_BAD_CREDENTIALS = "Authentication failed for email = {}: the password is invalid ";
-    
+
     private final UserService userService;
-    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorityService authorityService;
 
     @Override
-    public AuthenticationDetails authenticate(AuthenticationRequest authenticationRequest) {
-        User user = userService.findByEmail(authenticationRequest.getEmail());
-        if (passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) {
-            List<String> authorities = user.getAuthorityTitles().stream().map(EAuthority::name).toList();
-            return new AuthenticationDetails(user.getId(), authorities, jwtService.generateJwtCookie(user));
+    public AuthenticatedPrincipal authenticate(AuthenticationRequest credential) {
+        final String email = credential.getEmail();
+        User principal = userService.findByEmail(email);
+        if (isAuthenticated(credential, principal)) {
+            final List<String> authorityNames = authorityService.toAuthorityNames(principal.getAuthorities());
+            return new AuthenticatedPrincipal(principal.getId(), email, authorityNames);
         } else {
-            log.warn(LOG_MSG_ON_BAD_CREDENTIALS, authenticationRequest.getEmail());
-            throw new BadCredentialsException("Provided password is incorrect");      
-    }
+            log.warn(LOG_MSG_ON_BAD_CREDENTIALS, principal.getEmail());
+            throw new BadCredentialsException("Provided password is incorrect");
+        }
     }
 
+    @Override
+    public AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal) {
+        return new AuthenticationResponse(authenticatedPrincipal.email(), authenticatedPrincipal.authorities());
+    }
+
+    private boolean isAuthenticated(AuthenticationRequest credential, User principal) {
+        return passwordEncoder.matches(credential.getPassword(), principal.getPassword());
+    }
+    
 }
