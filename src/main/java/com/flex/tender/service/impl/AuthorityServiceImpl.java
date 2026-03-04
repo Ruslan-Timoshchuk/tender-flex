@@ -1,12 +1,10 @@
 package com.flex.tender.service.impl;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
-
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
