@@ -7,17 +7,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.util.StringUtils.startsWithIgnoreCase;
 import static java.util.Objects.nonNull;
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import com.flex.tender.exception.CookiesNotPresentException;
 import com.flex.tender.model.JwtAuthenticationToken;
+import com.flex.tender.model.constants.CookieNames;
 import com.flex.tender.service.JwtCookiesService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 
+@Service
 public class JwtCookiesServiceImpl implements JwtCookiesService {
 
     public static final String JWT_FORMAT = "%s %s";
@@ -27,8 +28,6 @@ public class JwtCookiesServiceImpl implements JwtCookiesService {
     public static final String JWT_COOKIE_NOT_FOUND = "JWT token cookie with [name %s] was not found";
     public static final String COOKIES_NOT_PRESENT = "Cookies are not present";
     
-    @Value("${jwt.cookie.name}")
-    private String jwtCookieName;
     @Value("${jwt.cookie.max.age}")
     private Integer jwtCookieMaxAgeSec;
     
@@ -36,19 +35,10 @@ public class JwtCookiesServiceImpl implements JwtCookiesService {
     public HttpHeaders issueJwtCookie(JwtAuthenticationToken authenticationToken) {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(SET_COOKIE,
-                buildCookie(jwtCookieName,
+                buildCookie(CookieNames.ACCESS_TOKEN,
                         format(JWT_FORMAT, BEARER_PREFIX, authenticationToken.accessToken()),
                         ABSOLUTE_API_PATH, jwtCookieMaxAgeSec));
         return headers;
-    }
-    
-    @Override
-    public String extractJwt(Cookie[] cookies) {
-        return Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(jwtCookieName) && StringUtils.hasText(cookie.getValue()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElseThrow(() -> new CookiesNotPresentException("JWT cookie is missing or empty"));
     }
 
     @Override

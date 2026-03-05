@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -27,7 +31,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http, 
-                                                   final JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+                                                   final JwtAuthenticationFilter jwtAuthenticationFilter,
+                                                   final RequestMatcher publicEndpointsMatcher) throws Exception {
         http
           .csrf(AbstractHttpConfigurer::disable)
           .cors(httpSecurityCorsConfigurer -> 
@@ -37,7 +42,7 @@ public class SecurityConfig {
                                  .sessionCreationPolicy(STATELESS))
           .authorizeHttpRequests(requests -> 
                                    requests
-                                     .requestMatchers("/api/v1/authentication/**").permitAll()
+                                     .requestMatchers(publicEndpointsMatcher).permitAll()
                                      .anyRequest().authenticated())
           .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -66,4 +71,12 @@ public class SecurityConfig {
         return source;
     }
 
+    @Bean
+    public RequestMatcher publicEndpointsMatcher() {
+        return new OrRequestMatcher(
+                PathPatternRequestMatcher
+                  .withDefaults()
+                  .matcher(HttpMethod.POST, "/api/v1/authentication/login"));
+    }
+    
 }

@@ -6,8 +6,6 @@ import jakarta.servlet.http.Cookie;
 
 public interface JwtCookiesService {
 
-    String extractJwt(Cookie[] cookies);
-
     HttpHeaders issueJwtCookie(JwtAuthenticationToken authenticationToken);
 
     String extractJwtToken(Cookie[] cookies, String cookieName);
