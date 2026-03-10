@@ -20,7 +20,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import com.flex.tender.controller.JwtAuthenticationFilter;
+import com.flex.tender.controller.filter.JwtAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)

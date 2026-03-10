@@ -2,7 +2,6 @@ package com.flex.tender.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,12 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = credential.getEmail();
         User principal = userService.findByEmail(email);
         if (isAuthenticated(credential, principal)) {
-            final List<String> authorityNames = principal
-                    .getAuthorities()
-                    .stream()
-                    .map(authority -> authority.getTitle().name())
-                    .toList();
-            return new AuthenticatedPrincipal(principal.getId(), email, authorityNames);
+            return new AuthenticatedPrincipal(principal);
         } else {
             log.warn(LOG_MSG_ON_BAD_CREDENTIALS, principal.getEmail());
             throw new BadCredentialsException("Provided password is incorrect");
