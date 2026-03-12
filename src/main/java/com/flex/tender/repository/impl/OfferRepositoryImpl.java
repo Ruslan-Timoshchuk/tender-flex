@@ -5,6 +5,8 @@ import static org.springframework.dao.support.DataAccessUtils.*;
 import static java.lang.String.format;
 import static java.util.Optional.*;
 import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -13,11 +15,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.Offer;
 import com.flex.tender.repository.OfferRepository;
+import com.flex.tender.repository.extractor.OfferCountExtractor;
 import com.flex.tender.repository.mapper.OfferMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -61,10 +62,11 @@ public class OfferRepositoryImpl implements OfferRepository {
             WHERE id = ?""";
     public static final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
     public static final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = "SELECT count(o.id) FROM offers o LEFT JOIN tenders t ON o.tender_id = t.id WHERE contractor_id = ?";
-    public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(os.id) FROM offers os WHERE os.tender_id = ?";
+    public static final String COUNT_OFFERS_BY_TENDER_IDS_QUERY = "SELECT tender_id, COUNT(*) as offers FROM offers WHERE tender_id IN (:tenderIds) GROUP BY tender_id ";
 
     private final JdbcTemplate jdbcTemplate;
     private final OfferMapper offerMapper;
+    private final OfferCountExtractor offerCountExtractor;
 
     @Override
     public Offer save(Offer offer) {
@@ -139,8 +141,8 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
-    public Integer countOffersByTender(Integer tenderId) {
-        return jdbcTemplate.queryForObject(COUNT_OFFERS_BY_TENDER_QUERY, Integer.class, tenderId);
+    public Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds) {
+        return jdbcTemplate.query(COUNT_OFFERS_BY_TENDER_IDS_QUERY, offerCountExtractor, tenderIds);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.flex.tender.repository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public interface OfferRepository {
     
     Integer countByContractor(Integer contractorId);
     
-    Integer countOffersByTender(Integer tenderId);
+    Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds);
         
     Offer findById(Integer offerId);
 

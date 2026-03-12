@@ -11,3 +11,6 @@ CREATE TABLE offers (
     award_decision_id INTEGER REFERENCES awards(id),
     reject_decision_id INTEGER REFERENCES rejects(id)
 );
+
+CREATE INDEX idx_offers_bidder_id ON offers(bidder_id);
+CREATE INDEX idx_offers_tender_id ON offers(tender_id);
