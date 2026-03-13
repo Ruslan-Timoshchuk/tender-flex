@@ -1,13 +1,13 @@
 package com.flex.tender.model;
 
 import java.time.LocalDate;
-
 import com.flex.tender.model.enumeration.ETenderStatus;
-
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class Tender {
 

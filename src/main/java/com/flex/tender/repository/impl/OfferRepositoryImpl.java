@@ -62,7 +62,7 @@ public class OfferRepositoryImpl implements OfferRepository {
             WHERE id = ?""";
     public static final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
     public static final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = "SELECT count(o.id) FROM offers o LEFT JOIN tenders t ON o.tender_id = t.id WHERE contractor_id = ?";
-    public static final String COUNT_OFFERS_BY_TENDER_IDS_QUERY = "SELECT tender_id, COUNT(*) as offers FROM offers WHERE tender_id IN (:tenderIds) GROUP BY tender_id ";
+    public static final String COUNT_OFFERS_BY_TENDER_IDS_QUERY = "SELECT tender_id, COUNT(*) as offers FROM offers WHERE tender_id IN (%s) GROUP BY tender_id";
 
     private final JdbcTemplate jdbcTemplate;
     private final OfferMapper offerMapper;
@@ -142,7 +142,8 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds) {
-        return jdbcTemplate.query(COUNT_OFFERS_BY_TENDER_IDS_QUERY, offerCountExtractor, tenderIds);
+        return jdbcTemplate.query(String.format(COUNT_OFFERS_BY_TENDER_IDS_QUERY, buildInPlaceholders(tenderIds.size())),
+                offerCountExtractor, tenderIds);
     }
 
     @Override
@@ -161,4 +162,16 @@ public class OfferRepositoryImpl implements OfferRepository {
         return ofNullable(singleResult(jdbcTemplate.query(sqlQuery, offerMapper, tenderId, bidderId)));
     }
 
+    private String buildInPlaceholders(Integer count) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            result.append("?");
+            if (i < count - 1) {
+                result.append(",");
+                result.append(" ");
+            }
+        }
+        return result.toString();
+    }
+    
 }
