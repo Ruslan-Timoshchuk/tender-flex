@@ -3,10 +3,12 @@ package com.flex.tender.service.impl;
 import static com.flex.tender.model.enumeration.ELanguage.*;
 import static com.flex.tender.model.enumeration.EProcedure.*;
 import static com.flex.tender.model.enumeration.ETenderStatus.*;
+import static java.util.stream.Collectors.toMap;
 import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ import com.flex.tender.model.enumeration.EAuthority;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
 import com.flex.tender.payload.mapstract.TenderMapper;
+import com.flex.tender.payload.response.BidderTenderSummaryResponse;
+import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.TenderResponse;
 import com.flex.tender.repository.TenderRepository;
@@ -53,7 +57,7 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<TenderResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
+    public Page<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
             Integer tendersPerPage) {
         Integer countTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersCount = tenderRepository.countByContractor(userId);
@@ -64,15 +68,21 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        return new Page<>(currentPage, totalPages, tenderRepository
-                .findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip).stream().map(tender -> {
-                    ETenderStatus tenderStatus = tender.getGlobalStatus();
-                    return tenderMapper.toResponse(tender, tenderStatus);
-                }).toList());
+        var tendersPage = tenderRepository.findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip);
+        var tenderIds = tendersPage
+                          .stream()
+                          .map(Tender::getId)
+                          .toList();
+        var offersCounts = offerService.countOffersByTenderIds(tenderIds);
+        var contractorTendersPage = tendersPage
+                                      .stream()
+                                      .map(tender -> tenderMapper.toContractorTenderSummary(tender, offersCounts.get(tender.getId())))
+                                      .toList();
+        return new Page<>(currentPage, totalPages, contractorTendersPage);
     }
 
     @Override
-    public Page<TenderResponse> findByBidderWithPagination(Integer userId, Integer currentPage,
+    public Page<BidderTenderSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage,
             Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countAll();
@@ -83,19 +93,27 @@ public class TenderServiceImpl implements TenderService {
                 totalPages++;
             }
         }
-        return new Page<>(currentPage, totalPages,
-                tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip).stream().map(tender -> {
-                    ETenderStatus tenderStatus = tender.getGlobalStatus();
-                    Optional<Offer> foundlOffer = offerService.findOfferByTenderAndBidder(tender.getId(), userId);
-                    if (tenderStatus.equals(TENDER_IN_PROGRESS) && foundlOffer.isPresent()) {
-                        Offer offer = foundlOffer.get();
-                        if (!offerService.hasContract(offer) && offerService.hasAwardDecision(offer)
-                                || offerService.hasRejectDecision(offer)) {
-                            tenderStatus = TENDER_CLOSED;
-                        }
-                    }
-                    return tenderMapper.toResponse(tender, tenderStatus);
-                }).toList());
+        var tendersPage = tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip);
+        var tenderIds = tendersPage
+                          .stream()
+                          .map(Tender::getId)
+                          .toList();
+        var offersByTenderIds = offerService.findByTenderIdsAndBidderId(tenderIds, bidderId)
+                .stream()
+                .collect(toMap(offer -> offer.getTender().getId(), Function.identity()));
+        return new Page<>(currentPage, totalPages, tendersPage.stream().map(tender -> {
+            ETenderStatus tenderStatus = tender.getGlobalStatus();
+            Offer offer = offersByTenderIds.get(tender.getId());
+            if (tenderStatus.equals(TENDER_IN_PROGRESS) && offer != null) {
+                boolean hasFinalDecision = offerService.hasAwardDecision(offer)
+                        || offerService.hasRejectDecision(offer);
+                boolean noContract = !offerService.hasContract(offer);
+                if (noContract && hasFinalDecision) {
+                    tenderStatus = TENDER_CLOSED;
+                }
+            }
+            return tenderMapper.toBidderTenderSummary(tender, tenderStatus);
+        }).toList());
     }
 
     @Override
@@ -106,8 +124,7 @@ public class TenderServiceImpl implements TenderService {
     @Override
     public TenderResponse findDetailsById(Integer id) {
         Tender tender = tenderRepository.findById(id);
-        ETenderStatus status = tender.getGlobalStatus();
-        return tenderMapper.toResponse(tender, status);
+        return tenderMapper.toResponse(tender);
     }
 
     @Override

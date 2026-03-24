@@ -1,0 +1,14 @@
+package com.flex.tender.model;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class Cpv {
+
+    private Integer id;
+    private String code;
+    private String summary;
+    
+}

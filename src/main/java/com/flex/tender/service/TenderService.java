@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
+import com.flex.tender.payload.response.BidderTenderSummaryResponse;
+import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.TenderResponse;
 
@@ -21,9 +23,9 @@ public interface TenderService {
 
     TenderCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities);
 
-    Page<TenderResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
+    Page<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
-    Page<TenderResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
+    Page<BidderTenderSummaryResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
     Tender close(Tender tender);
 
