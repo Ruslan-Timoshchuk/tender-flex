@@ -1,11 +1,13 @@
 package com.flex.tender.payload.mapper;
 
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import com.flex.tender.model.enumeration.EOfferStatus;
 
 @Component
 public class OfferStatusLabelMapper {
 
+    @Named("bidderLabel")
     public String toBidderLabel(EOfferStatus status) {
         return switch (status) {
             case NOT_SENT -> "Offer hasn't sent";
@@ -18,6 +20,7 @@ public class OfferStatusLabelMapper {
         };
     }
     
+    @Named("contractorLabel")
     public String toContractorLabel(EOfferStatus status) {
         return switch (status) {
             case SENT -> "Offer received";

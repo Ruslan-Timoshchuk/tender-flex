@@ -22,14 +22,14 @@ public interface TenderMapper {
 
     TenderResponse toResponse(Tender tender);
 
-    @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "toLabel")
+    @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
     ContractorTenderSummaryResponse toContractorTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, Integer offersAmount);
 
-    @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "toLabel")
+    @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "toBidderLabel")
+    @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "bidderLabel")
     BidderTenderSummaryResponse toBidderTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, EOfferStatus offerStatus);
 
