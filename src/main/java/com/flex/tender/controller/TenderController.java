@@ -42,7 +42,7 @@ public class TenderController {
                  .body(tenderService.findByContractorWithPagination(contractorId, currentPage, tendersPerPage));
     }
     
-    @Secured(CONTRACTOR)
+    @Secured(BIDDER)
     @GetMapping(URI_BIDDER_TENDERS_PAGE)
     public ResponseEntity<Page<BidderTenderSummaryResponse>> findByBidderWithPagination(
             @AuthenticationPrincipal Integer contractorId, 

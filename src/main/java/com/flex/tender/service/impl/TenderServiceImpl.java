@@ -76,7 +76,7 @@ public class TenderServiceImpl implements TenderService {
         }
         var tendersPage = tenderRepository.findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip);
         List<ContractorTenderSummaryResponse> contractorTendersPage = List.of();
-        if(!tendersPage.isEmpty()) {
+        if (!tendersPage.isEmpty()) {
             var tenderIds = tendersPage
                     .stream()
                     .map(Tender::getId)
@@ -84,10 +84,10 @@ public class TenderServiceImpl implements TenderService {
             var offersCounts = offerService.countOffersByTenderIds(tenderIds);
             contractorTendersPage = tendersPage
                     .stream()
-                    .map(tender -> tenderMapper
-                            .toContractorTenderSummary(tender.getId(), tender.getCpv(),
-                                tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(), 
-                                tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId()))).toList();
+                    .map(tender -> tenderMapper.toContractorTenderSummary(tender.getId(), tender.getCpv(),
+                            tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(),
+                            tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId())))
+                    .toList();
         }
         return new Page<>(currentPage, totalPages, contractorTendersPage);
     }
@@ -105,30 +105,34 @@ public class TenderServiceImpl implements TenderService {
             }
         }
         var tendersPage = tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip);
-        var tenderIds = tendersPage
-                .stream()
-                .map(Tender::getId)
-                .toList();
-        var offersByTenderIds = offerService.findByBidderIdAndTenderIdIn(bidderId, tenderIds)
-                .stream()
-                .collect(toMap(offer -> offer.getTender().getId(), Function.identity()));
-        var bidderTendersPage = tendersPage
-                .stream()
-                .map(tender -> {
-            ETenderStatus tenderStatus = tender.getGlobalStatus();
-            EOfferStatus offerStatus = NOT_SENT;
-            Offer offer = offersByTenderIds.get(tender.getId());
-            if (offer != null) {
-                offerStatus = offer.getGlobalStatus();
-                if (tenderStatus.equals(TENDER_IN_PROGRESS)
-                        && !(offerStatus.equals(SENT) || offerStatus.equals(SELECTED))) {
-                    tenderStatus = TENDER_CLOSED;
+        List<BidderTenderSummaryResponse> bidderTendersPage = List.of();
+        if(!tendersPage.isEmpty()) {
+            var tenderIds = tendersPage
+                    .stream()
+                    .map(Tender::getId)
+                    .toList();
+            var offersByTenderIds = offerService.findByBidderIdAndTenderIdIn(bidderId, tenderIds)
+                    .stream()
+                    .collect(toMap(offer -> offer.getTender().getId(), Function.identity()));
+            bidderTendersPage = tendersPage
+                    .stream()
+                    .map(tender -> { 
+                        ETenderStatus tenderStatus = tender.getGlobalStatus();
+                        EOfferStatus offerStatus = NOT_SENT;
+                        Offer offer = offersByTenderIds.get(tender.getId());
+                        if (offer != null) {
+                             offerStatus = offer.getGlobalStatus();
+                        if (tenderStatus.equals(TENDER_IN_PROGRESS)
+                             && !(offerStatus.equals(SENT) || 
+                                  offerStatus.equals(SELECTED))) {
+                        tenderStatus = TENDER_CLOSED;
+                    }
                 }
-            }
-            return tenderMapper.toBidderTenderSummary(tender.getId(), tender.getCpv(),
-                    tender.getCompanyProfile().getOfficialName(), tenderStatus, tender.getOfferSubmissionDeadline(),
-                    offerStatus);
-        }).toList();
+                return tenderMapper.toBidderTenderSummary(tender.getId(), tender.getCpv(),
+                        tender.getCompanyProfile().getOfficialName(), tenderStatus, tender.getOfferSubmissionDeadline(),
+                        offerStatus);
+            }).toList();
+        }
         return new Page<>(currentPage, totalPages, bidderTendersPage);
     }
 
