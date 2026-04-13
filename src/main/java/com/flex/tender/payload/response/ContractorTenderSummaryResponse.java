@@ -4,7 +4,7 @@ public record ContractorTenderSummaryResponse(
         Integer id,
         CpvResponse cpv,
         String contractorName,
-        String tenderStatus,
+        String tenderStatusLabel,
         String offerSubmissionDeadline,
         Integer offersAmount) {
 }
