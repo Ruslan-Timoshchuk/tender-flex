@@ -4,11 +4,12 @@ import static com.flex.tender.model.enumeration.ELanguage.*;
 import static com.flex.tender.model.enumeration.EProcedure.*;
 import static com.flex.tender.model.enumeration.ETenderStatus.*;
 import static java.util.stream.Collectors.toMap;
+import static com.flex.tender.model.enumeration.EOfferStatus.*;
 import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +18,10 @@ import com.flex.tender.model.Offer;
 import com.flex.tender.model.Procedure;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EAuthority;
+import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
-import com.flex.tender.payload.mapstract.TenderMapper;
+import com.flex.tender.payload.mapper.TenderMapper;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
@@ -50,7 +52,11 @@ public class TenderServiceImpl implements TenderService {
     public Tender save(Tender tender) {
         CompanyProfile contractorProfile = companyProfileService.create(tender.getCompanyProfile());
         tender.setCompanyProfile(contractorProfile);
-        tender.setProcedure(Procedure.builder().type(OPEN_PROCEDURE).language(ENGLISH).build());
+        tender.setProcedure(Procedure
+                              .builder()
+                              .type(OPEN_PROCEDURE)
+                              .language(ENGLISH)
+                              .build());
         tender.setGlobalStatus(TENDER_IN_PROGRESS);
         tender = tenderRepository.save(tender);
         return tender;
@@ -70,14 +76,16 @@ public class TenderServiceImpl implements TenderService {
         }
         var tendersPage = tenderRepository.findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip);
         var tenderIds = tendersPage
-                          .stream()
-                          .map(Tender::getId)
-                          .toList();
+                .stream()
+                .map(Tender::getId)
+                .toList();
         var offersCounts = offerService.countOffersByTenderIds(tenderIds);
         var contractorTendersPage = tendersPage
-                                      .stream()
-                                      .map(tender -> tenderMapper.toContractorTenderSummary(tender, offersCounts.get(tender.getId())))
-                                      .toList();
+                .stream()
+                .map(tender -> tenderMapper
+                        .toContractorTenderSummary(tender.getId(), tender.getCpv(),
+                            tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(), 
+                            tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId()))).toList();
         return new Page<>(currentPage, totalPages, contractorTendersPage);
     }
 
@@ -95,25 +103,30 @@ public class TenderServiceImpl implements TenderService {
         }
         var tendersPage = tenderRepository.findWithPagination(tendersPerPage, amountTendersToSkip);
         var tenderIds = tendersPage
-                          .stream()
-                          .map(Tender::getId)
-                          .toList();
-        var offersByTenderIds = offerService.findByTenderIdsAndBidderId(tenderIds, bidderId)
+                .stream()
+                .map(Tender::getId)
+                .toList();
+        var offersByTenderIds = offerService.findByBidderIdAndTenderIdIn(bidderId, tenderIds)
                 .stream()
                 .collect(toMap(offer -> offer.getTender().getId(), Function.identity()));
-        return new Page<>(currentPage, totalPages, tendersPage.stream().map(tender -> {
+        var bidderTendersPage = tendersPage
+                .stream()
+                .map(tender -> {
             ETenderStatus tenderStatus = tender.getGlobalStatus();
+            EOfferStatus offerStatus = NOT_SENT;
             Offer offer = offersByTenderIds.get(tender.getId());
-            if (tenderStatus.equals(TENDER_IN_PROGRESS) && offer != null) {
-                boolean hasFinalDecision = offerService.hasAwardDecision(offer)
-                        || offerService.hasRejectDecision(offer);
-                boolean noContract = !offerService.hasContract(offer);
-                if (noContract && hasFinalDecision) {
+            if (offer != null) {
+                offerStatus = offer.getGlobalStatus();
+                if (tenderStatus.equals(TENDER_IN_PROGRESS)
+                        && !(offerStatus.equals(SENT) || offerStatus.equals(SELECTED))) {
                     tenderStatus = TENDER_CLOSED;
                 }
             }
-            return tenderMapper.toBidderTenderSummary(tender, tenderStatus);
-        }).toList());
+            return tenderMapper.toBidderTenderSummary(tender.getId(), tender.getCpv(),
+                    tender.getCompanyProfile().getOfficialName(), tenderStatus, tender.getOfferSubmissionDeadline(),
+                    offerStatus);
+        }).toList();
+        return new Page<>(currentPage, totalPages, bidderTendersPage);
     }
 
     @Override
@@ -149,11 +162,10 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Tender closeIfHasNoPendingOffers(Tender tender) {
-        boolean hasNoPendingOffers = offerService.findAllByTender(tender.getId()).stream()
-                .filter(offer -> !offerService.hasAwardDecision(offer) && !offerService.hasRejectDecision(offer))
-                .toList().isEmpty();
-        if (hasNoPendingOffers) {
+    public Tender closeIfNoActiveOffers(Tender tender) {
+        boolean hasActiveOffers = offerService
+                .existsByTenderIdAndGlobalStatusIn(tender.getId(), List.of(SENT, SELECTED));
+        if (hasActiveOffers) {
             tender.setGlobalStatus(TENDER_CLOSED);
             tenderRepository.update(tender);
         }
@@ -164,7 +176,7 @@ public class TenderServiceImpl implements TenderService {
     @Transactional
     public void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate) {
         tenderRepository.findActiveWhereSubmissionIsExpired(status, currentDate)
-                .forEach(this::closeIfHasNoPendingOffers);
-    }
+                .forEach(this::closeIfNoActiveOffers);
+    }  
 
 }

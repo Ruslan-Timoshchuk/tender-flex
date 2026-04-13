@@ -2,9 +2,7 @@ package com.flex.tender.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
-
 import org.springframework.security.core.GrantedAuthority;
-
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
@@ -29,7 +27,7 @@ public interface TenderService {
 
     Tender close(Tender tender);
 
-    Tender closeIfHasNoPendingOffers(Tender tender);
+    Tender closeIfNoActiveOffers(Tender tender);
 
     void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate);
 
