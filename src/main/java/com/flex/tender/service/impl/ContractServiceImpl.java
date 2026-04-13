@@ -9,7 +9,7 @@ import com.flex.tender.model.Contract;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EContractStatus;
-import com.flex.tender.payload.mapstract.ContractMapper;
+import com.flex.tender.payload.mapper.ContractMapper;
 import com.flex.tender.payload.response.ContractResponse;
 import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.service.ContractService;

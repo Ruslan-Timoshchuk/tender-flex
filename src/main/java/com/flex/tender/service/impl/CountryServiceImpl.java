@@ -3,7 +3,7 @@ package com.flex.tender.service.impl;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-import com.flex.tender.payload.mapstract.CountryMapper;
+import com.flex.tender.payload.mapper.CountryMapper;
 import com.flex.tender.payload.response.CountryResponse;
 import com.flex.tender.repository.CountryRepository;
 import com.flex.tender.service.CountryService;

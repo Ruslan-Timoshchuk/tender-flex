@@ -11,7 +11,7 @@ import java.io.IOException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.flex.tender.model.FileMetadata;
-import com.flex.tender.payload.mapstract.FileMetadataMapper;
+import com.flex.tender.payload.mapper.FileMetadataMapper;
 import com.flex.tender.payload.response.FileMetadataResponse;
 import com.flex.tender.repository.FileRepository;
 import com.flex.tender.service.FileStorageService;

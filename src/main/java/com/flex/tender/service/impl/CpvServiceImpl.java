@@ -3,7 +3,7 @@ package com.flex.tender.service.impl;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-import com.flex.tender.payload.mapstract.CpvMapper;
+import com.flex.tender.payload.mapper.CpvMapper;
 import com.flex.tender.payload.response.CpvResponse;
 import com.flex.tender.repository.CpvRepository;
 import com.flex.tender.service.CpvService;
