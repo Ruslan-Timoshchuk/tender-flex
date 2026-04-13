@@ -1,9 +1,7 @@
 package com.flex.tender.model;
 
 import java.time.LocalDate;
-
 import com.flex.tender.model.enumeration.EOfferStatus;
-
 import lombok.Builder;
 import lombok.Data;
 
