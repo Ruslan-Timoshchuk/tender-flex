@@ -1,4 +1,4 @@
-package com.flex.tender.payload.mapstract;
+package com.flex.tender.payload.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
