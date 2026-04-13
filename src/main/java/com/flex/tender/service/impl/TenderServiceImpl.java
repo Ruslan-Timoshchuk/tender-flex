@@ -75,17 +75,20 @@ public class TenderServiceImpl implements TenderService {
             }
         }
         var tendersPage = tenderRepository.findByContractorWithPagination(userId, tendersPerPage, countTendersToSkip);
-        var tenderIds = tendersPage
-                .stream()
-                .map(Tender::getId)
-                .toList();
-        var offersCounts = offerService.countOffersByTenderIds(tenderIds);
-        var contractorTendersPage = tendersPage
-                .stream()
-                .map(tender -> tenderMapper
-                        .toContractorTenderSummary(tender.getId(), tender.getCpv(),
-                            tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(), 
-                            tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId()))).toList();
+        List<ContractorTenderSummaryResponse> contractorTendersPage = List.of();
+        if(!tendersPage.isEmpty()) {
+            var tenderIds = tendersPage
+                    .stream()
+                    .map(Tender::getId)
+                    .toList();
+            var offersCounts = offerService.countOffersByTenderIds(tenderIds);
+            contractorTendersPage = tendersPage
+                    .stream()
+                    .map(tender -> tenderMapper
+                            .toContractorTenderSummary(tender.getId(), tender.getCpv(),
+                                tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(), 
+                                tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId()))).toList();
+        }
         return new Page<>(currentPage, totalPages, contractorTendersPage);
     }
 
