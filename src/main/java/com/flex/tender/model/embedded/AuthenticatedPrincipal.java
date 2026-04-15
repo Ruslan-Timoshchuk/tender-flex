@@ -1,18 +1,23 @@
-package com.flex.tender.model;
+package com.flex.tender.model.embedded;
 
 import java.util.List;
 
+import com.flex.tender.model.User;
+
+/**
+ * @author Ruslan Timoshchuk
+ */
 public record AuthenticatedPrincipal(
         Integer id,
         String email, 
-        List<String> authorities) {
+        List<PrincipalAuthority> authorities) {
     
     public AuthenticatedPrincipal(User user) {
         this(user.getId(), 
              user.getEmail(), 
              user.getAuthorities()
                  .stream()
-                 .map(authority -> authority.getTitle().name())
+                 .map(PrincipalAuthority::new)
                  .toList());
     }
     
