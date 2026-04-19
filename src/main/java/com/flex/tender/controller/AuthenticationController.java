@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.flex.tender.model.AuthenticatedPrincipal;
-import com.flex.tender.model.JwtAuthenticationToken;
+import com.flex.tender.model.embedded.AuthenticatedPrincipal;
+import com.flex.tender.model.embedded.JwtAuthenticationToken;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.AuthenticationService;
@@ -40,7 +40,10 @@ public class AuthenticationController {
         final HttpHeaders headers = jwtCookiesService.issueJwtCookie(authenticationToken);
         final AuthenticationResponse authenticationResponse = authenticationService
                 .resolveAuthenticationResponse(authenticatedPrincipal);
-        return ResponseEntity.ok().headers(headers).body(authenticationResponse);
+        return ResponseEntity
+                   .ok()
+                   .headers(headers)
+                   .body(authenticationResponse);
     }
 
 }

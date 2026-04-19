@@ -7,8 +7,8 @@ import java.util.List;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.flex.tender.model.AuthenticatedPrincipal;
-import com.flex.tender.model.JwtAuthenticationToken;
+import com.flex.tender.model.embedded.AuthenticatedPrincipal;
+import com.flex.tender.model.embedded.JwtAuthenticationToken;
 import com.flex.tender.service.JwtTokenGenerator;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +25,20 @@ public class JwtTokenGeneratorImpl implements JwtTokenGenerator {
 
     @Override
     public JwtAuthenticationToken issueAuthenticationToken(AuthenticatedPrincipal authenticatedPrincipal) {
-        return new JwtAuthenticationToken(
-                generateAccessToken(authenticatedPrincipal.id(), authenticatedPrincipal.authorities()));
+        return new JwtAuthenticationToken(generateAccessToken(authenticatedPrincipal.id(),
+                authenticatedPrincipal
+                    .authorities()
+                    .stream()
+                    .map(authority -> authority.authority().name())
+                    .toList()));
     }
 
-    private String generateAccessToken(Integer id, List<String> authorityNames) {
+    private String generateAccessToken(Integer id, List<String> authorities) {
         return Jwts
                  .builder()
                  .subject(String.valueOf(id))
                  .claim(ISSUER, jwtTokenIssuer)
-                 .claim(AUTHORITIES, authorityNames)
+                 .claim(AUTHORITIES, authorities)
                  .issuedAt(new Date(System.currentTimeMillis()))
                  .expiration(new Date(System.currentTimeMillis() + jwtAccessTokenLive.toMillis()))
                  .signWith(accessTokenSecretKey)

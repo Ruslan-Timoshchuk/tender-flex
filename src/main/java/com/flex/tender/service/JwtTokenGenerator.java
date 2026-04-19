@@ -1,7 +1,7 @@
 package com.flex.tender.service;
 
-import com.flex.tender.model.AuthenticatedPrincipal;
-import com.flex.tender.model.JwtAuthenticationToken;
+import com.flex.tender.model.embedded.AuthenticatedPrincipal;
+import com.flex.tender.model.embedded.JwtAuthenticationToken;
 
 public interface JwtTokenGenerator {
 

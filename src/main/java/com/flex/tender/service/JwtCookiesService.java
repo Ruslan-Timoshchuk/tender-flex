@@ -1,7 +1,7 @@
 package com.flex.tender.service;
 
 import org.springframework.http.HttpHeaders;
-import com.flex.tender.model.JwtAuthenticationToken;
+import com.flex.tender.model.embedded.JwtAuthenticationToken;
 import jakarta.servlet.http.Cookie;
 
 public interface JwtCookiesService {
