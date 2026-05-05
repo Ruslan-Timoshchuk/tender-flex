@@ -17,11 +17,12 @@ import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.Page;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.response.OfferCountResponse;
-import com.flex.tender.payload.response.OfferResponse;
+import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.AuthorityService;
 import com.flex.tender.service.CompanyProfileService;
+import com.flex.tender.service.CpvService;
 import com.flex.tender.service.OfferService;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,7 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final AuthorityService authorityService;
     private final CompanyProfileService companyProfileService;
+    private final CpvService cpvService;
 
     @Override
     public Offer save(Tender tender, Offer offer) {
@@ -44,55 +46,71 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage, Integer offersPerPage) {
-        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
-        Integer allOffersAmount = offerRepository.countAllByBidder(bidderId);
-        Integer totalPages = 1;
-        if (allOffersAmount >= offersPerPage) {
-            totalPages = allOffersAmount / offersPerPage;
-            if (allOffersAmount % offersPerPage > 0) {
-                totalPages++;
-            }
+    public Page<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer page,
+            Integer pageSize) {
+        Integer offset = (page - 1) * pageSize;
+        Integer totalOffers = offerRepository.countAllByBidder(bidderId);
+        Integer totalPages = countTotalPages(pageSize, totalOffers);
+        var offers = offerRepository.findByBidderWithPagination(bidderId, pageSize, offset);
+        List<OfferSummaryResponse> offersPage = List.of();
+        if(!offers.isEmpty()) {
+            var offerIds = offers
+                    .stream()
+                    .map(Offer::getId)
+                    .toList();
+            var cpvs = cpvService.findByOfferIdIn(offerIds);
+            offersPage = offers.stream()
+                  .map(offer -> offerMapper.toBidderSummaryResponse(offer, cpvs.get(offer.getId())))
+                  .toList();
         }
-        return new Page<>(currentPage, totalPages,
-                offerRepository.findByBidderWithPagination(bidderId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::toBidderSummaryResponse)
-                        .toList());
+        return new Page<>(page, totalPages, offersPage);
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer currentPage,
-            Integer offersPerPage) {
-        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
-        Integer allOffersAmount = offerRepository.countAllByContractor(contractorId);
-        Integer totalPages = 1;
-        if (allOffersAmount >= offersPerPage) {
-            totalPages = allOffersAmount / offersPerPage;
-            if (allOffersAmount % offersPerPage > 0) {
-                totalPages++;
-            }
+    public Page<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,
+            Integer pageSize) {
+        Integer offset = (page - 1) * pageSize;
+        Integer totalOffers = offerRepository.countAllByContractor(contractorId);
+        Integer totalPages = countTotalPages(pageSize, totalOffers);
+        var offers = offerRepository.findByContractorWithPagination(contractorId, pageSize, offset);
+        List<OfferSummaryResponse> offersPage = List.of();
+        if(!offers.isEmpty()) {
+            var offerIds = offers
+                    .stream()
+                    .map(Offer::getId)
+                    .toList();
+            var cpvs = cpvService.findByOfferIdIn(offerIds);
+            offersPage = offers.stream()
+                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
+                  .toList();
         }
-        return new Page<>(currentPage, totalPages,
-                offerRepository.findByContractorWithPagination(contractorId, offersPerPage, amountOffersToSkip).stream()
-                        .map(offerMapper::toContractorSummaryResponse).toList());
+        return new Page<>(page, totalPages, offersPage);
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer currentPage, Integer offersPerPage) {
-        Integer amountOffersToSkip = (currentPage - 1) * offersPerPage;
-        Integer allOffersAmount = offerRepository.countAllByTender(tenderId);
-        Integer totalPages = 1;
-        if (allOffersAmount >= offersPerPage) {
-            totalPages = allOffersAmount / offersPerPage;
-            if (allOffersAmount % offersPerPage > 0) {
-                totalPages++;
-            }
+    public Page<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page, Integer pageSize) {
+        Integer offset = (page - 1) * pageSize;
+        Integer totalOffers = offerRepository.countAllByTender(tenderId);
+        Integer totalPages = countTotalPages(pageSize, totalOffers);
+        var offers = offerRepository.findByTenderWithPagination(tenderId, pageSize, offset);
+        List<OfferSummaryResponse> offersPage = List.of();
+        if(!offers.isEmpty()) {
+            var offerIds = offers
+                    .stream()
+                    .map(Offer::getId)
+                    .toList();
+            var cpvs = cpvService.findByOfferIdIn(offerIds);
+            offersPage = offers.stream()
+                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
+                  .toList();
         }
-        return new Page<>(currentPage, totalPages, offerRepository
-                .findByTenderWithPagination(tenderId, offersPerPage, amountOffersToSkip)
-                .stream().map(offerMapper::toContractorSummaryResponse).toList());
+        return new Page<>(page, totalPages, offersPage);
     }
-
+    
+    private Integer countTotalPages(Integer pageSize, Integer totalOffers) {
+        return ((totalOffers + pageSize - 1) / pageSize);
+    }
+    
     @Override
     public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
         return offerRepository.existsByTenderIdAndGlobalStatusIn(tenderId, statuses);
@@ -104,17 +122,11 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferResponse findDetailsByBidder(Integer offerId) {
+    public OfferDetailsResponse findDetailsById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
-        return offerMapper.toBidderResponse(offer);
+        return offerMapper.toResponse(offer);
     }
     
-    @Override
-    public OfferResponse findDetailsByContractor(Integer offerId) {
-        Offer offer = offerRepository.findById(offerId);  
-        return offerMapper.toContractorResponse(offer);
-    }
-
     @Override
     public OfferCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities) {
         if (authorityService.hasAuthority(authorities, EAuthority.CONTRACTOR)) {

@@ -5,7 +5,6 @@ package com.flex.tender.payload.response;
  */
 public record OfferSummaryResponse(
         Integer id, 
-        Integer tenderId,
         String officialName,
         String fieldOfTheTender,
         Integer bidPrice,

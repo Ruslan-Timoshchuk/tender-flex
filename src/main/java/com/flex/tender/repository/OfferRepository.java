@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import com.flex.tender.model.Offer;
+import com.flex.tender.model.enumeration.EOfferStatus;
 
 public interface OfferRepository {
 
@@ -19,16 +19,22 @@ public interface OfferRepository {
     
     Set<Offer> findByTenderWithPagination(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
     
-    Integer countByBidder(Integer bidderId);
+    Integer countAllByBidder(Integer bidderId);
     
-    Integer countByContractor(Integer contractorId);
+    Integer countAllByContractor(Integer contractorId);
+    
+    Integer countAllByTender(Integer tenderId);
     
     Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds);
+    
+    List<Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds);
         
     Offer findById(Integer offerId);
 
     Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
 
-    Set<Offer> findAllByTender(Integer id);
+    List<Offer> findByTenderIdAndGlobalStatusIn(Integer id, List<EOfferStatus> statuses);
+
+    boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses);
 
 }

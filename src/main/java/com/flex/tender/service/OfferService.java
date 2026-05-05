@@ -11,7 +11,7 @@ import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.Page;
 import com.flex.tender.payload.response.OfferCountResponse;
-import com.flex.tender.payload.response.OfferResponse;
+import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 
 public interface OfferService {
@@ -22,9 +22,7 @@ public interface OfferService {
     
     Offer findById(Integer offerId);
     
-    OfferResponse findDetailsByBidder(Integer offerId); 
-    
-    OfferResponse findDetailsByContractor(Integer offerId); 
+    OfferDetailsResponse findDetailsById(Integer offerId);
     
     Page<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
