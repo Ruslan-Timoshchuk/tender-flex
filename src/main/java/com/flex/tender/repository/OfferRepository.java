@@ -2,7 +2,6 @@ package com.flex.tender.repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.enumeration.EOfferStatus;
@@ -25,13 +24,11 @@ public interface OfferRepository {
     
     Integer countAllByTender(Integer tenderId);
     
-    Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds);
+    Map<Integer, Integer> countByTenderIdIn(List<Integer> tenderIds);
     
     List<Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds);
         
     Offer findById(Integer offerId);
-
-    Optional<Offer> findOfferByTenderAndBidder(Integer tenderId, Integer bidderId);
 
     List<Offer> findByTenderIdAndGlobalStatusIn(Integer id, List<EOfferStatus> statuses);
 

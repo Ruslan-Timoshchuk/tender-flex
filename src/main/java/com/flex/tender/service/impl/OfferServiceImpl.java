@@ -193,7 +193,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds) {
-        return offerRepository.countOffersByTenderIds(tenderIds);
+        return offerRepository.countByTenderIdIn(tenderIds);
     }
 
 }
