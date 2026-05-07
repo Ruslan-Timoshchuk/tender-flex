@@ -10,4 +10,6 @@ public interface AuthenticationService {
     
     AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal);
 
+    AuthenticationResponse loadAuthenticationState(Integer principalid);
+
 }

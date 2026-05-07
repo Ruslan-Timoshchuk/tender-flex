@@ -2,6 +2,8 @@ package com.flex.tender.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationDetailsMapper authenticationDetailsMapper;
 
+    private final Map<Integer, AuthenticatedPrincipal> authenticationStateCaching = new ConcurrentHashMap<>();
+    
     @Override
     public AuthenticatedPrincipal authenticate(AuthenticationRequest credential) {
         final String email = credential.getEmail();
         User principal = userService.findByEmail(email);
         if (isAuthenticated(credential, principal)) {
-            return authenticationDetailsMapper.toPrincipal(principal);
+            final AuthenticatedPrincipal authenticatedPrincipal = authenticationDetailsMapper.toPrincipal(principal);
+            authenticationStateCaching.put(principal.getId(), authenticatedPrincipal);
+            return authenticatedPrincipal;
         } else {
             log.warn(LOG_MSG_ON_BAD_CREDENTIALS, principal.getEmail());
             throw new BadCredentialsException("Provided password is incorrect");
@@ -39,6 +45,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal) {
         return authenticationDetailsMapper.toResponse(authenticatedPrincipal);
+    }
+    
+    @Override
+    public AuthenticationResponse loadAuthenticationState(Integer principalid) {
+        return authenticationDetailsMapper.toResponse(authenticationStateCaching.get(principalid));
     }
     
     private boolean isAuthenticated(AuthenticationRequest credential, User principal) {

@@ -1,10 +1,13 @@
 package com.flex.tender.controller;
 
-import static com.flex.tender.controller.constant.AuthenticationUrls.*;
+import static java.util.Objects.isNull;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +24,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(AUTHENTICATION_MAIN)
+@RequestMapping("${api.base.path}/${api.v1}/${api.authentication.path}")
 public class AuthenticationController {
 
+    public static final String URL_USER_LOGIN = "/login";
+    public static final String URL_LOAD_AUTHENTICATION_STATE = "/load-authentication-state";
+    
     private final AuthenticationService authenticationService;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final JwtCookiesService jwtCookiesService;
 
-    @PostMapping(USER_LOGIN)
+    @PostMapping(URL_USER_LOGIN)
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @Valid final AuthenticationRequest credential, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -46,4 +52,17 @@ public class AuthenticationController {
                    .body(authenticationResponse);
     }
 
+    @GetMapping(URL_LOAD_AUTHENTICATION_STATE)
+    public ResponseEntity<AuthenticationResponse> loadAuthenticationState(@AuthenticationPrincipal Integer userId) {
+        final AuthenticationResponse authenticationResponse = authenticationService.loadAuthenticationState(userId);
+        if(isNull(authenticationResponse)) {
+            return ResponseEntity
+                       .status(UNAUTHORIZED)
+                       .build();
+        } else {
+            return ResponseEntity
+                    .ok(authenticationResponse);
+        }
+    }
+    
 }
