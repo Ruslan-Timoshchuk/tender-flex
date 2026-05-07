@@ -1,7 +1,5 @@
 package com.flex.tender.controller;
 
-import static java.util.Objects.isNull;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -54,15 +52,8 @@ public class AuthenticationController {
 
     @GetMapping(URL_LOAD_AUTHENTICATION_STATE)
     public ResponseEntity<AuthenticationResponse> loadAuthenticationState(@AuthenticationPrincipal Integer userId) {
-        final AuthenticationResponse authenticationResponse = authenticationService.loadAuthenticationState(userId);
-        if(isNull(authenticationResponse)) {
-            return ResponseEntity
-                       .status(UNAUTHORIZED)
-                       .build();
-        } else {
-            return ResponseEntity
-                    .ok(authenticationResponse);
-        }
+        return ResponseEntity
+                   .ok(authenticationService.loadAuthenticationState(userId));
     }
     
 }

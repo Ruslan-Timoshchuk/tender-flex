@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import io.jsonwebtoken.JwtException;
 
 @RestControllerAdvice
 public class AuthenticationExceptionAdvice {
@@ -18,6 +19,12 @@ public class AuthenticationExceptionAdvice {
     @ResponseStatus(UNAUTHORIZED)
     public ExceptionHandlerResponse handleAuthenticationException(AuthenticationException exception) {
         return new ExceptionHandlerResponse(now(), UNAUTHORIZED.value(), UNAUTHORIZED, EX_MSG_ON_BAD_CREDENTIALS);
+    }
+    
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ExceptionHandlerResponse handleJwtException(JwtException exception) {
+        return new ExceptionHandlerResponse(now(), UNAUTHORIZED.value(), UNAUTHORIZED, exception.getMessage());
     }
 
 }
