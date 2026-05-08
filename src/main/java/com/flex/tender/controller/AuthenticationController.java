@@ -1,5 +1,6 @@
 package com.flex.tender.controller;
 
+import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -43,7 +44,7 @@ public class AuthenticationController {
                 .issueAuthenticationToken(authenticatedPrincipal);
         final HttpHeaders headers = jwtCookiesService.issueJwtCookie(authenticationToken);
         final AuthenticationResponse authenticationResponse = authenticationService
-                .resolveAuthenticationResponse(authenticatedPrincipal);
+                .resolveAuthenticationResponse(authenticatedPrincipal, authenticationToken.principalUuid());
         return ResponseEntity
                    .ok()
                    .headers(headers)
@@ -51,9 +52,9 @@ public class AuthenticationController {
     }
 
     @GetMapping(URL_LOAD_AUTHENTICATION_STATE)
-    public ResponseEntity<AuthenticationResponse> loadAuthenticationState(@AuthenticationPrincipal Integer userId) {
+    public ResponseEntity<AuthenticationResponse> loadAuthenticationState(@AuthenticationPrincipal UUID principalUuid) {
         return ResponseEntity
-                   .ok(authenticationService.loadAuthenticationState(userId));
+                   .ok(authenticationService.loadAuthenticationState(principalUuid));
     }
     
 }

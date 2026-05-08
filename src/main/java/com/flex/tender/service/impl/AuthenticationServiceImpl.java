@@ -3,6 +3,7 @@ package com.flex.tender.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,16 +27,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationDetailsMapper authenticationDetailsMapper;
 
-    private final Map<Integer, AuthenticatedPrincipal> authenticationStateCaching = new ConcurrentHashMap<>();
+    private final Map<UUID, AuthenticatedPrincipal> authenticationStateCaching = new ConcurrentHashMap<>();
     
     @Override
     public AuthenticatedPrincipal authenticate(AuthenticationRequest credential) {
         final String email = credential.getEmail();
         User principal = userService.findByEmail(email);
         if (isAuthenticated(credential, principal)) {
-            final AuthenticatedPrincipal authenticatedPrincipal = authenticationDetailsMapper.toPrincipal(principal);
-            authenticationStateCaching.put(principal.getId(), authenticatedPrincipal);
-            return authenticatedPrincipal;
+            return authenticationDetailsMapper.toPrincipal(principal);
         } else {
             log.warn(LOG_MSG_ON_BAD_CREDENTIALS, principal.getEmail());
             throw new BadCredentialsException("Provided password is incorrect");
@@ -43,13 +42,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal) {
+    public AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal,
+            UUID principalUuid) {
+        authenticationStateCaching.put(principalUuid, authenticatedPrincipal);
         return authenticationDetailsMapper.toResponse(authenticatedPrincipal);
     }
     
     @Override
-    public AuthenticationResponse loadAuthenticationState(Integer principalid) {
-        return authenticationDetailsMapper.toResponse(authenticationStateCaching.get(principalid));
+    public AuthenticationResponse loadAuthenticationState(UUID principalUuid) {
+        return authenticationDetailsMapper.toResponse(authenticationStateCaching.get(principalUuid));
     }
     
     private boolean isAuthenticated(AuthenticationRequest credential, User principal) {

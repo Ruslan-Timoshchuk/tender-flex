@@ -4,6 +4,7 @@ import static com.flex.tender.model.constants.JwtClaims.*;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class JwtTokenGeneratorImpl implements JwtTokenGenerator {
 
     @Override
     public JwtAuthenticationToken issueAuthenticationToken(AuthenticatedPrincipal authenticatedPrincipal) {
-        return new JwtAuthenticationToken(generateAccessToken(authenticatedPrincipal.id(),
+        final UUID principalUuId = UUID.randomUUID();
+        return new JwtAuthenticationToken(principalUuId, generateAccessToken(principalUuId,
                 authenticatedPrincipal
                     .authorities()
                     .stream()
@@ -33,10 +35,10 @@ public class JwtTokenGeneratorImpl implements JwtTokenGenerator {
                     .toList()));
     }
 
-    private String generateAccessToken(Integer id, List<String> authorities) {
+    private String generateAccessToken(UUID principalUuid, List<String> authorities) {
         return Jwts
                  .builder()
-                 .subject(String.valueOf(id))
+                 .subject(principalUuid.toString())
                  .claim(ISSUER, jwtTokenIssuer)
                  .claim(AUTHORITIES, authorities)
                  .issuedAt(new Date(System.currentTimeMillis()))

@@ -3,6 +3,7 @@ package com.flex.tender.controller.filter;
 import static java.util.Objects.isNull;
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,9 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private Authentication buildAuthenticationToken(String accessToken, WebAuthenticationDetails details) {
         final Claims claims = jwtClaimsExtractor.extractAccessTokenClaims(accessToken);
-        final Integer userId = jwtClaimsExtractor.extractUserId(claims);
+        final UUID principalUuid = jwtClaimsExtractor.extractPrincipalUuid(claims);
         final Set<SimpleGrantedAuthority> authorities = jwtClaimsExtractor.extractAuthorities(claims);
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId,
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principalUuid,
                 null, authorities);
         authenticationToken.setDetails(details);
         return authenticationToken;

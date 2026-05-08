@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toSet;
 import static com.flex.tender.model.constants.JwtClaims.*;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ public class JwtClaimsExtractorImpl implements JwtClaimsExtractor {
     }
     
     @Override
-    public Integer extractUserId(Claims claims) {
-        return Integer.valueOf(claims.getSubject());
+    public UUID extractPrincipalUuid(Claims claims) {
+        return UUID.fromString(claims.getSubject());
     }
 
     @Override
