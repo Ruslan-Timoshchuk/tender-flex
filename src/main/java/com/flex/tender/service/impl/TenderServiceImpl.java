@@ -5,19 +5,15 @@ import static com.flex.tender.model.enumeration.EProcedure.*;
 import static com.flex.tender.model.enumeration.ETenderStatus.*;
 import static java.util.stream.Collectors.toMap;
 import static com.flex.tender.model.enumeration.EOfferStatus.*;
-import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.Procedure;
 import com.flex.tender.model.Tender;
-import com.flex.tender.model.enumeration.EAuthority;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
@@ -27,7 +23,6 @@ import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.TenderResponse;
 import com.flex.tender.repository.TenderRepository;
-import com.flex.tender.service.AuthorityService;
 import com.flex.tender.service.CompanyProfileService;
 import com.flex.tender.service.OfferService;
 import com.flex.tender.service.TenderService;
@@ -39,12 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TenderServiceImpl implements TenderService {
 
-    public static final String LOG_MSG_ON_COUNT_TENDERS_FORBIDDEN = 
-            "Failed to count tenders for userId = {}, authorities = {}: missing required authority";
-
     private final TenderMapper tenderMapper;
     private final TenderRepository tenderRepository;
-    private final AuthorityService authorityService;
     private final CompanyProfileService companyProfileService;
     private final OfferService offerService;
 
@@ -148,17 +139,13 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public TenderCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities) {
-        if(authorityService.hasAuthority(authorities, EAuthority.CONTRACTOR)) {
-            return new TenderCountResponse(tenderRepository.countByContractor(userId)); 
-        } else if (authorityService.hasAuthority(authorities, EAuthority.BIDDER)) {
-            return new TenderCountResponse(tenderRepository.countAll());
-        } else {
-            log.warn(LOG_MSG_ON_COUNT_TENDERS_FORBIDDEN, userId, authorities);
-            throw new AccessDeniedException(
-                    "User does not have the required authority to count tenders"
-                );
-        }
+    public TenderCountResponse countByContractor(Integer contractorId) {
+        return new TenderCountResponse(tenderRepository.countByContractor(contractorId));
+    }
+
+    @Override
+    public TenderCountResponse countAll() {
+        return new TenderCountResponse(tenderRepository.countAll());
     }
 
     @Override

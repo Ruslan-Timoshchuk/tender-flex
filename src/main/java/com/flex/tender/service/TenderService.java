@@ -1,8 +1,6 @@
 package com.flex.tender.service;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import org.springframework.security.core.GrantedAuthority;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.Page;
@@ -19,7 +17,9 @@ public interface TenderService {
 
     TenderResponse findDetailsById(Integer id);
 
-    TenderCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities);
+    TenderCountResponse countByContractor(Integer contractorId);
+    
+    TenderCountResponse countAll();
 
     Page<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 

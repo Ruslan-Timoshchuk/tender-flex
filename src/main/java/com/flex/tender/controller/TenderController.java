@@ -1,11 +1,8 @@
 package com.flex.tender.controller;
 
 import static com.flex.tender.controller.constant.SecuredAuthorities.*;
-import java.util.Collection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +22,16 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.base.path}/${api.v1}/${api.tenders.path}")
 public class TenderController {
 
-    public static final String URI_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
-    public static final String URI_BIDDER_TENDERS_PAGE = "/bidder-page";
-    public static final String URI_TENDERS_ID = "/{id}";
+    public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
+    public static final String URL_BIDDER_TENDERS_PAGE = "/bidder-page";
+    public static final String URL_TENDER_ID = "/{id}";
+    public static final String URL_CONTRACTOR_COUNT = "/contractor-count/{contractor-id}";
+    public static final String URL_COUNT_ALL = "/count-all";
 
     private final TenderService tenderService;
 
     @Secured(CONTRACTOR)
-    @GetMapping(URI_CONTRACTOR_TENDERS_PAGE)
+    @GetMapping(URL_CONTRACTOR_TENDERS_PAGE)
     public ResponseEntity<Page<ContractorTenderSummaryResponse>> findByContractorWithPagination(
             @AuthenticationPrincipal Integer contractorId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
@@ -43,7 +42,7 @@ public class TenderController {
     }
     
     @Secured(BIDDER)
-    @GetMapping(URI_BIDDER_TENDERS_PAGE)
+    @GetMapping(URL_BIDDER_TENDERS_PAGE)
     public ResponseEntity<Page<BidderTenderSummaryResponse>> findByBidderWithPagination(
             @AuthenticationPrincipal Integer contractorId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
@@ -54,17 +53,21 @@ public class TenderController {
     }
 
     @Secured({ CONTRACTOR, BIDDER })
-    @GetMapping(URI_TENDERS_ID)
+    @GetMapping(URL_TENDER_ID)
     public TenderResponse findDetailsById(@PathVariable("id") Integer tenderId) {
         return tenderService.findDetailsById(tenderId);
     }
 
-    @Secured({ CONTRACTOR, BIDDER })
-    @GetMapping("/count")
-    public TenderCountResponse count(Authentication authentication) {
-        final var userId = (Integer) authentication.getPrincipal();
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        return tenderService.countByUserAuthority(userId, authorities);
+    @Secured(CONTRACTOR)
+    @GetMapping(URL_CONTRACTOR_COUNT)
+    public TenderCountResponse countByContractor(@PathVariable("contractor-id") Integer contractorId) {
+        return tenderService.countByContractor(contractorId);
+    }
+    
+    @Secured(BIDDER)
+    @GetMapping(URL_COUNT_ALL)
+    public TenderCountResponse countAll() {
+        return tenderService.countAll();
     }
 
 }
