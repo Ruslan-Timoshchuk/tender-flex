@@ -60,14 +60,16 @@ public class TenderController {
 
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_COUNT)
-    public TenderCountResponse countByContractor(@PathVariable("contractor-id") Integer contractorId) {
-        return tenderService.countByContractor(contractorId);
+    public ResponseEntity<TenderCountResponse> countByContractor(@PathVariable("contractor-id") Integer contractorId) {
+        return ResponseEntity
+                   .ok(tenderService.countByContractor(contractorId));
     }
     
     @Secured(BIDDER)
     @GetMapping(URL_COUNT_ALL)
-    public TenderCountResponse countAll() {
-        return tenderService.countAll();
+    public ResponseEntity<TenderCountResponse> countAll() {
+        return ResponseEntity
+                   .ok(tenderService.countAll());
     }
 
 }
