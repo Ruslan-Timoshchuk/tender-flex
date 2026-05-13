@@ -5,11 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.ContractType;
 import com.flex.tender.repository.ContractTypeRepository;
 import com.flex.tender.repository.mapper.ContractTypeMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -24,7 +22,7 @@ public class ContractTypeRepositoryImpl implements ContractTypeRepository {
     private final ContractTypeMapper contractTypeMapper;
 
     @Override
-    public List<ContractType> getAll() {
+    public List<ContractType> findAll() {
         List<ContractType> contractTypes = jdbcTemplate.query(FIND_ALL_QUERY, contractTypeMapper);
         LOGGER.info("Successfully fetched {} contract-types", contractTypes.size());
         return contractTypes;
