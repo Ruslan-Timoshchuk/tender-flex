@@ -1,15 +1,13 @@
 package com.flex.tender.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.springframework.security.core.GrantedAuthority;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EOfferStatus;
-import com.flex.tender.payload.Page;
+import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
@@ -24,13 +22,15 @@ public interface OfferService {
     
     OfferDetailsResponse findDetailsById(Integer offerId);
     
-    Page<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage, Integer offersPerPage);
+    SummaryPage<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
-    Page<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer currentPage, Integer offersPerPage);
+    SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer currentPage, Integer offersPerPage);
     
-    Page<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer currentPage, Integer offersPerPage);
+    SummaryPage<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer currentPage, Integer offersPerPage);
 
-    OfferCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities);
+    OfferCountResponse countByBidder(Integer bidderId);
+    
+    OfferCountResponse countByContractor(Integer contractorId);
     
     List<Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds);
 

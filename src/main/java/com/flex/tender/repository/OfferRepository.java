@@ -18,9 +18,9 @@ public interface OfferRepository {
     
     Set<Offer> findByTenderWithPagination(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
     
-    Integer countAllByBidder(Integer bidderId);
+    Integer countByBidder(Integer bidderId);
     
-    Integer countAllByContractor(Integer contractorId);
+    Integer countByContractor(Integer contractorId);
     
     Integer countAllByTender(Integer tenderId);
     

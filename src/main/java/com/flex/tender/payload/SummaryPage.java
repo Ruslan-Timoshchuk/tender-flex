@@ -8,10 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Page<T> {
+public class SummaryPage<T> {
 
-    private final Integer currentPage;
-    private final Integer totalPages;
+    private final Integer page;
+    private final Integer pages;
     private final List<T> content;
 
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.flex.tender.payload.Page;
+import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.base.path}/${api.v1}/${api.tenders.path}")
 public class TenderController {
 
-    public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
+    public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page/{contractor-id}";
     public static final String URL_BIDDER_TENDERS_PAGE = "/bidder-page";
     public static final String URL_TENDER_ID = "/{id}";
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count/{contractor-id}";
@@ -32,18 +32,18 @@ public class TenderController {
 
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_TENDERS_PAGE)
-    public ResponseEntity<Page<ContractorTenderSummaryResponse>> findByContractorWithPagination(
-            @AuthenticationPrincipal Integer contractorId, 
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer tendersPerPage) {
+    public ResponseEntity<SummaryPage<ContractorTenderSummaryResponse>> findByContractorWithPagination(
+            @PathVariable("contractor-id") Integer contractorId, 
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
                  .ok()
-                 .body(tenderService.findByContractorWithPagination(contractorId, currentPage, tendersPerPage));
+                 .body(tenderService.findByContractorWithPagination(contractorId, page, pageSize));
     }
     
     @Secured(BIDDER)
     @GetMapping(URL_BIDDER_TENDERS_PAGE)
-    public ResponseEntity<Page<BidderTenderSummaryResponse>> findByBidderWithPagination(
+    public ResponseEntity<SummaryPage<BidderTenderSummaryResponse>> findByBidderWithPagination(
             @AuthenticationPrincipal Integer contractorId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {

@@ -3,7 +3,7 @@ package com.flex.tender.service;
 import java.time.LocalDate;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
-import com.flex.tender.payload.Page;
+import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
@@ -21,9 +21,9 @@ public interface TenderService {
     
     TenderCountResponse countAll();
 
-    Page<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
+    SummaryPage<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
-    Page<BidderTenderSummaryResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
+    SummaryPage<BidderTenderSummaryResponse> findByBidderWithPagination(Integer userId, Integer currentPage, Integer tendersPerPage);
 
     Tender close(Tender tender);
 

@@ -141,12 +141,12 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
     
     @Override
-    public Integer countAllByBidder(Integer bidderId) {
+    public Integer countByBidder(Integer bidderId) {
         return jdbc.getJdbcTemplate().queryForObject(COUNT_OFFERS_BY_BIDDER_QUERY, Integer.class, bidderId);
     }
 
     @Override
-    public Integer countAllByContractor(Integer contractorId) {
+    public Integer countByContractor(Integer contractorId) {
         return jdbc.getJdbcTemplate().queryForObject(COUNT_OFFERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
     }
 

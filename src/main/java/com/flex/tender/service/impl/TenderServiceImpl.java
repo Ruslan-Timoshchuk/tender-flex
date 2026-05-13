@@ -16,7 +16,7 @@ import com.flex.tender.model.Procedure;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.model.enumeration.ETenderStatus;
-import com.flex.tender.payload.Page;
+import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.TenderMapper;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
@@ -54,7 +54,7 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Page<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
+    public SummaryPage<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
             Integer tendersPerPage) {
         Integer countTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersCount = tenderRepository.countByContractor(userId);
@@ -80,11 +80,11 @@ public class TenderServiceImpl implements TenderService {
                             tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId())))
                     .toList();
         }
-        return new Page<>(currentPage, totalPages, contractorTendersPage);
+        return new SummaryPage<>(currentPage, totalPages, contractorTendersPage);
     }
 
     @Override
-    public Page<BidderTenderSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage,
+    public SummaryPage<BidderTenderSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage,
             Integer tendersPerPage) {
         Integer amountTendersToSkip = (currentPage - 1) * tendersPerPage;
         Integer allTendersAmount = tenderRepository.countAll();
@@ -124,7 +124,7 @@ public class TenderServiceImpl implements TenderService {
                         offerStatus);
             }).toList();
         }
-        return new Page<>(currentPage, totalPages, bidderTendersPage);
+        return new SummaryPage<>(currentPage, totalPages, bidderTendersPage);
     }
 
     @Override

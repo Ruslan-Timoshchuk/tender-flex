@@ -1,26 +1,21 @@
 package com.flex.tender.service.impl;
 
 import static com.flex.tender.model.enumeration.EOfferStatus.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
-import com.flex.tender.model.enumeration.EAuthority;
 import com.flex.tender.model.enumeration.EOfferStatus;
-import com.flex.tender.payload.Page;
+import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
-import com.flex.tender.service.AuthorityService;
 import com.flex.tender.service.CompanyProfileService;
 import com.flex.tender.service.CpvService;
 import com.flex.tender.service.OfferService;
@@ -32,7 +27,6 @@ public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
     private final OfferRepository offerRepository;
-    private final AuthorityService authorityService;
     private final CompanyProfileService companyProfileService;
     private final CpvService cpvService;
 
@@ -46,10 +40,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer page,
+    public SummaryPage<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer page,
             Integer pageSize) {
         Integer offset = (page - 1) * pageSize;
-        Integer totalOffers = offerRepository.countAllByBidder(bidderId);
+        Integer totalOffers = offerRepository.countByBidder(bidderId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
         var offers = offerRepository.findByBidderWithPagination(bidderId, pageSize, offset);
         List<OfferSummaryResponse> offersPage = List.of();
@@ -63,14 +57,14 @@ public class OfferServiceImpl implements OfferService {
                   .map(offer -> offerMapper.toBidderSummaryResponse(offer, cpvs.get(offer.getId())))
                   .toList();
         }
-        return new Page<>(page, totalPages, offersPage);
+        return new SummaryPage<>(page, totalPages, offersPage);
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,
+    public SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,
             Integer pageSize) {
         Integer offset = (page - 1) * pageSize;
-        Integer totalOffers = offerRepository.countAllByContractor(contractorId);
+        Integer totalOffers = offerRepository.countByContractor(contractorId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
         var offers = offerRepository.findByContractorWithPagination(contractorId, pageSize, offset);
         List<OfferSummaryResponse> offersPage = List.of();
@@ -84,11 +78,11 @@ public class OfferServiceImpl implements OfferService {
                   .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
                   .toList();
         }
-        return new Page<>(page, totalPages, offersPage);
+        return new SummaryPage<>(page, totalPages, offersPage);
     }
 
     @Override
-    public Page<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page, Integer pageSize) {
+    public SummaryPage<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page, Integer pageSize) {
         Integer offset = (page - 1) * pageSize;
         Integer totalOffers = offerRepository.countAllByTender(tenderId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
@@ -104,7 +98,7 @@ public class OfferServiceImpl implements OfferService {
                   .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
                   .toList();
         }
-        return new Page<>(page, totalPages, offersPage);
+        return new SummaryPage<>(page, totalPages, offersPage);
     }
     
     private Integer countTotalPages(Integer pageSize, Integer totalOffers) {
@@ -128,14 +122,13 @@ public class OfferServiceImpl implements OfferService {
     }
     
     @Override
-    public OfferCountResponse countByUserAuthority(Integer userId, Collection<? extends GrantedAuthority> authorities) {
-        if (authorityService.hasAuthority(authorities, EAuthority.CONTRACTOR)) {
-            return new OfferCountResponse(offerRepository.countAllByContractor(userId));
-        } else if (authorityService.hasAuthority(authorities, EAuthority.BIDDER)) {
-            return new OfferCountResponse(offerRepository.countAllByBidder(userId));
-        } else {
-            throw new AccessDeniedException("User does not have the required authority to count offers");
-        }
+    public OfferCountResponse countByBidder(Integer bidderId) {
+        return new OfferCountResponse(offerRepository.countByBidder(bidderId));
+    }
+
+    @Override
+    public OfferCountResponse countByContractor(Integer contractorId) {
+        return new OfferCountResponse(offerRepository.countByContractor(contractorId));
     }
 
     @Override
