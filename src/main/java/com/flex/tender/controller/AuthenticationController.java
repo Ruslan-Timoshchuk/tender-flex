@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.flex.tender.model.embedded.AuthenticatedPrincipal;
+import com.flex.tender.model.embedded.PrincipalDetails;
 import com.flex.tender.model.embedded.JwtAuthenticationToken;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
@@ -39,12 +39,12 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             throw new BadCredentialsException("Email and password should not be empty");
         }
-        final AuthenticatedPrincipal authenticatedPrincipal = authenticationService.authenticate(credential);
+        final PrincipalDetails principalDetails = authenticationService.authenticate(credential);
         final JwtAuthenticationToken authenticationToken = jwtTokenGenerator
-                .issueAuthenticationToken(authenticatedPrincipal);
+                .issueAuthenticationToken(principalDetails);
         final HttpHeaders headers = jwtCookiesService.issueJwtCookie(authenticationToken);
         final AuthenticationResponse authenticationResponse = authenticationService
-                .resolveAuthenticationResponse(authenticatedPrincipal, authenticationToken.principalUuid());
+                .resolveAuthenticationResponse(principalDetails, authenticationToken.principalUuid());
         return ResponseEntity
                    .ok()
                    .headers(headers)
@@ -52,7 +52,8 @@ public class AuthenticationController {
     }
 
     @GetMapping(URL_LOAD_AUTHENTICATION_STATE)
-    public ResponseEntity<AuthenticationResponse> loadAuthenticationState(@AuthenticationPrincipal UUID principalUuid) {
+    public ResponseEntity<AuthenticationResponse> loadAuthenticationState(
+            @AuthenticationPrincipal(expression = "principalUuid") UUID principalUuid) {
         return ResponseEntity
                    .ok(authenticationService.loadAuthenticationState(principalUuid));
     }

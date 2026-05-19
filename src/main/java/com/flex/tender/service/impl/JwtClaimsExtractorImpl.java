@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.service.JwtClaimsExtractor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -31,8 +32,10 @@ public class JwtClaimsExtractorImpl implements JwtClaimsExtractor {
     }
     
     @Override
-    public UUID extractPrincipalUuid(Claims claims) {
-        return UUID.fromString(claims.getSubject());
+    public PrincipalSummary extractPrincipal(Claims claims) {
+        return new PrincipalSummary(
+                claims.get(USER_ID, Integer.class), 
+                UUID.fromString(claims.getSubject()));
     }
 
     @Override

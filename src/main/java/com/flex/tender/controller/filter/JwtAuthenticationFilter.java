@@ -3,7 +3,6 @@ package com.flex.tender.controller.filter;
 import static java.util.Objects.isNull;
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import com.flex.tender.model.constants.CookieNames;
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.service.JwtClaimsExtractor;
 import com.flex.tender.service.JwtCookiesService;
 import io.jsonwebtoken.Claims;
@@ -62,9 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private Authentication buildAuthenticationToken(String accessToken, WebAuthenticationDetails details) {
         final Claims claims = jwtClaimsExtractor.extractAccessTokenClaims(accessToken);
-        final UUID principalUuid = jwtClaimsExtractor.extractPrincipalUuid(claims);
+        final PrincipalSummary principal = jwtClaimsExtractor.extractPrincipal(claims);
         final Set<SimpleGrantedAuthority> authorities = jwtClaimsExtractor.extractAuthorities(claims);
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principalUuid,
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principal,
                 null, authorities);
         authenticationToken.setDetails(details);
         return authenticationToken;

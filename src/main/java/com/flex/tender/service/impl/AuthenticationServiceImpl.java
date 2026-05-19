@@ -9,7 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.User;
-import com.flex.tender.model.embedded.AuthenticatedPrincipal;
+import com.flex.tender.model.embedded.PrincipalDetails;
 import com.flex.tender.payload.mapper.AuthenticationDetailsMapper;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
@@ -27,10 +27,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationDetailsMapper authenticationDetailsMapper;
 
-    private final Map<UUID, AuthenticatedPrincipal> authenticationStateCaching = new ConcurrentHashMap<>();
+    private final Map<UUID, PrincipalDetails> authenticationStateCaching = new ConcurrentHashMap<>();
     
     @Override
-    public AuthenticatedPrincipal authenticate(AuthenticationRequest credential) {
+    public PrincipalDetails authenticate(AuthenticationRequest credential) {
         final String email = credential.getEmail();
         User principal = userService.findByEmail(email);
         if (isAuthenticated(credential, principal)) {
@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse resolveAuthenticationResponse(AuthenticatedPrincipal authenticatedPrincipal,
+    public AuthenticationResponse resolveAuthenticationResponse(PrincipalDetails authenticatedPrincipal,
             UUID principalUuid) {
         authenticationStateCaching.put(principalUuid, authenticatedPrincipal);
         return authenticationDetailsMapper.toResponse(authenticatedPrincipal);
