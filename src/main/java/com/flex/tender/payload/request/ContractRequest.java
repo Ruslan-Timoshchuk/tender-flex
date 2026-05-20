@@ -1,10 +1,12 @@
 package com.flex.tender.payload.request;
 
 public record ContractRequest(
-        ContractTypeRequest contractType, 
+        Integer id,
+        Integer tenderId,
+        Integer contractTypeId, 
         Integer minPrice, 
         Integer maxPrice,
-        CurrencyRequest currency, 
+        Integer currencyId, 
         String signedDeadline,
-        FileMetadataRequest fileMetadata) {
+        Integer fileMetadataId) {
 }

@@ -1,7 +1,9 @@
 package com.flex.tender.controller;
 
+import static com.flex.tender.controller.constant.SecuredAuthorities.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ public class AwardDecisionController {
 
     private final AwardDecisionService awardDecisionService;
 
+    @Secured( CONTRACTOR )
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<AwardDecisionResponse> save(@RequestBody AwardDecisionRequest awardDecisionRequest) {
         return ResponseEntity

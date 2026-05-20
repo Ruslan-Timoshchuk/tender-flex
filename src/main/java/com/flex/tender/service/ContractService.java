@@ -1,17 +1,16 @@
 package com.flex.tender.service;
 
 import java.util.Set;
-
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.Offer;
-import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EContractStatus;
+import com.flex.tender.payload.request.ContractRequest;
 import com.flex.tender.payload.response.ContractResponse;
 
 public interface ContractService {
 
-    Contract save(Contract contract, Tender tender);
-
+    ContractResponse save(ContractRequest contractRequest);
+    
     Contract findById(Integer id);
     
     ContractResponse findDetailsById(Integer id);
@@ -27,5 +26,5 @@ public interface ContractService {
     void handleOnSigningDeadlinePassed(Contract contract);
 
     Set<Contract> findAll(EContractStatus globalStatus);
- 
+
 }
