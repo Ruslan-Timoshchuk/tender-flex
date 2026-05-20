@@ -1,3 +1,7 @@
 package com.flex.tender.payload.request;
 
-public record RejectDecisionRequest(FileMetadataRequest fileMetadata) {}
+public record RejectDecisionRequest(
+        Integer id, 
+        Integer tenderId, 
+        Integer filemetadataId) {
+}
