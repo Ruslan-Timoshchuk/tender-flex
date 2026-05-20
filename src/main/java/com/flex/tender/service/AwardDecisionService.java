@@ -1,12 +1,13 @@
 package com.flex.tender.service;
 
 import com.flex.tender.model.AwardDecision;
-import com.flex.tender.model.Tender;
+import com.flex.tender.payload.request.AwardDecisionRequest;
+import com.flex.tender.payload.response.AwardDecisionResponse;
 
 public interface AwardDecisionService {
 
-    AwardDecision save(AwardDecision awardDecision, Tender tender);
-
     AwardDecision findById(Integer id);
+
+    AwardDecisionResponse save(AwardDecisionRequest awardDecisionRequest);
     
 }
