@@ -1,8 +1,7 @@
 package com.flex.tender.repository.impl;
 
+import static com.flex.tender.repository.sql.query.ContractTypeQueries.*;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.flex.tender.model.ContractType;
@@ -14,18 +13,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractTypeRepositoryImpl implements ContractTypeRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContractTypeRepositoryImpl.class);
-    
-    public static final String FIND_ALL_QUERY = "SELECT id AS contract_type_id, title AS contract_type_name FROM contract_types";
-
     private final JdbcTemplate jdbcTemplate;
     private final ContractTypeMapper contractTypeMapper;
 
     @Override
     public List<ContractType> findAll() {
-        List<ContractType> contractTypes = jdbcTemplate.query(FIND_ALL_QUERY, contractTypeMapper);
-        LOGGER.info("Successfully fetched {} contract-types", contractTypes.size());
-        return contractTypes;
+        return jdbcTemplate.query(FIND_ALL_QUERY, contractTypeMapper);
+    }
+
+    @Override
+    public ContractType findById(Integer id) {
+        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, contractTypeMapper, id);
     }
 
 }
