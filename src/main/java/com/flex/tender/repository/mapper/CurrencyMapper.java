@@ -1,18 +1,14 @@
 package com.flex.tender.repository.mapper;
 
+import static com.flex.tender.repository.sql.column.CurrencyColumns.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import com.flex.tender.model.Currency;
 
 @Component
 public class CurrencyMapper implements RowMapper<Currency> {
-
-    public static final String CURRENCY_ID = "currency_id";
-    public static final String CURRENCY_CODE = "code";
-    public static final String CURRENCY_SYMBOL = "symbol";
     
     @Override
     public Currency mapRow(ResultSet resultSet, int rowNum) throws SQLException {

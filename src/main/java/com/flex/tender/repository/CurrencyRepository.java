@@ -6,5 +6,7 @@ import com.flex.tender.model.Currency;
 public interface CurrencyRepository {
 
     List<Currency> findAll();
+
+    Currency findById(Integer id);
     
 }
