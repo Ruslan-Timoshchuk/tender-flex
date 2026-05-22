@@ -13,9 +13,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.flex.tender.model.FileMetadata;
 import com.flex.tender.payload.mapper.FileMetadataMapper;
 import com.flex.tender.payload.response.FileMetadataResponse;
-import com.flex.tender.repository.FileRepository;
+import com.flex.tender.repository.FileMetadataRepository;
 import com.flex.tender.service.FileStorageService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,7 +26,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Value("${bucket.name}")
     private String bucketName;
     private final AmazonS3 amazonS3Client;
-    private final FileRepository fileRepository;
+    private final FileMetadataRepository fileRepository;
     private final FileMetadataMapper fileMapper;
 
     @Override
@@ -58,6 +57,11 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public Resource findByKey(String key) throws IOException {
         return new ByteArrayResource(amazonS3Client.getObject(bucketName, key).getObjectContent().readAllBytes());
+    }
+
+    @Override
+    public FileMetadata findById(Integer id) {
+        return fileRepository.findById(id);
     }
 
 }

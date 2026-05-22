@@ -1,30 +1,28 @@
 package com.flex.tender.repository.impl;
 
+import static com.flex.tender.repository.sql.query.FileMetadataQueries.*;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.FileMetadata;
-import com.flex.tender.repository.FileRepository;
-
+import com.flex.tender.repository.FileMetadataRepository;
+import com.flex.tender.repository.mapper.FileMetadataMapper;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class FileRepositoryImpl implements FileRepository {
-
-    public static final String ADD_NEW_FILE_QUERY = "INSERT INTO files(name, content_type, aws_s3_file_key) "
-            + "VALUES (?, ?, ?)";
+public class FileMetadataRepositoryImpl implements FileMetadataRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final FileMetadataMapper fileMetadataMapper;
 
     @Override
     public FileMetadata save(FileMetadata file) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_FILE_QUERY, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(SAVE_NEW_QUERY, new String[] { "id" });
             statement.setString(1, file.getName());
             statement.setString(2, file.getContentType());
             statement.setString(3, file.getAwsS3fileKey());
@@ -32,6 +30,11 @@ public class FileRepositoryImpl implements FileRepository {
         }, keyHolder);
         file.setId(keyHolder.getKeyAs(Integer.class));
         return file;
+    }
+
+    @Override
+    public FileMetadata findById(Integer id) {
+        return jdbcTemplate.queryForObject(SAVE_NEW_QUERY, fileMetadataMapper, id);
     }
 
 }
