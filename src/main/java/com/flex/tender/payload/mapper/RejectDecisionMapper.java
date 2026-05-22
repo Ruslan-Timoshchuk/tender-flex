@@ -10,7 +10,7 @@ import com.flex.tender.payload.response.RejectDecisionResponse;
 public interface RejectDecisionMapper {
     
     @Mapping(target = "tender", ignore = true)
-    @Mapping(target = "fileMetadataId", ignore = true)
+    @Mapping(target = "fileMetadata", ignore = true)
     RejectDecision toEntity(RejectDecisionRequest rejectDecisionRequest);
     
     RejectDecisionResponse toResponse(RejectDecision rejectDecision);
