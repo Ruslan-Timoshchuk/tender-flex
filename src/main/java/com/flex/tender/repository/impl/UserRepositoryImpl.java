@@ -21,4 +21,9 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.ofNullable(jdbcTemplate.query(FIND_BY_EMAIL_QUERY, userExtractor, email));
     }
 
+    @Override
+    public User findById(Integer id) {
+        return jdbcTemplate.query(FIND_BY_ID_QUERY, userExtractor, id);
+    }
+
 }

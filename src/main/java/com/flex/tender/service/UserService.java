@@ -6,4 +6,6 @@ public interface UserService {
 
     User findByEmail(String email);
 
+    User findById(Integer id);
+
 }

@@ -6,5 +6,7 @@ import com.flex.tender.model.User;
 public interface UserRepository {
 
     Optional<User> findByEmail(String email);
+
+    User findById(Integer id);
     
 }
