@@ -69,7 +69,7 @@ public class TenderRepositoryImpl implements TenderRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
-            statement.setInt(1, tender.getContractorId());
+            statement.setInt(1, tender.getContractor().getId());
             statement.setInt(2, tender.getCompanyProfile().getId());
             statement.setString(3, tender.getProcedure().getType().name());
             statement.setString(4, tender.getProcedure().getLanguage().name());

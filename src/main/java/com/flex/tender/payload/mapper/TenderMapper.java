@@ -16,17 +16,21 @@ import com.flex.tender.payload.response.TenderResponse;
         OfferStatusLabelMapper.class })
 public interface TenderMapper {
 
+    @Mapping(target = "cpv", ignore = true)
+    @Mapping(target = "companyProfile", ignore = true)
     @Mapping(target = "publicationDate", source = "publication", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "yyyy-MM-dd")
     Tender toEntity(TenderRequest tenderRequest);
 
     TenderResponse toResponse(Tender tender);
 
+    @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
     ContractorTenderSummaryResponse toContractorTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, Integer offersAmount);
 
+    @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "bidderLabel")

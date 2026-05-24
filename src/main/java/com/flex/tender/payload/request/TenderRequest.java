@@ -1,10 +1,9 @@
 package com.flex.tender.payload.request;
 
 public record TenderRequest(
-        Integer id,
-        Integer contractorId, 
+        Integer id, 
         CompanyProfileRequest companyProfile,
-        CpvRequest cpv,
+        Integer cpvId,
         String description, 
         String publication, 
         String offerSubmissionDeadline) {

@@ -2,8 +2,10 @@ package com.flex.tender.service;
 
 import java.time.LocalDate;
 import com.flex.tender.model.Tender;
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.SummaryPage;
+import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
@@ -11,9 +13,7 @@ import com.flex.tender.payload.response.TenderResponse;
 
 public interface TenderService {
 
-    Tender save(Tender tender);
-
-    Tender findById(Integer id);
+    ContractorTenderSummaryResponse save(PrincipalSummary principalSammary, TenderRequest tenderRequest);
 
     TenderResponse findDetailsById(Integer id);
 

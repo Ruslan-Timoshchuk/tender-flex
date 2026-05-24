@@ -6,10 +6,15 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.payload.SummaryPage;
+import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
@@ -22,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.base.path}/${api.v1}/${api.tenders.path}")
 public class TenderController {
 
-    public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page/{contractor-id}";
+    public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
     public static final String URL_BIDDER_TENDERS_PAGE = "/bidder-page";
     public static final String URL_TENDER_ID = "/{id}";
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count/{contractor-id}";
@@ -31,9 +36,16 @@ public class TenderController {
     private final TenderService tenderService;
 
     @Secured(CONTRACTOR)
+    @PostMapping
+    public ResponseEntity<ContractorTenderSummaryResponse> save(@AuthenticationPrincipal PrincipalSummary principal,
+            @RequestBody TenderRequest tender) {
+        return ResponseEntity.ok(tenderService.save(principal, tender));
+    }
+    
+    @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_TENDERS_PAGE)
     public ResponseEntity<SummaryPage<ContractorTenderSummaryResponse>> findByContractorWithPagination(
-            @PathVariable("contractor-id") Integer contractorId, 
+            @AuthenticationPrincipal(expression = "userId") Integer contractorId, 
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
@@ -44,12 +56,12 @@ public class TenderController {
     @Secured(BIDDER)
     @GetMapping(URL_BIDDER_TENDERS_PAGE)
     public ResponseEntity<SummaryPage<BidderTenderSummaryResponse>> findByBidderWithPagination(
-            @AuthenticationPrincipal Integer contractorId, 
+            @AuthenticationPrincipal(expression = "userId") Integer bidderId, 
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
         return ResponseEntity
                  .ok()
-                 .body(tenderService.findByBidderWithPagination(contractorId, currentPage, tendersPerPage));
+                 .body(tenderService.findByBidderWithPagination(bidderId, currentPage, tendersPerPage));
     }
 
     @Secured({ CONTRACTOR, BIDDER })

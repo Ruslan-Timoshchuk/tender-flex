@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Tender {
 
     private Integer id;
-    private Integer contractorId;
+    private User contractor;
     private CompanyProfile companyProfile;
     private Procedure procedure;
     private Cpv cpv;
