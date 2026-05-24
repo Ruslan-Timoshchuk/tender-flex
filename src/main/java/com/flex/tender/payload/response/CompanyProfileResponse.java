@@ -3,7 +3,6 @@ package com.flex.tender.payload.response;
 /**
  * @author Ruslan Tymoshchuk
  */
-
 public record CompanyProfileResponse(
         Integer id,
         CountryResponse country,

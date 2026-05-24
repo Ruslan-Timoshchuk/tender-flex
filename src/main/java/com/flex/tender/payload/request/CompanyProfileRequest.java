@@ -20,9 +20,10 @@ package com.flex.tender.payload.request;
  */
 
 public record CompanyProfileRequest(
+        Integer id,
         String officialName, 
         String registrationNumber, 
-        CountryRequest country, 
+        Integer countryId, 
         String city,
         ContactPersonRequest contactPerson) {
 }

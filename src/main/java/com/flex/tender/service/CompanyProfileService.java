@@ -1,9 +1,10 @@
 package com.flex.tender.service;
 
 import com.flex.tender.model.CompanyProfile;
+import com.flex.tender.payload.request.CompanyProfileRequest;
 
 public interface CompanyProfileService {
 
-    CompanyProfile create(CompanyProfile companyProfile);
+    CompanyProfile save(CompanyProfileRequest companyProfile);
     
 }
