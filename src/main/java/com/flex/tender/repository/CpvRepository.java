@@ -10,4 +10,6 @@ public interface CpvRepository {
 
     Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds);
 
+    Cpv findById(Integer id);
+
 }

@@ -11,4 +11,6 @@ public interface CpvService {
 
     Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds);
 
+    Cpv findById(Integer cpvId);
+
 }

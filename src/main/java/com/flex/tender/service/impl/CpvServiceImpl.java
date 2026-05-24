@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CpvServiceImpl implements CpvService {
 
+    public static final String CPV_WITH_ID_NOT_FOUND = "Cpv with [id: %s] not found.";
+    
     private final CpvRepository cpvRepository;
     private final CpvMapper cpvMapper;
 
@@ -29,6 +31,11 @@ public class CpvServiceImpl implements CpvService {
     @Override
     public Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds) {
         return cpvRepository.findByOfferIdIn(offerIds);
+    }
+
+    @Override
+    public Cpv findById(Integer id) {
+        return cpvRepository.findById(id);
     }
 
 }
