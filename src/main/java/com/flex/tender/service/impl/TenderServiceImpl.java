@@ -92,7 +92,7 @@ public class TenderServiceImpl implements TenderService {
                     .stream()
                     .map(tender -> tenderMapper.toContractorTenderSummary(tender.getId(), tender.getCpv(),
                             tender.getCompanyProfile().getOfficialName(), tender.getGlobalStatus(),
-                            tender.getOfferSubmissionDeadline(), offersCounts.get(tender.getId())))
+                            tender.getOfferSubmissionDeadline(), offersCounts.getOrDefault(tender.getId(), 0)))
                     .toList();
         }
         return new SummaryPage<>(currentPage, totalPages, contractorTendersPage);
