@@ -21,4 +21,7 @@ public class OfferQueries {
            SELECT EXISTS 
            (SELECT 1 FROM offers 
            WHERE id = :tenderId AND global_status IN (:statuses))""";
+    public final String FIND_BY_BIDDER_ID_AND_TENDER_ID_IN_PATTERN_QUERY = """
+            SELECT %s FROM offers offer %s 
+            WHERE offer.bidder_id = :bidderId AND offer.tender_id IN (:tenderIds)""";
 }

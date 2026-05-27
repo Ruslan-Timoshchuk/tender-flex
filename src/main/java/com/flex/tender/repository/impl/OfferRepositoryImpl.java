@@ -70,7 +70,7 @@ public class OfferRepositoryImpl implements OfferRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.getJdbcTemplate().update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_OFFER_QUERY, new String[] { "id" });
-            statement.setInt(1, offer.getBidderId());
+            statement.setInt(1, offer.getBidder().getId());
             statement.setInt(2, offer.getTender().getId());
             statement.setInt(3, offer.getCompanyProfile().getId());
             statement.setString(4, offer.getGlobalStatus().name());
@@ -120,7 +120,7 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public List<Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds) {
-        String sqlQuery = format(FIND_BY_TENDER_ID_AND_GLOBAL_STATUS_IN_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
+        String sqlQuery = format(FIND_BY_BIDDER_ID_AND_TENDER_ID_IN_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
                 OFFER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
         return jdbc.query(sqlQuery, Map.of("bidderId", bidderId, "tenderIds", tenderIds), offerMapper);
