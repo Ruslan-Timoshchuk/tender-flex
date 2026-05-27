@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
 
     public static final String ADD_NEW_REJECT_QUERY = "INSERT INTO rejects(tender_id, reject_file_id) VALUES (?, ?)";
-    public static final String SELECT_REJECT_BY_ID_QUERY = """
+    public static final String FIND_BY_ID_QUERY = """
             SELECT reject.id AS reject_id, reject_file.id AS reject_file_id, reject_file.name AS reject_file_name,
             reject_file.content_type AS reject_file_content_type, reject_file.aws_s3_file_key AS reject_aws_s3_file_key
             FROM rejects reject
@@ -43,7 +43,7 @@ public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
 
     @Override
     public RejectDecision findById(Integer id) {
-        return jdbcTemplate.queryForObject(SELECT_REJECT_BY_ID_QUERY, rejectDecisionMapper, id);
+        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rejectDecisionMapper, id);
     }
     
 }

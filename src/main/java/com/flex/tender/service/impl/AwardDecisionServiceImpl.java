@@ -28,7 +28,7 @@ public class AwardDecisionServiceImpl implements AwardDecisionService {
     public AwardDecisionResponse save(AwardDecisionRequest awardDecisionRequest) {
         AwardDecision awardDecision = awardDecisionMapper.toEntity(awardDecisionRequest);
         Tender tender = tenderDetailsService.findById(awardDecisionRequest.tenderId());
-        FileMetadata fileMetadata = fileStorageService.findById(awardDecisionRequest.filemetadataId());
+        FileMetadata fileMetadata = fileStorageService.findById(awardDecisionRequest.fileMetadataId());
         awardDecision.setTender(tender);
         awardDecision.setFileMetadata(fileMetadata);
         return awardDecisionMapper.toResponse(awardDecisionRepository.save(awardDecision));

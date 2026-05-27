@@ -24,6 +24,7 @@ public interface TenderMapper {
 
     TenderResponse toResponse(Tender tender);
 
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "cpvCode", source = "cpv.code")
     @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
     @Mapping(target = "tenderStatusName", source = "tenderStatus")
@@ -32,6 +33,7 @@ public interface TenderMapper {
     ContractorTenderSummaryResponse toContractorTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, Integer offersAmount);
 
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "cpvCode", source = "cpv.code")
     @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
     @Mapping(target = "tenderStatusName", source = "tenderStatus")

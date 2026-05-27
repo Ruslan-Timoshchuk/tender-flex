@@ -35,7 +35,7 @@ public class TenderRepositoryImpl implements TenderRepository {
             WHERE id = ?""";
     public static final String COUNT_TENDERS_QUERY = "SELECT count(*) FROM tenders";
     public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
-    public static final String SELECT_BY_ID_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE tender.id = ?";
+    public static final String FIND_BY_ID_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE tender.id = ?";
     public static final String SELECT_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s LIMIT ? OFFSET ?";
     public static final String SELECT_CONTRACTOR_PAGE_PATTERN_QUERY = "SELECT %s FROM tenders tender %s WHERE contractor_id = ? LIMIT ? OFFSET ?";
     public static final String SELECT_ACTIVE_WITH_EXPIRED_SUBMISSION_PATTERN_QUERY = """
@@ -121,7 +121,7 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     @Override
     public Tender findById(Integer tenderId) {
-        String sqlQuery = format(SELECT_BY_ID_PATTERN_QUERY, TENDER_COLUMNS_SQL_PART_QUERY,
+        String sqlQuery = format(FIND_BY_ID_PATTERN_QUERY, TENDER_COLUMNS_SQL_PART_QUERY,
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
         return jdbcTemplate.queryForObject(sqlQuery, tenderMapper, tenderId);

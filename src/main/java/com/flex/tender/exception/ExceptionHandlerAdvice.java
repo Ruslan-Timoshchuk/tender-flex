@@ -8,16 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import com.amazonaws.AmazonServiceException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
-
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    @ResponseStatus(UNAUTHORIZED)
-    public ExceptionHandlerResponse handleEmptyResultDataAccessException(EmptyResultDataAccessException exception) {
-        return new ExceptionHandlerResponse(now(), BAD_REQUEST.value(), BAD_REQUEST, exception.getMessage());
-    }
 
     @ExceptionHandler(FileNotExistsException.class)
     @ResponseStatus(BAD_REQUEST)
