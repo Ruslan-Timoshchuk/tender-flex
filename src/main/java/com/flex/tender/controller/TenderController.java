@@ -29,7 +29,7 @@ public class TenderController {
     public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
     public static final String URL_BIDDER_TENDERS_PAGE = "/bidder-page";
     public static final String URL_TENDER_ID = "/{id}";
-    public static final String URL_CONTRACTOR_COUNT = "/contractor-count/{contractor-id}";
+    public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
     public static final String URL_COUNT_ALL = "/count-all";
 
     private final TenderService tenderService;
@@ -71,7 +71,8 @@ public class TenderController {
 
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_COUNT)
-    public ResponseEntity<TenderCountResponse> countByContractor(@PathVariable("contractor-id") Integer contractorId) {
+    public ResponseEntity<TenderCountResponse> countByContractor(
+            @AuthenticationPrincipal(expression = "userId") Integer contractorId) {
         return ResponseEntity
                    .ok(tenderService.countByContractor(contractorId));
     }

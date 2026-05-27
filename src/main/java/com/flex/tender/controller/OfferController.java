@@ -14,6 +14,7 @@ import com.flex.tender.service.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +25,8 @@ public class OfferController {
     public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page/{bidder-id}";
     public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page/{contractor-id}";
     public static final String URL_OFFERS_PAGE_TENDER_ID = "/tender-page/{tender-id}";
-    public static final String URL_BIDDER_COUNT = "/bidder-count/{bidder-id}";
-    public static final String URL_CONTRACTOR_COUNT = "/contractor-count/{contractor-id}";
+    public static final String URL_BIDDER_COUNT = "/bidder-count";
+    public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
 
     private final OfferService offerService;
 
@@ -66,16 +67,18 @@ public class OfferController {
                    .ok(offerService.findByTenderWithPagination(tenderId, currentPage, offersPerPage));
     }
 
-    @Secured({ BIDDER, CONTRACTOR })
+    @Secured( BIDDER )
     @GetMapping(URL_BIDDER_COUNT)
-    public ResponseEntity<OfferCountResponse> countByBidder(@PathVariable("bidder-id") Integer bidderId) {
+    public ResponseEntity<OfferCountResponse> countByBidder(
+            @AuthenticationPrincipal(expression = "userId") Integer bidderId) {
         return ResponseEntity
                    .ok(offerService.countByBidder(bidderId));
     }
 
-    @Secured({ BIDDER, CONTRACTOR })
+    @Secured( CONTRACTOR )
     @GetMapping(URL_CONTRACTOR_COUNT)
-    public ResponseEntity<OfferCountResponse> countByContractor(@PathVariable("contractor-id") Integer contractorId) {
+    public ResponseEntity<OfferCountResponse> countByContractor(
+            @AuthenticationPrincipal(expression = "userId") Integer contractorId) {
         return ResponseEntity
                    .ok(offerService.countByContractor(contractorId));
     }
