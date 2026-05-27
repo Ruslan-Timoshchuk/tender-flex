@@ -12,7 +12,7 @@ import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderResponse;
 
-@Mapper(componentModel = "spring", uses = { CpvMapper.class, CompanyProfileMapper.class, TenderStatusLabelMapper.class,
+@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, TenderStatusLabelMapper.class,
         OfferStatusLabelMapper.class })
 public interface TenderMapper {
 
@@ -24,13 +24,16 @@ public interface TenderMapper {
 
     TenderResponse toResponse(Tender tender);
 
-    @Mapping(target = "cpv", source = "cpv")
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
     @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
     ContractorTenderSummaryResponse toContractorTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, Integer offersAmount);
 
+    @Mapping(target = "cpvCode", source = "cpv.code")
+    @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
     @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
