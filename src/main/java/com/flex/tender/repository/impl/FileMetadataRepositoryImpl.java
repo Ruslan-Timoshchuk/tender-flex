@@ -34,7 +34,7 @@ public class FileMetadataRepositoryImpl implements FileMetadataRepository {
 
     @Override
     public FileMetadata findById(Integer id) {
-        return jdbcTemplate.queryForObject(SAVE_NEW_QUERY, fileMetadataMapper, id);
+        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, fileMetadataMapper, id);
     }
 
 }
