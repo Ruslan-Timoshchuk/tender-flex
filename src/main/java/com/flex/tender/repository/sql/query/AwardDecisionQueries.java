@@ -18,7 +18,7 @@ public class AwardDecisionQueries {
             fe.content_type AS award_file_content_type, fe.aws_s3_file_key AS award_aws_s3_file_key
             FROM awards ad
             LEFT JOIN files fe ON fe.id = ad.award_file_id 
-            WHERE ad.tender_id = 1
+            WHERE ad.tender_id = ?
             """;
     
 }

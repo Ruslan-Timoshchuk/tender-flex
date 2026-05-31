@@ -1,10 +1,11 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.details.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.repository.AwardDecisionRepository;
-import com.flex.tender.service.AwardDecisionDetailsService;
+import com.flex.tender.service.details.AwardDecisionDetailsService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
