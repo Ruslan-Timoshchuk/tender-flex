@@ -1,15 +1,17 @@
 package com.flex.tender.payload.response;
 
-public record TenderResponse(
+/**
+ * @author Ruslan Timoshchuk
+ */
+public record ContractorTenderDetailsResponse(
         Integer id, 
-        Integer contractId,
         CompanyProfileResponse companyProfile,
-        ProcedureResponse procedure, 
+        ProcedureResponse procedure,
         CpvResponse cpv,
         String description, 
         String publicationDate, 
         String offerSubmissionDeadline,
+        ContractResponse contract,
         AwardDecisionResponse awardDecision,
-        RejectDecisionResponse rejectDecision,
-        String status) {
+        RejectDecisionResponse rejectDecision) {
 }

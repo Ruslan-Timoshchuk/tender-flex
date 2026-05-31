@@ -1,4 +1,4 @@
-package com.flex.tender.model;
+package com.flex.tender.model.embedded;
 
 import com.flex.tender.model.enumeration.ELanguage;
 import com.flex.tender.model.enumeration.EProcedure;

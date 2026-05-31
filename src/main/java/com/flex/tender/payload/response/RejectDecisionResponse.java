@@ -1,3 +1,9 @@
 package com.flex.tender.payload.response;
 
-public record RejectDecisionResponse(Integer id, FileMetadataResponse fileMetadata) {}
+/**
+ * @author Ruslan Timoshchuk
+ */
+public record RejectDecisionResponse(
+        Integer id, 
+        FileMetadataResponse fileMetadata) {
+}

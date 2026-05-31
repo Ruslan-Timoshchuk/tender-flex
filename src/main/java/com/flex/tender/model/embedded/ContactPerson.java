@@ -1,9 +1,9 @@
-package com.flex.tender.model;
+package com.flex.tender.model.embedded;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class ContactPerson {
 
