@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.request.TenderRequest;
+import com.flex.tender.payload.response.BidderTenderDetailsResponse;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
-import com.flex.tender.payload.response.TenderResponse;
+import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
 import com.flex.tender.service.TenderService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +29,8 @@ public class TenderController {
 
     public static final String URL_CONTRACTOR_TENDERS_PAGE = "/contractor-page";
     public static final String URL_BIDDER_TENDERS_PAGE = "/bidder-page";
-    public static final String URL_TENDER_ID = "/{id}";
+    public static final String URL_CONTRACTOR_TENDER_DETAILS_BY_ID = "contractor-details/{id}";
+    public static final String URL_BIDDER_TENDER_DETAILS_BY_ID = "bidder-details/{id}";
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
     public static final String URL_COUNT_ALL = "/count-all";
 
@@ -63,10 +65,18 @@ public class TenderController {
                  .body(tenderService.findByBidderWithPagination(bidderId, currentPage, tendersPerPage));
     }
 
-    @Secured({ CONTRACTOR, BIDDER })
-    @GetMapping(URL_TENDER_ID)
-    public TenderResponse findDetailsById(@PathVariable("id") Integer tenderId) {
-        return tenderService.findDetailsById(tenderId);
+    @Secured(CONTRACTOR)
+    @GetMapping(URL_CONTRACTOR_TENDER_DETAILS_BY_ID)
+    public ResponseEntity<ContractorTenderDetailsResponse> loadContractorTenderDetailsById(
+            @PathVariable("id") Integer tenderId) {
+        return ResponseEntity.ok(tenderService.loadContractortTenderDetailsById(tenderId));
+    }
+
+    @Secured(BIDDER)
+    @GetMapping(URL_BIDDER_TENDER_DETAILS_BY_ID)
+    public ResponseEntity<BidderTenderDetailsResponse> loadBidderTenderDetailsById(
+            @PathVariable("id") Integer tenderId) {
+        return ResponseEntity.ok(tenderService.loadBidderTenderDetailsById(tenderId));
     }
 
     @Secured(CONTRACTOR)
