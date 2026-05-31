@@ -1,11 +1,9 @@
-package com.flex.tender.repository;
+package com.flex.tender.service;
 
 import com.flex.tender.model.AwardDecision;
 
-public interface AwardDecisionRepository {
+public interface AwardDecisionDetailsService {
 
-    AwardDecision save(AwardDecision award);
-    
     AwardDecision findById(Integer id);
 
     AwardDecision findByTenderId(Integer id);

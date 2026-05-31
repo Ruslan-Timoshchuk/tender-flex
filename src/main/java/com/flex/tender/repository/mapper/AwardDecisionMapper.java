@@ -1,26 +1,18 @@
 package com.flex.tender.repository.mapper;
 
+import static com.flex.tender.repository.sql.column.AwardDecisionColumns.*;
 import static com.flex.tender.repository.mapper.FileMeatadataMapper.*;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import com.flex.tender.model.AwardDecision;
-
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class AwardDecisionMapper implements RowMapper<AwardDecision> {
-
-    public static final String AWARD_DECISION_ID = "award_id";
-    public static final String AWARD_FILE_ID = "award_file_id";
-    public static final String AWARD_FILE_NAME = "award_file_name";
-    public static final String AWARD_FILE_CONTENT_TYPE = "award_file_content_type";
-    public static final String AWARD_FILE_AWS3_KEY = "award_aws_s3_file_key";
     
     private final FileMeatadataMapper fileMapper;
 

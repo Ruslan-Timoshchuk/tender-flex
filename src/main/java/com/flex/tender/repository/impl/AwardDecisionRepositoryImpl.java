@@ -1,29 +1,19 @@
 package com.flex.tender.repository.impl;
 
+import static com.flex.tender.repository.sql.query.AwardDecisionQueries.*;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.repository.mapper.AwardDecisionMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class AwardDecisionRepositoryImpl implements AwardDecisionRepository {
-
-    public static final String ADD_NEW_AWARD_DECISION_QUERY = "INSERT INTO awards(tender_id, award_file_id) VALUES (?, ?)";
-    public static final String FIND_BY_ID_QUERY = """
-            SELECT award.id AS award_id, award_file.id AS award_file_id, award_file.name AS award_file_name,
-            award_file.content_type AS award_file_content_type, award_file.aws_s3_file_key AS award_aws_s3_file_key
-            FROM awards award
-            LEFT JOIN files award_file ON award_file.id = award.award_file_id
-            WHERE award.id = ?
-            """;
 
     private final JdbcTemplate jdbcTemplate;
     private final AwardDecisionMapper awardDecisionMapper;
@@ -45,6 +35,11 @@ public class AwardDecisionRepositoryImpl implements AwardDecisionRepository {
     @Override
     public AwardDecision findById(Integer id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, awardDecisionMapper, id);
+    }
+
+    @Override
+    public AwardDecision findByTenderId(Integer id) {
+        return jdbcTemplate.queryForObject(FIND_BY_TENDER_ID_QUERY, awardDecisionMapper, id);
     }
 
 }
