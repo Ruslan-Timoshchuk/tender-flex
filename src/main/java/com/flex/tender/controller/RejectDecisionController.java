@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.payload.response.RejectDecisionResponse;
-import com.flex.tender.service.RejectDecisionService;
+import com.flex.tender.service.transactional.RejectDecisionService;
 import lombok.RequiredArgsConstructor;
 
 @RestController

@@ -1,17 +1,19 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.transactional.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.payload.mapper.RejectDecisionMapper;
 import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.payload.response.RejectDecisionResponse;
 import com.flex.tender.repository.RejectDecisionRepository;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.RejectDecisionService;
 import com.flex.tender.service.TenderDetailsService;
+import com.flex.tender.service.transactional.RejectDecisionService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class RejectDecisionServiceImpl implements RejectDecisionService {
 
@@ -26,11 +28,6 @@ public class RejectDecisionServiceImpl implements RejectDecisionService {
         rejectDecision.setTender(tenderDetailsService.findById(rejectDecisionRequest.tenderId()));
         rejectDecision.setFileMetadata(fileStorageService.findById(rejectDecisionRequest.fileMetadataId()));
         return rejectDecisionMapper.toResponse(rejectDecisionRepository.save(rejectDecision));
-    }
-
-    @Override
-    public RejectDecision findById(Integer id) {
-        return rejectDecisionRepository.findById(id);
     }
 
 }

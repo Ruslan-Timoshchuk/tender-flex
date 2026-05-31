@@ -1,29 +1,19 @@
 package com.flex.tender.repository.impl;
 
+import static com.flex.tender.repository.sql.query.RejectDecisionQueries.*;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.repository.RejectDecisionRepository;
 import com.flex.tender.repository.mapper.RejectDecisionMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
-
-    public static final String ADD_NEW_REJECT_QUERY = "INSERT INTO rejects(tender_id, reject_file_id) VALUES (?, ?)";
-    public static final String FIND_BY_ID_QUERY = """
-            SELECT reject.id AS reject_id, reject_file.id AS reject_file_id, reject_file.name AS reject_file_name,
-            reject_file.content_type AS reject_file_content_type, reject_file.aws_s3_file_key AS reject_aws_s3_file_key
-            FROM rejects reject
-            LEFT JOIN files reject_file ON reject_file.id = reject.reject_file_id
-            WHERE reject.id = ?
-            """;
  
     private final JdbcTemplate jdbcTemplate;
     private final RejectDecisionMapper rejectDecisionMapper;
@@ -44,6 +34,11 @@ public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
     @Override
     public RejectDecision findById(Integer id) {
         return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, rejectDecisionMapper, id);
+    }
+
+    @Override
+    public RejectDecision findByTenderId(Integer id) {
+        return jdbcTemplate.queryForObject(FIND_BY_TENDER_ID_QUERY, rejectDecisionMapper, id);
     }
     
 }

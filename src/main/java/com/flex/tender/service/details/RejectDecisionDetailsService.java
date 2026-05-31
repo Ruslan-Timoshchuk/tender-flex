@@ -1,13 +1,11 @@
-package com.flex.tender.repository;
+package com.flex.tender.service.details;
 
 import com.flex.tender.model.RejectDecision;
 
-public interface RejectDecisionRepository {
-
-    RejectDecision save(RejectDecision reject);
+public interface RejectDecisionDetailsService {
 
     RejectDecision findById(Integer id);
 
     RejectDecision findByTenderId(Integer id);
-    
+
 }
