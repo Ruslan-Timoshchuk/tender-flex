@@ -1,4 +1,4 @@
-package com.flex.tender.service;
+package com.flex.tender.service.transactional;
 
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.payload.request.CompanyProfileRequest;

@@ -1,24 +1,18 @@
 package com.flex.tender.repository.impl;
 
+import static com.flex.tender.repository.sql.query.CompanyProfileQueries.*;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.repository.CompanyProfileRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class CompanyProfileRepositoryImpl implements CompanyProfileRepository {
-      
-    public static final String ADD_NEW_COMPANY_PROFILE_QUERY = """
-            INSERT INTO company_profiles(official_name, registration_number, country_id, city, 
-                                         contact_first_name, contact_last_name, contact_phone_number)
-            VALUES (?, ?, ?, ?, ?, ?, ?)""";
     
     private final JdbcTemplate jdbcTemplate;
    
@@ -26,7 +20,7 @@ public class CompanyProfileRepositoryImpl implements CompanyProfileRepository {
     public CompanyProfile save(CompanyProfile companyProfile) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_COMPANY_PROFILE_QUERY,
+            PreparedStatement statement = connection.prepareStatement(ADD_NEW_QUERY,
                     new String[] { "id" });
             statement.setString(1, companyProfile.getOfficialName());
             statement.setString(2, companyProfile.getRegistrationNumber());

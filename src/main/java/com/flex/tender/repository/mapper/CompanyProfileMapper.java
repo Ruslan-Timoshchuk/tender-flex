@@ -1,25 +1,18 @@
 package com.flex.tender.repository.mapper;
 
+import static com.flex.tender.repository.sql.column.CompanyProfileColumns.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.stereotype.Component;
-
 import com.flex.tender.model.CompanyProfile;
-import com.flex.tender.model.ContactPerson;
-
+import com.flex.tender.model.embedded.ContactPerson;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class CompanyProfileMapper {
       
-    public static final String COMPANY_ID = "company_profile_id";
-    public static final String OFFICIAL_NAME = "official_name";
-    public static final String REGISTRATION_NUMBER = "registration_number";
-    public static final String COMPANY_CITY = "city";
-    public static final String CONTACT_FIRST_NAME = "contact_first_name";
-    public static final String CONTACT_LAST_NAME = "contact_last_name";
-    public static final String CONTACT_PHONE_NUMBER = "contact_phone_number";
+  
     
     private final CountryMapper countryMapper;
     
