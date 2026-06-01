@@ -1,11 +1,9 @@
 package com.flex.tender.repository.mapper;
 
-import static com.flex.tender.repository.mapper.ContractMapper.CONTRACT_ID;
 import static com.flex.tender.repository.sql.column.TenderColumns.*;
 import org.springframework.stereotype.Component;
-import com.flex.tender.model.Contract;
-import com.flex.tender.model.Procedure;
 import com.flex.tender.model.Tender;
+import com.flex.tender.model.embedded.Procedure;
 import com.flex.tender.model.enumeration.ELanguage;
 import com.flex.tender.model.enumeration.EProcedure;
 import com.flex.tender.model.enumeration.ETenderStatus;
@@ -21,8 +19,6 @@ public class TenderMapper implements RowMapper<Tender> {
     
     private final CompanyProfileMapper companyProfileMapper;
     private final CpvMapper cpvMapper;
-    private final AwardDecisionMapper awardMapper;
-    private final RejectDecisionMapper rejectMapper;
   
     @Override
     public Tender mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -38,12 +34,6 @@ public class TenderMapper implements RowMapper<Tender> {
                 .cpv(cpvMapper.mapCpv(resultSet))
                 .description(resultSet.getString(TENDER_DESCRIPTION))
                 .globalStatus(ETenderStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
-                .contract(Contract
-                           .builder()
-                           .id(resultSet.getObject(CONTRACT_ID, Integer.class))
-                           .build())
-                .awardDecision(awardMapper.mapAward(resultSet))
-                .rejectDecision(rejectMapper.mapReject(resultSet))
                 .publicationDate(resultSet.getObject(PUBLICATION_DATE, LocalDate.class))
                 .offerSubmissionDeadline(resultSet.getObject(OFFER_SUBMISSION_DEADLINE, LocalDate.class))
                 .build();

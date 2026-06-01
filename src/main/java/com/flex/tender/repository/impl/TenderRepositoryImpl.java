@@ -46,20 +46,11 @@ public class TenderRepositoryImpl implements TenderRepository {
             tender.offer_submission_deadline, tender.company_profile_id, company_profile.official_name,
             company_profile.registration_number, company_profile.country_id, country.name, country.iso_code, country.phone_code,
             company_profile.city, company_profile.contact_first_name, company_profile.contact_last_name,
-            company_profile.contact_phone_number, tender.cpv_id, cpv.code, cpv.summary, contract.id AS contract_id,
-            award.id AS award_id, award_file.id AS award_file_id, award_file.name AS award_file_name,
-            award_file.content_type AS award_file_content_type, award_file.aws_s3_file_key AS award_aws_s3_file_key,
-            reject.id AS reject_id, reject_file.id AS reject_file_id, reject_file.name AS reject_file_name,
-            reject_file.content_type AS reject_file_content_type, reject_file.aws_s3_file_key AS reject_aws_s3_file_key""";
+            company_profile.contact_phone_number, tender.cpv_id, cpv.code, cpv.summary""";
     public static final String TENDER_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN cpvs cpv ON cpv.id = tender.cpv_id
             LEFT JOIN company_profiles company_profile ON company_profile.id = tender.company_profile_id
-            LEFT JOIN countries country ON country.id = company_profile.country_id
-            LEFT JOIN contracts contract ON contract.tender_id = tender.id
-            LEFT JOIN awards award ON award.tender_id = tender.id
-            LEFT JOIN files award_file ON award_file.id = award.award_file_id
-            LEFT JOIN rejects reject ON reject.tender_id = tender.id
-            LEFT JOIN files reject_file ON reject_file.id = reject.reject_file_id""";
+            LEFT JOIN countries country ON country.id = company_profile.country_id""";
 
     private final JdbcTemplate jdbcTemplate;
     private final TenderMapper tenderMapper;

@@ -1,6 +1,7 @@
 package com.flex.tender.model;
 
 import java.time.LocalDate;
+import com.flex.tender.model.embedded.Procedure;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +18,7 @@ public class Tender {
     private Procedure procedure;
     private Cpv cpv;
     private String description;
-    private ETenderStatus globalStatus; 
-    private Contract contract;
-    private AwardDecision awardDecision;
-    private RejectDecision rejectDecision;
+    private ETenderStatus globalStatus;
     private LocalDate publicationDate; 
     private LocalDate offerSubmissionDeadline;
         

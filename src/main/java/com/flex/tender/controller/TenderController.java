@@ -20,6 +20,7 @@ import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
 import com.flex.tender.service.TenderService;
+import com.flex.tender.service.details.TenderDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,6 +36,7 @@ public class TenderController {
     public static final String URL_COUNT_ALL = "/count-all";
 
     private final TenderService tenderService;
+    private final TenderDetailsService tenderDetailsService;
 
     @Secured(CONTRACTOR)
     @PostMapping
@@ -69,14 +71,16 @@ public class TenderController {
     @GetMapping(URL_CONTRACTOR_TENDER_DETAILS_BY_ID)
     public ResponseEntity<ContractorTenderDetailsResponse> loadContractorTenderDetailsById(
             @PathVariable("id") Integer tenderId) {
-        return ResponseEntity.ok(tenderService.loadContractortTenderDetailsById(tenderId));
+        return ResponseEntity
+                   .ok(tenderDetailsService.loadContractortTenderDetailsById(tenderId));
     }
 
     @Secured(BIDDER)
     @GetMapping(URL_BIDDER_TENDER_DETAILS_BY_ID)
     public ResponseEntity<BidderTenderDetailsResponse> loadBidderTenderDetailsById(
             @PathVariable("id") Integer tenderId) {
-        return ResponseEntity.ok(tenderService.loadBidderTenderDetailsById(tenderId));
+        return ResponseEntity
+                   .ok(tenderDetailsService.loadBidderTenderDetailsById(tenderId));
     }
 
     @Secured(CONTRACTOR)
