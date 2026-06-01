@@ -4,30 +4,42 @@ import static java.time.LocalDate.*;
 import java.time.LocalDate;
 import java.util.Set;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.Offer;
-import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.EContractStatus;
 import com.flex.tender.payload.mapper.ContractMapper;
+import com.flex.tender.payload.request.ContractRequest;
 import com.flex.tender.payload.response.ContractResponse;
 import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.service.ContractService;
-
+import com.flex.tender.service.ContractTypeService;
+import com.flex.tender.service.CurrencyService;
+import com.flex.tender.service.FileStorageService;
+import com.flex.tender.service.TenderDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
+    private final ContractRepository contractRepository;
+    private final TenderDetailsService tenderDetailsService;
+    private final ContractTypeService contractTypeService;
+    private final CurrencyService currencyService;
+    private final FileStorageService fileStorageService;
 
     @Override
-    public Contract save(Contract contract, Tender tender) {
-        contract.setTender(tender);
+    @Transactional
+    public ContractResponse save(ContractRequest contractRequest) {
+        Contract contract = contractMapper.toEntity(contractRequest);
+        contract.setTender(tenderDetailsService.findById(contractRequest.tenderId()));
+        contract.setContractType(contractTypeService.findById(contractRequest.contractTypeId()));
+        contract.setCurrency(currencyService.findById(contractRequest.currencyId()));
+        contract.setFileMetadata(fileStorageService.findById(contractRequest.fileMetadataId()));
         contract.setGlobalStatus(EContractStatus.DRAFT);
-        return contractRepository.save(contract);
+        return contractMapper.toResponse(contractRepository.save(contract));
     }
 
     @Override
