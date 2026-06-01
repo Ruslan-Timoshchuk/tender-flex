@@ -13,6 +13,4 @@ public interface CpvService {
 
     Cpv findById(Integer cpvId);
 
-    Cpv findByTenderId(Integer id);
-
 }

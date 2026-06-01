@@ -41,9 +41,4 @@ public class CpvRepositoryImpl implements CpvRepository {
         return jdbc.queryForObject(FIND_BY_ID_QUERY, Map.of("id", id), cpvMapper);
     }
 
-    @Override
-    public Cpv findByTenderId(Integer tenderId) {
-        return jdbc.queryForObject(FIND_BY_TENDER_ID_QUERY, Map.of("tenderId", tenderId), cpvMapper);
-    }
-
 }

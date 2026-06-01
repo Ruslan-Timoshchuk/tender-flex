@@ -38,9 +38,4 @@ public class CpvServiceImpl implements CpvService {
         return cpvRepository.findById(id);
     }
 
-    @Override
-    public Cpv findByTenderId(Integer id) {
-        return cpvRepository.findByTenderId(id);
-    }
-
 }

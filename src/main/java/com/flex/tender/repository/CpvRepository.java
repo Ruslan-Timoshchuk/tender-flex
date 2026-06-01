@@ -14,6 +14,4 @@ public interface CpvRepository {
 
     Cpv findById(Integer id);
 
-    Cpv findByTenderId(Integer id);   
-
 }
