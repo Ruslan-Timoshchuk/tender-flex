@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.details.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import com.flex.tender.model.Cpv;
 import com.flex.tender.payload.mapper.CpvMapper;
 import com.flex.tender.payload.response.CpvResponse;
 import com.flex.tender.repository.CpvRepository;
-import com.flex.tender.service.CpvService;
+import com.flex.tender.service.details.CpvService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -36,6 +36,11 @@ public class CpvServiceImpl implements CpvService {
     @Override
     public Cpv findById(Integer id) {
         return cpvRepository.findById(id);
+    }
+
+    @Override
+    public Cpv findByTenderId(Integer id) {
+        return cpvRepository.findByTenderId(id);
     }
 
 }

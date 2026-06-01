@@ -1,4 +1,4 @@
-package com.flex.tender.service;
+package com.flex.tender.service.details;
 
 import java.util.List;
 import java.util.Map;
@@ -12,5 +12,7 @@ public interface CpvService {
     Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds);
 
     Cpv findById(Integer cpvId);
+
+    Cpv findByTenderId(Integer id);
 
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.response.CpvResponse;
-import com.flex.tender.service.CpvService;
+import com.flex.tender.service.details.CpvService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -18,7 +18,7 @@ public class CpvController {
     
     private final CpvService cpvService;
     
-    @Secured( CONTRACTOR )
+    @Secured(CONTRACTOR)
     @GetMapping
     public ResponseEntity<List<CpvResponse>> findAll() {
         return ResponseEntity
