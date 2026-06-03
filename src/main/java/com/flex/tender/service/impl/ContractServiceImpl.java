@@ -16,7 +16,8 @@ import com.flex.tender.service.ContractService;
 import com.flex.tender.service.ContractTypeService;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.TenderDetailsService;
+import com.flex.tender.service.details.TenderDetailsService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -39,8 +39,9 @@ public class FileController {
     
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping(value = URI_FILES_KEY, produces = APPLICATION_PDF_VALUE)
-    public Resource findByKey(@PathVariable("key") String key) throws IOException {
-        return fileStorageService.findByKey(key);
+    public ResponseEntity<Resource> findByKey(@PathVariable("key") String key) throws IOException {
+        return ResponseEntity
+                   .ok(fileStorageService.findByKey(key));
     }
     
 }

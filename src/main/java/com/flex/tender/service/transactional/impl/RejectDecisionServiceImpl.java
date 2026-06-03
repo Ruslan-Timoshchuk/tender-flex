@@ -8,7 +8,7 @@ import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.payload.response.RejectDecisionResponse;
 import com.flex.tender.repository.RejectDecisionRepository;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.TenderDetailsService;
+import com.flex.tender.service.details.TenderDetailsService;
 import com.flex.tender.service.transactional.RejectDecisionService;
 import lombok.RequiredArgsConstructor;
 

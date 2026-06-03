@@ -10,7 +10,7 @@ import com.flex.tender.payload.request.AwardDecisionRequest;
 import com.flex.tender.payload.response.AwardDecisionResponse;
 import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.TenderDetailsService;
+import com.flex.tender.service.details.TenderDetailsService;
 import com.flex.tender.service.transactional.AwardDecisionService;
 import lombok.RequiredArgsConstructor;
 
