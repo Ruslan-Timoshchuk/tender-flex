@@ -5,16 +5,17 @@ import java.util.Map;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.RejectDecision;
-import com.flex.tender.model.Tender;
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.SummaryPage;
+import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 
 public interface OfferService {
 
-    Offer save(Tender tender, Offer offer);
+    OfferSummaryResponse save(PrincipalSummary principalSummary, OfferRequest offerRequest);
 
     boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses);
     

@@ -4,21 +4,28 @@ import static com.flex.tender.model.enumeration.EOfferStatus.*;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
+import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
+import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
-import com.flex.tender.service.CompanyProfileService;
-import com.flex.tender.service.CpvService;
+import com.flex.tender.service.CurrencyService;
+import com.flex.tender.service.FileStorageService;
 import com.flex.tender.service.OfferService;
+import com.flex.tender.service.UserService;
+import com.flex.tender.service.details.CpvService;
+import com.flex.tender.service.details.TenderDetailsService;
+import com.flex.tender.service.transactional.CompanyProfileService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,17 +33,27 @@ import lombok.RequiredArgsConstructor;
 public class OfferServiceImpl implements OfferService {
 
     private final OfferMapper offerMapper;
+    private final UserService userService;
+    private final TenderDetailsService tenderDetailsService;
     private final OfferRepository offerRepository;
     private final CompanyProfileService companyProfileService;
+    private final CurrencyService currencyService;
+    private final FileStorageService fileStorageService;
     private final CpvService cpvService;
 
     @Override
-    public Offer save(Tender tender, Offer offer) {
+    @Transactional
+    public OfferSummaryResponse save(PrincipalSummary principalSummary, OfferRequest offerRequest) {
+        Offer offer = offerMapper.toEntity(offerRequest);
+        offer.setBidder(userService.findById(principalSummary.userId()));
+        Tender tender = tenderDetailsService.findById(offerRequest.tenderId());
         offer.setTender(tender);
-        CompanyProfile companyProfile = companyProfileService.create(offer.getCompanyProfile());
-        offer.setCompanyProfile(companyProfile);
+        CompanyProfile bidderCompanyProfile = companyProfileService.save(offerRequest.companyProfile());
+        offer.setCompanyProfile(bidderCompanyProfile);
+        offer.setCurrency(currencyService.findById(offerRequest.currencyId()));
         offer.setGlobalStatus(SENT);
-        return offerRepository.save(offer);
+        offer.setProposition(fileStorageService.findById(offerRequest.propositionMetadataId()));
+        return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), tender.getCpv()) ;
     }
 
     @Override

@@ -3,14 +3,16 @@ package com.flex.tender.model;
 import java.time.LocalDate;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class Offer {
 
     private Integer id;
-    private Integer bidderId;
+    private User bidder;
     private Tender tender;
     private Contract contract;
     private CompanyProfile companyProfile;

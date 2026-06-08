@@ -1,10 +1,11 @@
 package com.flex.tender.payload.request;
 
 public record OfferRequest(
-        Integer bidderId,  
+        Integer id,
+        Integer tenderId,
         CompanyProfileRequest companyProfile,
         Integer bidPrice, 
-        CurrencyRequest currency,
+        Integer currencyId,
         String publication, 
-        FileMetadataRequest proposition) {
+        Integer propositionMetadataId) {
 }
