@@ -67,6 +67,7 @@ public interface TenderMapper {
     @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "offerStatusName", source = "offerStatus")
     @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "bidderLabel")
     BidderTenderSummaryResponse toBidderTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, EOfferStatus offerStatus);
