@@ -33,7 +33,7 @@ public interface OfferService {
     
     OfferCountResponse countByContractor(Integer contractorId);
     
-    List<Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds);
+    Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds);
 
     Offer selectWinningOffer(Offer offer, AwardDecision awardDecision);
 

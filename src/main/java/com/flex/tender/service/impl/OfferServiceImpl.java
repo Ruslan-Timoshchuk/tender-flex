@@ -149,7 +149,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds) {
+    public Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds) {
         return offerRepository.findByBidderIdAndTenderIdIn(userId, tenderIds);
     }
 

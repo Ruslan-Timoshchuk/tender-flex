@@ -26,7 +26,7 @@ public interface OfferRepository {
     
     Map<Integer, Integer> countByTenderIdIn(List<Integer> tenderIds);
     
-    List<Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds);
+    Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds);
         
     Offer findById(Integer offerId);
 

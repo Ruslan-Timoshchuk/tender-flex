@@ -17,6 +17,7 @@ import com.flex.tender.model.Offer;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.repository.extractor.OfferCountExtractor;
+import com.flex.tender.repository.extractor.TenderOfferMapExtractor;
 import com.flex.tender.repository.mapper.OfferMapper;
 import lombok.RequiredArgsConstructor;
 
@@ -64,6 +65,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     private final NamedParameterJdbcTemplate jdbc;
     private final OfferMapper offerMapper;
     private final OfferCountExtractor offerCountExtractor;
+    private final TenderOfferMapExtractor tenderOfferMapExtractor;
 
     @Override
     public Offer save(Offer offer) {
@@ -119,11 +121,11 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
-    public List<Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds) {
+    public Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer bidderId, List<Integer> tenderIds) {
         String sqlQuery = format(FIND_BY_BIDDER_ID_AND_TENDER_ID_IN_PATTERN_QUERY, OFFER_COLUMNS_SQL_PART_QUERY,
                 OFFER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbc.query(sqlQuery, Map.of("bidderId", bidderId, "tenderIds", tenderIds), offerMapper);
+        return jdbc.query(sqlQuery, Map.of("bidderId", bidderId, "tenderIds", tenderIds), tenderOfferMapExtractor);
     }
     
     @Override
