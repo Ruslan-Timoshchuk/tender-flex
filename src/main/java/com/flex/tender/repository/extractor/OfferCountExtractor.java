@@ -16,7 +16,7 @@ public class OfferCountExtractor implements ResultSetExtractor<Map<Integer, Inte
         final var result = new HashMap<Integer, Integer>();
         while (resultSet.next()) {
             Integer tenderId = resultSet.getObject("tender_id", Integer.class);
-            Integer offers = resultSet.getObject("offers", Integer.class);
+            Integer offers = Math.toIntExact(resultSet.getLong("offers"));
             result.put(tenderId, offers);
         }
         return result;
