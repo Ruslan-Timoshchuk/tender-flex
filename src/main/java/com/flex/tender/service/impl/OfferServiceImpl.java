@@ -18,6 +18,7 @@ import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
+import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
@@ -99,23 +100,14 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public SummaryPage<OfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page, Integer pageSize) {
+    public SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page,
+            Integer pageSize) {
         Integer offset = (page - 1) * pageSize;
         Integer totalOffers = offerRepository.countAllByTender(tenderId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
-        var offers = offerRepository.findByTenderWithPagination(tenderId, pageSize, offset);
-        List<OfferSummaryResponse> offersPage = List.of();
-        if(!offers.isEmpty()) {
-            var offerIds = offers
-                    .stream()
-                    .map(Offer::getId)
-                    .toList();
-            var cpvs = cpvService.findByOfferIdIn(offerIds);
-            offersPage = offers.stream()
-                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
-                  .toList();
-        }
-        return new SummaryPage<>(page, totalPages, offersPage);
+        return new SummaryPage<>(page, totalPages,
+                offerRepository.findByTenderWithPagination(tenderId, pageSize, offset).stream()
+                        .map(offerMapper::toTenderSummaryResponse).toList());
     }
     
     private Integer countTotalPages(Integer pageSize, Integer totalOffers) {

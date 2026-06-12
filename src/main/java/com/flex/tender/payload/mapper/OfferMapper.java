@@ -7,6 +7,7 @@ import com.flex.tender.model.Offer;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
+import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
 @Mapper(componentModel = "spring", uses = { FileMetadataMapper.class, OfferStatusLabelMapper.class })
 public interface OfferMapper {
@@ -35,4 +36,12 @@ public interface OfferMapper {
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorLabel")
     OfferSummaryResponse toContractorSummaryResponse(Offer offer, Cpv cpv);
    
+    @Mapping(target = "offerId", source = "offer.id") 
+    @Mapping(target = "bidderOfficialName", source = "offer.companyProfile.officialName")
+    @Mapping(target = "currencyCode", source = "offer.currency.code")
+    @Mapping(target = "bidPrice", source = "offer.bidPrice")
+    @Mapping(target = "countryName", source = "offer.companyProfile.country.name")
+    @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorLabel")
+    TenderOfferSummaryResponse toTenderSummaryResponse(Offer offer);
 }

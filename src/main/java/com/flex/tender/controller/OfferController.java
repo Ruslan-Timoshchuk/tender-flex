@@ -14,6 +14,7 @@ import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
+import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.service.OfferService;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +32,7 @@ public class OfferController {
     public static final String URL_OFFERS_ID = "/{id}";
     public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page/{bidder-id}";
     public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page/{contractor-id}";
-    public static final String URL_OFFERS_PAGE_TENDER_ID = "/tender-page/{tender-id}";
+    public static final String URL_TENDER_OFFERS_PAGE = "/tender-page/{tender-id}";
     public static final String URL_BIDDER_COUNT = "/bidder-count";
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
 
@@ -62,7 +63,7 @@ public class OfferController {
                    .ok(offerService.findByBidderWithPagination(bidderId, currentPage, offersPerPage));
     }
     
-    @Secured( CONTRACTOR )
+    @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByContractorWithPagination(
             @PathVariable("contractor-id") Integer contractorId,
@@ -72,9 +73,9 @@ public class OfferController {
                    .ok(offerService.findByContractorWithPagination(contractorId, currentPage, offersPerPage));
     }
     
-    @Secured( CONTRACTOR )
-    @GetMapping(URL_OFFERS_PAGE_TENDER_ID)
-    public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByTenderWithPagination(
+    @Secured(CONTRACTOR)
+    @GetMapping(URL_TENDER_OFFERS_PAGE)
+    public ResponseEntity<SummaryPage<TenderOfferSummaryResponse>> findByTenderWithPagination(
             @PathVariable("tender-id") Integer tenderId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
@@ -82,7 +83,7 @@ public class OfferController {
                    .ok(offerService.findByTenderWithPagination(tenderId, currentPage, offersPerPage));
     }
 
-    @Secured( BIDDER )
+    @Secured(BIDDER)
     @GetMapping(URL_BIDDER_COUNT)
     public ResponseEntity<OfferCountResponse> countByBidder(
             @AuthenticationPrincipal(expression = "userId") Integer bidderId) {
@@ -90,7 +91,7 @@ public class OfferController {
                    .ok(offerService.countByBidder(bidderId));
     }
 
-    @Secured( CONTRACTOR )
+    @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_COUNT)
     public ResponseEntity<OfferCountResponse> countByContractor(
             @AuthenticationPrincipal(expression = "userId") Integer contractorId) {
