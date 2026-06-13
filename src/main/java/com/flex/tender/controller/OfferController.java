@@ -77,10 +77,10 @@ public class OfferController {
     @GetMapping(URL_TENDER_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<TenderOfferSummaryResponse>> findByTenderWithPagination(
             @PathVariable("tender-id") Integer tenderId,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+            @RequestParam(defaultValue = "0") Integer requestedPage,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
-                   .ok(offerService.findByTenderWithPagination(tenderId, currentPage, offersPerPage));
+                   .ok(offerService.findByTenderWithPagination(tenderId, requestedPage, pageSize));
     }
 
     @Secured(BIDDER)

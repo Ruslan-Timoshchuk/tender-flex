@@ -100,12 +100,12 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer page,
+    public SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer requestedPage,
             Integer pageSize) {
-        Integer offset = (page - 1) * pageSize;
+        Integer offset = requestedPage * pageSize;
         Integer totalOffers = offerRepository.countAllByTender(tenderId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
-        return new SummaryPage<>(page, totalPages,
+        return new SummaryPage<>(requestedPage, totalPages,
                 offerRepository.findByTenderWithPagination(tenderId, pageSize, offset).stream()
                         .map(offerMapper::toTenderSummaryResponse).toList());
     }
