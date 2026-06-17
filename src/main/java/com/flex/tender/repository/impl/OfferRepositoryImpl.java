@@ -3,6 +3,7 @@ package com.flex.tender.repository.impl;
 import static java.util.stream.Collectors.toSet;
 import static java.lang.String.format;
 import static com.flex.tender.repository.sql.query.OfferQueries.*;
+import static java.util.Optional.ofNullable;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Offer;
+import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.repository.extractor.OfferCountExtractor;
@@ -88,8 +91,10 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public void update(Offer offer) {
-        jdbc.getJdbcTemplate().update(UPDATE_OFFER_QUERY, offer.getGlobalStatus().name(), offer.getAwardDecision().getId(),
-                offer.getRejectDecision().getId(), offer.getId());
+        Integer awardDecisionId = ofNullable(offer.getAwardDecision()).map(AwardDecision::getId).orElse(null);
+        Integer rejectDecisionId = ofNullable(offer.getRejectDecision()).map(RejectDecision::getId).orElse(null);
+        jdbc.getJdbcTemplate().update(UPDATE_OFFER_QUERY, offer.getGlobalStatus().name(), awardDecisionId,
+                rejectDecisionId, offer.getId());
     }
 
     @Override
