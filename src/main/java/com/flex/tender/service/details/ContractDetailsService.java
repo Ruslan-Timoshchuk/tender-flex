@@ -4,6 +4,6 @@ import com.flex.tender.model.Contract;
 
 public interface ContractDetailsService {
 
-    Contract findByTenderId(Integer tenderId);
+    Contract findByAwardDecisionId(Integer awardDecisionId);
 
 }

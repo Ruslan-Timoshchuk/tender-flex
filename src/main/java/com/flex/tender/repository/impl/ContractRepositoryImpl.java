@@ -26,7 +26,7 @@ public class ContractRepositoryImpl implements ContractRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(ADD_NEW_CONTRACT_QUERY, new String[] { "id" });
-            statement.setInt(1, contract.getTender().getId());
+            statement.setInt(1, contract.getAwardDecision().getId());
             statement.setInt(2, contract.getContractType().getId());
             statement.setInt(3, contract.getMinPrice());
             statement.setInt(4, contract.getMaxPrice());
@@ -42,7 +42,7 @@ public class ContractRepositoryImpl implements ContractRepository {
 
     @Override
     public void update(Contract contract) {
-        jdbcTemplate.update(UPDATE_CONTRACT_QUERY, contract.getOffer().getId(), contract.getContractType().getId(),
+        jdbcTemplate.update(UPDATE_CONTRACT_QUERY, contract.getContractType().getId(),
                 contract.getMinPrice(), contract.getMaxPrice(), contract.getCurrency().getId(),
                 contract.getFileMetadata().getId(), contract.getGlobalStatus().name(), contract.getSignedDeadline(),
                 contract.getSignedDate(), contract.getId());
@@ -63,8 +63,8 @@ public class ContractRepositoryImpl implements ContractRepository {
     }
 
     @Override
-    public Contract findByTenderId(Integer id) {
-        String sqlQuery = String.format(FIND_BY_TENDER_ID_PATTERN_QUERY, CONTRACT_COLUMNS_SQL_PART_QUERY,
+    public Contract findByAwardDecisionId(Integer id) {
+        String sqlQuery = String.format(FIND_BY_AWARD_DECISION_ID_PATTERN_QUERY, CONTRACT_COLUMNS_SQL_PART_QUERY,
                 CONTRACT_JOIN_TABLES_SQL_PART_QUERY);
         return jdbcTemplate.queryForObject(sqlQuery, contractMapper, id);
     }

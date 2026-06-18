@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 public class ContractDetailsServiceImpl implements ContractDetailsService {
 
     private final ContractRepository contractRepository;
-    
+
     @Override
-    public Contract findByTenderId(Integer tenderId) {
-        return contractRepository.findByTenderId(tenderId);
+    public Contract findByAwardDecisionId(Integer awardDecisionId) {
+        return contractRepository.findByAwardDecisionId(awardDecisionId);
     }
     
 }

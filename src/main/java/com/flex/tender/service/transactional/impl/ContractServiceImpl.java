@@ -1,6 +1,7 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.transactional.impl;
 
 import static java.time.LocalDate.*;
+import static com.flex.tender.model.enumeration.EContractStatus.*;
 import java.time.LocalDate;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -12,34 +13,31 @@ import com.flex.tender.payload.mapper.ContractMapper;
 import com.flex.tender.payload.request.ContractRequest;
 import com.flex.tender.payload.response.ContractResponse;
 import com.flex.tender.repository.ContractRepository;
-import com.flex.tender.service.ContractService;
 import com.flex.tender.service.ContractTypeService;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
 import com.flex.tender.service.details.TenderDetailsService;
-
+import com.flex.tender.service.transactional.ContractService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
     private final ContractMapper contractMapper;
     private final ContractRepository contractRepository;
-    private final TenderDetailsService tenderDetailsService;
     private final ContractTypeService contractTypeService;
     private final CurrencyService currencyService;
     private final FileStorageService fileStorageService;
 
-    @Override
-    @Transactional
+    @Override  
     public ContractResponse save(ContractRequest contractRequest) {
         Contract contract = contractMapper.toEntity(contractRequest);
-        contract.setTender(tenderDetailsService.findById(contractRequest.tenderId()));
         contract.setContractType(contractTypeService.findById(contractRequest.contractTypeId()));
         contract.setCurrency(currencyService.findById(contractRequest.currencyId()));
         contract.setFileMetadata(fileStorageService.findById(contractRequest.fileMetadataId()));
-        contract.setGlobalStatus(EContractStatus.DRAFT);
+        contract.setGlobalStatus(DRAFT);
         return contractMapper.toResponse(contractRepository.save(contract));
     }
 
@@ -55,9 +53,8 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Contract initiateContractSigning(Contract contract, Offer offer) {
-        contract.setOffer(offer);
-        contract.setGlobalStatus(EContractStatus.PENDING_SIGNATURE);
+    public Contract initiateContractSigning(Contract contract) {
+        contract.setGlobalStatus(PENDING_SIGNATURE);
         contractRepository.update(contract);
         return contract;
     }
@@ -72,9 +69,6 @@ public class ContractServiceImpl implements ContractService {
     
     @Override
     public Contract decline(Contract contract) {
-        contract.setOffer(Offer
-                            .builder()
-                            .build());
         contract.setGlobalStatus(EContractStatus.DRAFT);
         contractRepository.update(contract);
         return contract;
@@ -85,11 +79,6 @@ public class ContractServiceImpl implements ContractService {
         LocalDate extendedSignedDeadline = contract.getSignedDeadline().plusDays(7);
         contract.setSignedDeadline(extendedSignedDeadline);
         decline(contract);
-    }
-    
-    @Override
-    public boolean hasOffer(Contract contract) {
-        return contract.getOffer() != null && contract.getOffer().getId() != null;
     }
 
     @Override

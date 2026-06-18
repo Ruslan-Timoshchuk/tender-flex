@@ -10,12 +10,12 @@ public class ContractQueries {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
     public final String UPDATE_CONTRACT_QUERY = """
             UPDATE contracts
-            SET offer_id = ?, contract_type_id = ?, min_price = ?, max_price = ?, currency_id = ?,
+            SET contract_type_id = ?, min_price = ?, max_price = ?, currency_id = ?,
             file_id = ?, global_status = ?, signed_deadline = ?, signed_date = ?
             WHERE id = ?
             """;
     public final String SELECT_BY_ID_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.id = ?";
-    public final String FIND_BY_TENDER_ID_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.tender_id = ?";
+    public final String FIND_BY_AWARD_DECISION_ID_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.award_decision_id = ?";
     public final String SELECT_ALL_BY_IS_SIGNED_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.global_status = ?";
     public final String CONTRACT_COLUMNS_SQL_PART_QUERY = """
             contract.id AS contract_id, contract.tender_id, contract.offer_id, contract.contract_type_id,

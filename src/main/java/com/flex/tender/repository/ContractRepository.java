@@ -14,6 +14,6 @@ public interface ContractRepository {
 
     Set<Contract> findAll(EContractStatus globalStatus);
 
-    Contract findByTenderId(Integer id);
+    Contract findByAwardDecisionId(Integer id);
     
 }

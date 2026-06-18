@@ -2,20 +2,19 @@ package com.flex.tender.model;
 
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.flex.tender.model.enumeration.EContractStatus;
-
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class Contract {
 
     private Integer id;
-    private Tender tender;
-    private Offer offer;
+    private AwardDecision awardDecision;
     private ContractType contractType;
     private Integer minPrice;
     private Integer maxPrice;

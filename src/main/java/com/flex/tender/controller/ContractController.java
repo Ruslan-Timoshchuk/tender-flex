@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.request.ContractRequest;
 import com.flex.tender.payload.response.ContractResponse;
-import com.flex.tender.service.ContractService;
+import com.flex.tender.service.transactional.ContractService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
