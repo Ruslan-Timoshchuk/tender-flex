@@ -1,7 +1,8 @@
 package com.flex.tender.payload.request;
 
+/**
+ * @author Ruslan Timoshchuk
+ */
 public record AwardDecisionRequest(
-        Integer id,
-        Integer tenderId,
         Integer fileMetadataId) {
 }

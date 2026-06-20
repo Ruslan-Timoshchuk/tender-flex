@@ -1,5 +1,6 @@
 package com.flex.tender.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static com.flex.tender.controller.constant.SecuredAuthorities.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.request.OfferRequest;
+import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
-import com.flex.tender.service.OfferService;
+import com.flex.tender.service.details.OfferDetailsService;
+import com.flex.tender.service.transactional.OfferService;
 import lombok.RequiredArgsConstructor;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +30,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 public class OfferController {
 
     public static final String URL_OFFERS_ID = "/{id}";
+    public static final String URL_CONTRACTOR_OFFER_DETAILS = "contractor-details/{offer-id}";
     public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page/{bidder-id}";
     public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page/{contractor-id}";
     public static final String URL_TENDER_OFFERS_PAGE = "/tender-page/{tender-id}";
@@ -37,6 +38,7 @@ public class OfferController {
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
 
     private final OfferService offerService;
+    private final OfferDetailsService offerDetailsService;
 
     @Secured(BIDDER)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
@@ -51,6 +53,13 @@ public class OfferController {
     public ResponseEntity<OfferDetailsResponse> findDetailsById(@PathVariable("id") Integer id) {
         return ResponseEntity
                    .ok(offerService.findDetailsById(id));
+    }
+    
+    @Secured(CONTRACTOR)
+    @GetMapping(URL_CONTRACTOR_OFFER_DETAILS)
+    public ResponseEntity<ContractorOfferDetailsResponse> findContractorDetailsById(@PathVariable("offer-id") Integer offerId) {
+        return ResponseEntity
+                   .ok(offerDetailsService.findContractorOfferDetailsById(offerId));
     }
 
     @Secured( BIDDER )

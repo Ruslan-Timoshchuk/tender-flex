@@ -1,6 +1,7 @@
 package com.flex.tender.controller;
 
 import static com.flex.tender.controller.constant.SecuredAuthorities.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,8 +20,9 @@ import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
-import com.flex.tender.service.TenderService;
 import com.flex.tender.service.details.TenderDetailsService;
+import com.flex.tender.service.facade.TenderManager;
+import com.flex.tender.service.transactional.TenderService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,14 +37,16 @@ public class TenderController {
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
     public static final String URL_COUNT_ALL = "/count-all";
 
+    private final TenderManager tenderManager;
     private final TenderService tenderService;
     private final TenderDetailsService tenderDetailsService;
 
     @Secured(CONTRACTOR)
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<ContractorTenderSummaryResponse> save(@AuthenticationPrincipal PrincipalSummary principal,
             @RequestBody TenderRequest tender) {
-        return ResponseEntity.ok(tenderService.save(principal, tender));
+        return ResponseEntity
+                 .ok(tenderManager.save(principal, tender));
     }
     
     @Secured(CONTRACTOR)

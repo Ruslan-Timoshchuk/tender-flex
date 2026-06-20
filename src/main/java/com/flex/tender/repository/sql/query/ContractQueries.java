@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 public class ContractQueries {
 
     public final String ADD_NEW_CONTRACT_QUERY = """
-            INSERT INTO contracts(tender_id, contract_type_id, min_price, max_price, currency_id, file_id, global_status, signed_deadline)
+            INSERT INTO contracts(award_decision_id, contract_type_id, min_price, max_price, currency_id, file_id, global_status, signed_deadline)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""";
     public final String UPDATE_CONTRACT_QUERY = """
             UPDATE contracts

@@ -6,20 +6,16 @@ import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.FileMetadata;
 import com.flex.tender.model.Offer;
-import com.flex.tender.model.Tender;
 import com.flex.tender.payload.mapper.AwardDecisionMapper;
 import com.flex.tender.payload.request.AwardDecisionRequest;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
-import com.flex.tender.payload.response.AwardDecisionResponse;
 import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.service.FileStorageService;
 import com.flex.tender.service.details.ContractDetailsService;
 import com.flex.tender.service.details.OfferDetailsService;
-import com.flex.tender.service.details.TenderDetailsService;
 import com.flex.tender.service.transactional.AwardDecisionService;
 import com.flex.tender.service.transactional.ContractService;
 import com.flex.tender.service.transactional.OfferService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,7 +25,6 @@ public class AwardDecisionServiceImpl implements AwardDecisionService {
 
     private final AwardDecisionMapper awardDecisionMapper;
     private final AwardDecisionRepository awardDecisionRepository;
-    private final TenderDetailsService tenderDetailsService;
     private final FileStorageService fileStorageService;
     private final OfferDetailsService offerDetailsService;
     private final OfferService offerService;
@@ -37,13 +32,16 @@ public class AwardDecisionServiceImpl implements AwardDecisionService {
     private final ContractService contractService;
     
     @Override
-    public AwardDecisionResponse save(AwardDecisionRequest awardDecisionRequest) {
+    public AwardDecision buildEntity(AwardDecisionRequest awardDecisionRequest) {
         AwardDecision awardDecision = awardDecisionMapper.toEntity(awardDecisionRequest);
-        Tender tender = tenderDetailsService.findById(awardDecisionRequest.tenderId());
-        FileMetadata fileMetadata = fileStorageService.findById(awardDecisionRequest.fileMetadataId());
-        awardDecision.setTender(tender);
-        awardDecision.setFileMetadata(fileMetadata);
-        return awardDecisionMapper.toResponse(awardDecisionRepository.save(awardDecision));
+        FileMetadata awardDecisionFile = fileStorageService.findById(awardDecisionRequest.fileMetadataId());
+        awardDecision.setFileMetadata(awardDecisionFile);
+        return awardDecision;
+    }
+    
+    @Override
+    public AwardDecision save(AwardDecision awardDecision) {
+        return awardDecisionRepository.save(awardDecision);
     }
 
     @Override

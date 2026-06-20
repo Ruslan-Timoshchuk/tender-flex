@@ -1,9 +1,9 @@
 package com.flex.tender.payload.request;
 
+/**
+ * @author Ruslan Timoshchuk
+ */
 public record ContractRequest(
-        Integer id,
-        Integer tenderId,
-        Integer offerId,
         Integer contractTypeId, 
         Integer minPrice, 
         Integer maxPrice,

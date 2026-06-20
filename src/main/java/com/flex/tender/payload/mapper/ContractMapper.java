@@ -9,8 +9,6 @@ import com.flex.tender.payload.response.ContractResponse;
 @Mapper(componentModel = "spring", uses = { ContractTypeMapper.class, CurrencyMapper.class, FileMetadataMapper.class })
 public interface ContractMapper {
 
-    @Mapping(target = "tender", ignore = true)
-    @Mapping(target = "offer", ignore = true)
     @Mapping(target = "contractType", ignore = true)
     @Mapping(target = "currency", ignore = true)
     @Mapping(target = "fileMetadata", ignore = true)

@@ -8,7 +8,7 @@ import com.flex.tender.payload.response.ContractResponse;
 
 public interface ContractService {
 
-    ContractResponse save(ContractRequest contractRequest);
+    Contract save(Contract contract);
     
     Contract findById(Integer id);
     
@@ -23,5 +23,7 @@ public interface ContractService {
     void handleOnSigningDeadlinePassed(Contract contract);
 
     Set<Contract> findAll(EContractStatus globalStatus);
+
+    Contract buildEntity(ContractRequest contractRequest);
 
 }

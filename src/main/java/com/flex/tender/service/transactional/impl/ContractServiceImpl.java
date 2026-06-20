@@ -7,7 +7,6 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.Contract;
-import com.flex.tender.model.Offer;
 import com.flex.tender.model.enumeration.EContractStatus;
 import com.flex.tender.payload.mapper.ContractMapper;
 import com.flex.tender.payload.request.ContractRequest;
@@ -16,7 +15,6 @@ import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.service.ContractTypeService;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.details.TenderDetailsService;
 import com.flex.tender.service.transactional.ContractService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,17 +28,22 @@ public class ContractServiceImpl implements ContractService {
     private final ContractTypeService contractTypeService;
     private final CurrencyService currencyService;
     private final FileStorageService fileStorageService;
-
-    @Override  
-    public ContractResponse save(ContractRequest contractRequest) {
+    
+    @Override 
+    public Contract buildEntity(ContractRequest contractRequest) {
         Contract contract = contractMapper.toEntity(contractRequest);
         contract.setContractType(contractTypeService.findById(contractRequest.contractTypeId()));
         contract.setCurrency(currencyService.findById(contractRequest.currencyId()));
         contract.setFileMetadata(fileStorageService.findById(contractRequest.fileMetadataId()));
         contract.setGlobalStatus(DRAFT);
-        return contractMapper.toResponse(contractRepository.save(contract));
+        return contract;
     }
 
+    @Override
+    public Contract save(Contract contract) {
+        return contractRepository.save(contract);
+    }
+    
     @Override
     public Contract findById(Integer id) {
         return contractRepository.findById(id);

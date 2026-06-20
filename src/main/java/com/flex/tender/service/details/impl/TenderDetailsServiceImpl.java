@@ -35,7 +35,7 @@ public class TenderDetailsServiceImpl implements TenderDetailsService {
     @Override
     public ContractorTenderDetailsResponse loadContractortTenderDetailsById(Integer tenderId) {
         Tender tender = tenderRepository.findById(tenderId);
-        Contract contract = contractDetailsService.findByTenderId(tenderId);
+        Contract contract = contractDetailsService.findByAwardDecisionId(tenderId);
         AwardDecision awardDecision = awardDecisionDetailsService.findByTenderId(tenderId);
         RejectDecision rejectDecision = rejectDecisionDetailsService.findByTenderId(tenderId);
         return tenderMapper.toContractorTenderDetailsResponse(tender, contract, awardDecision,
@@ -45,7 +45,7 @@ public class TenderDetailsServiceImpl implements TenderDetailsService {
     @Override
     public BidderTenderDetailsResponse loadBidderTenderDetailsById(Integer tenderId) {
         Tender tender = tenderRepository.findById(tenderId);
-        Contract contract = contractDetailsService.findByTenderId(tenderId);
+        Contract contract = contractDetailsService.findByAwardDecisionId(tenderId);
         return tenderMapper.toBidderTenderDetailsResponse(tender, contract);
     }
 

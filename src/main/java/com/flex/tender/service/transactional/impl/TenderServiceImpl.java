@@ -1,36 +1,33 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.transactional.impl;
 
 import static com.flex.tender.model.enumeration.ELanguage.*;
 import static com.flex.tender.model.enumeration.EProcedure.*;
 import static com.flex.tender.model.enumeration.ETenderStatus.*;
-import static java.util.stream.Collectors.toMap;
 import static com.flex.tender.model.enumeration.EOfferStatus.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Function;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Cpv;
+import com.flex.tender.model.FileMetadata;
 import com.flex.tender.model.Offer;
-import com.flex.tender.model.Procedure;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.embedded.PrincipalSummary;
+import com.flex.tender.model.embedded.Procedure;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.SummaryPage;
+import com.flex.tender.payload.mapper.AwardDecisionMapper;
 import com.flex.tender.payload.mapper.TenderMapper;
-import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
-import com.flex.tender.payload.response.TenderResponse;
 import com.flex.tender.repository.TenderRepository;
-import com.flex.tender.service.CompanyProfileService;
-import com.flex.tender.service.CpvService;
-import com.flex.tender.service.OfferService;
-import com.flex.tender.service.TenderService;
-import com.flex.tender.service.UserService;
+import com.flex.tender.service.transactional.OfferService;
+import com.flex.tender.service.transactional.TenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,33 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TenderServiceImpl implements TenderService {
 
     private final TenderMapper tenderMapper;
-    private final UserService userService;
-    private final CompanyProfileService companyProfileService;
-    private final CpvService cpvService;
     private final TenderRepository tenderRepository;
     private final OfferService offerService;
-
-    @Override
-    @Transactional
-    public ContractorTenderSummaryResponse save(PrincipalSummary principalSummary, TenderRequest tenderRequest) {
-        Tender tender = tenderMapper.toEntity(tenderRequest);
-        tender.setContractor(userService.findById(principalSummary.userId()));
-        CompanyProfile contractorProfile = companyProfileService.save(tenderRequest.companyProfile());
-        tender.setCompanyProfile(contractorProfile);
-        Cpv cpv = cpvService.findById(tenderRequest.cpvId());
-        tender.setCpv(cpv);
-        tender.setProcedure(Procedure
-                              .builder()
-                              .type(OPEN_PROCEDURE)
-                              .language(ENGLISH)
-                              .build());
-        ETenderStatus status = TENDER_IN_PROGRESS;
-        tender.setGlobalStatus(status);
-        tender = tenderRepository.save(tender);
-        Integer offers = 0;
-        return tenderMapper.toContractorTenderSummary(tender.getId(), cpv, contractorProfile.getOfficialName(),
-                status, tender.getOfferSubmissionDeadline(), offers);
-    }
 
     @Override
     public SummaryPage<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
@@ -117,9 +89,7 @@ public class TenderServiceImpl implements TenderService {
                     .stream()
                     .map(Tender::getId)
                     .toList();
-            var offersByTenderIds = offerService.findByBidderIdAndTenderIdIn(bidderId, tenderIds)
-                    .stream()
-                    .collect(toMap(offer -> offer.getTender().getId(), Function.identity()));
+            var offersByTenderIds = offerService.findByBidderIdAndTenderIdIn(bidderId, tenderIds);
             bidderTendersPage = tendersPage
                     .stream()
                     .map(tender -> { 
@@ -140,12 +110,6 @@ public class TenderServiceImpl implements TenderService {
             }).toList();
         }
         return new SummaryPage<>(currentPage, totalPages, bidderTendersPage);
-    }
-
-    @Override
-    public TenderResponse findDetailsById(Integer id) {
-        Tender tender = tenderRepository.findById(id);
-        return tenderMapper.toResponse(tender);
     }
 
     @Override

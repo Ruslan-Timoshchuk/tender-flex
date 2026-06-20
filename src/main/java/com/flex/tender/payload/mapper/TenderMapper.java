@@ -16,8 +16,7 @@ import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
 
-@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, ContractMapper.class,
-        AwardDecisionMapper.class, RejectDecisionMapper.class, TenderStatusLabelMapper.class,
+@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, TenderStatusLabelMapper.class,
         OfferStatusLabelMapper.class })
 public interface TenderMapper {
 
@@ -51,7 +50,7 @@ public interface TenderMapper {
     @Mapping(target = "offerSubmissionDeadline", source = "tender.offerSubmissionDeadline")
     @Mapping(target = "contract", source = "contract")
     BidderTenderDetailsResponse toBidderTenderDetailsResponse(Tender tender, Contract contract);
-    
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "cpvCode", source = "cpv.code")
     @Mapping(target = "fieldOfTheTender", source = "cpv.summary")

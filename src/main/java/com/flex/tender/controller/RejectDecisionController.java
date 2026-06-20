@@ -5,13 +5,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.payload.request.RejectOfferDecisionRequest;
-import com.flex.tender.payload.response.RejectDecisionResponse;
 import com.flex.tender.service.transactional.RejectDecisionService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,13 +20,6 @@ public class RejectDecisionController {
     public static final String URL_REJECT_OFFER = "/reject-offer";
     
     private final RejectDecisionService rejectDecisionService;
-
-    @Secured(CONTRACTOR)
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<RejectDecisionResponse> save(@RequestBody RejectDecisionRequest rejectDecisionRequest) {
-        return ResponseEntity
-                   .ok(rejectDecisionService.save(rejectDecisionRequest));
-    }
 
     @Secured(CONTRACTOR)
     @PatchMapping(path = URL_REJECT_OFFER, consumes = APPLICATION_JSON_VALUE)
