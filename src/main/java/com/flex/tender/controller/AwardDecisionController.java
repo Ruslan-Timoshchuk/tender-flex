@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
-import com.flex.tender.service.write.AwardDecisionService;
-
+import com.flex.tender.service.facade.AwardDecisionManager;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,13 +19,13 @@ public class AwardDecisionController {
 
     public static final String URL_AWARD_OFFER = "/award-offer";
     
-    private final AwardDecisionService awardDecisionService;
+    private final AwardDecisionManager awardDecisionManager;
     
     @Secured(CONTRACTOR)
     @PatchMapping(path = URL_AWARD_OFFER, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> applyAwardDecision(
             @RequestBody AwardOfferDecisionRequest awardOfferDecisionRequest) {
-        awardDecisionService.applyAwardDecision(awardOfferDecisionRequest);
+        awardDecisionManager.applyAwardDecision(awardOfferDecisionRequest);
         return ResponseEntity
                  .noContent()
                  .build();
