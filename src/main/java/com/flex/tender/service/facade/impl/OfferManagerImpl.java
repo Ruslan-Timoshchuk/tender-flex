@@ -8,8 +8,9 @@ import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.service.facade.OfferManager;
-import com.flex.tender.service.transactional.CompanyProfileService;
-import com.flex.tender.service.transactional.OfferService;
+import com.flex.tender.service.write.CompanyProfileService;
+import com.flex.tender.service.write.OfferService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -47,12 +47,13 @@ public interface OfferMapper {
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")
     OfferSummaryResponse toContractorSummaryResponse(Offer offer, Cpv cpv);
    
-    @Mapping(target = "offerId", source = "offer.id") 
-    @Mapping(target = "bidderOfficialName", source = "offer.companyProfile.officialName")
-    @Mapping(target = "currencyCode", source = "offer.currency.code")
-    @Mapping(target = "bidPrice", source = "offer.bidPrice")
-    @Mapping(target = "countryName", source = "offer.companyProfile.country.name")
-    @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "contractorStatusName")
-    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")
+    @Mapping(target = "offerId", source = "id") 
+    @Mapping(target = "bidderOfficialName", source = "companyProfile.officialName")
+    @Mapping(target = "currencyCode", source = "currency.code")
+    @Mapping(target = "bidPrice", source = "bidPrice")
+    @Mapping(target = "countryName", source = "companyProfile.country.name")
+    @Mapping(target = "receivedDate", source = "publication", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "offerStatusName", source = "globalStatus", qualifiedByName = "contractorStatusName")
+    @Mapping(target = "offerStatusLabel", source = "globalStatus", qualifiedByName = "contractorStatusLabel")
     TenderOfferSummaryResponse toTenderSummaryResponse(Offer offer);
 }

@@ -9,6 +9,7 @@ public record TenderOfferSummaryResponse(
         String currencyCode,
         Integer bidPrice,
         String countryName,
-        String submissionDate,
+        String receivedDate,
+        String offerStatusName,
         String offerStatusLabel) {
 }

@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional.impl;
+package com.flex.tender.service.write.impl;
 
 import static com.flex.tender.model.enumeration.EOfferStatus.*;
 import java.util.List;
@@ -22,9 +22,10 @@ import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
 import com.flex.tender.service.UserService;
-import com.flex.tender.service.details.CpvService;
-import com.flex.tender.service.details.TenderDetailsService;
-import com.flex.tender.service.transactional.OfferService;
+import com.flex.tender.service.read.CpvService;
+import com.flex.tender.service.read.TenderDetailsService;
+import com.flex.tender.service.write.OfferService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
