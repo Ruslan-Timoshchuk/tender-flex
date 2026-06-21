@@ -18,7 +18,7 @@ public class ContractQueries {
     public final String FIND_BY_AWARD_DECISION_ID_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.award_decision_id = ?";
     public final String SELECT_ALL_BY_IS_SIGNED_PATTERN_QUERY = "SELECT %s FROM contracts contract %s WHERE contract.global_status = ?";
     public final String CONTRACT_COLUMNS_SQL_PART_QUERY = """
-            contract.id AS contract_id, contract.tender_id, contract.offer_id, contract.contract_type_id,
+            contract.id AS contract_id, contract.contract_type_id,
             contract_type.title AS contract_type_name, contract.min_price, contract.max_price,
             contract.currency_id, currency.code, currency.symbol, contract_file.id AS contract_file_id,
             contract_file.name AS contract_file_name, contract_file.content_type AS contract_file_content_type,
