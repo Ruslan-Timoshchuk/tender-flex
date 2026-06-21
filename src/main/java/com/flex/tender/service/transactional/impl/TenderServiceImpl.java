@@ -8,11 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.flex.tender.model.AwardDecision;
-import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Cpv;
-import com.flex.tender.model.FileMetadata;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.embedded.PrincipalSummary;
@@ -20,12 +16,14 @@ import com.flex.tender.model.embedded.Procedure;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.payload.SummaryPage;
-import com.flex.tender.payload.mapper.AwardDecisionMapper;
 import com.flex.tender.payload.mapper.TenderMapper;
+import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.repository.TenderRepository;
+import com.flex.tender.service.UserService;
+import com.flex.tender.service.details.CpvService;
 import com.flex.tender.service.transactional.OfferService;
 import com.flex.tender.service.transactional.TenderService;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +35,32 @@ import lombok.extern.slf4j.Slf4j;
 public class TenderServiceImpl implements TenderService {
 
     private final TenderMapper tenderMapper;
+    private final UserService userService;
+    private final CpvService cpvService;
     private final TenderRepository tenderRepository;
     private final OfferService offerService;
 
+    @Override
+    public Tender buildEntity(PrincipalSummary principalSummary, TenderRequest tenderRequest) {
+        Tender tender = tenderMapper.toEntity(tenderRequest);
+        tender.setContractor(userService.findById(principalSummary.userId()));
+        Cpv cpv = cpvService.findById(tenderRequest.cpvId());
+        tender.setCpv(cpv);
+        tender.setProcedure(Procedure
+                              .builder()
+                              .type(OPEN_PROCEDURE)
+                              .language(ENGLISH)
+                              .build());
+        ETenderStatus status = TENDER_IN_PROGRESS;
+        tender.setGlobalStatus(status);
+        return tender;
+    }
+    
+    @Override
+    public Tender save(Tender tender) {
+        return tenderRepository.save(tender);
+    }
+    
     @Override
     public SummaryPage<ContractorTenderSummaryResponse> findByContractorWithPagination(Integer userId, Integer currentPage,
             Integer tendersPerPage) {
