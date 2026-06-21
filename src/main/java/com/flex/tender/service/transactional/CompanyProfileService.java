@@ -5,6 +5,8 @@ import com.flex.tender.payload.request.CompanyProfileRequest;
 
 public interface CompanyProfileService {
 
-    CompanyProfile save(CompanyProfileRequest companyProfile);
+    CompanyProfile buildEntity(CompanyProfileRequest companyProfileRequest);
+
+    CompanyProfile save(CompanyProfile companyProfile);
     
 }

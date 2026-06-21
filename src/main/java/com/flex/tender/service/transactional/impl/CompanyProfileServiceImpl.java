@@ -18,9 +18,14 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
     private final CountryService countryService;
 
     @Override
-    public CompanyProfile save(CompanyProfileRequest companyProfileRequest) {
+    public CompanyProfile buildEntity(CompanyProfileRequest companyProfileRequest) {
         CompanyProfile companyProfile = companyProfileMapper.toEntity(companyProfileRequest);
         companyProfile.setCountry(countryService.findById(companyProfileRequest.countryId()));
+        return companyProfile;
+    }
+    
+    @Override
+    public CompanyProfile save(CompanyProfile companyProfile) {
         return companyProfileRepository.save(companyProfile);
     }
 
