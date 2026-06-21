@@ -46,15 +46,14 @@ public class OfferRepositoryImpl implements OfferRepository {
             company_profile.contact_first_name, company_profile.contact_last_name, company_profile.contact_phone_number,
             offer.currency_id, currency.code, currency.symbol, proposition_file.id AS proposition_file_id,
             proposition_file.name AS proposition_file_name, proposition_file.content_type AS proposition_file_content_type,
-            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key, contract.id AS contract_id,
+            proposition_file.aws_s3_file_key AS proposition_file_aws_s3_file_key,
             offer.award_decision_id AS award_id, offer.reject_decision_id AS reject_id""";
     public static final String OFFER_JOIN_TABLES_SQL_PART_QUERY = """
             LEFT JOIN company_profiles company_profile ON company_profile.id = offer.company_profile_id
             LEFT JOIN countries country ON country.id = company_profile.country_id
             LEFT JOIN currencies currency ON currency.id = offer.currency_id
             LEFT JOIN files proposition_file ON proposition_file.id = offer.proposition_file_id
-            LEFT JOIN tenders tender ON tender.id = offer.tender_id
-            LEFT JOIN contracts contract ON contract.offer_id = offer.id""";
+            LEFT JOIN tenders tender ON tender.id = offer.tender_id""";
 
     public static final String ADD_NEW_OFFER_QUERY = """
             INSERT INTO offers(bidder_id, tender_id, company_profile_id, global_status,

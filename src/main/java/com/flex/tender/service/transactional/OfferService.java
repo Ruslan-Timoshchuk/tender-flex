@@ -1,4 +1,4 @@
-package com.flex.tender.service;
+package com.flex.tender.service.transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +16,11 @@ import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
 public interface OfferService {
 
-    OfferSummaryResponse save(PrincipalSummary principalSummary, OfferRequest offerRequest);
+    Offer buildEntity(PrincipalSummary principalSummary, OfferRequest offerRequest);
+    
+    OfferSummaryResponse save(Offer offer);
 
     boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses);
-    
-    Offer findById(Integer offerId);
     
     OfferDetailsResponse findDetailsById(Integer offerId);
     
@@ -36,9 +36,9 @@ public interface OfferService {
     
     Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds);
 
-    Offer selectWinningOffer(Offer offer, AwardDecision awardDecision);
+    Offer applyAwardDecision(Offer offer, AwardDecision awardDecision);
 
-    Offer rejectOffer(Offer offer, RejectDecision rejectDecision);
+    Offer applyRejectDecision(Offer offer, RejectDecision rejectDecision);
 
     Offer rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
     

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import com.flex.tender.model.Cpv;
 import com.flex.tender.model.Offer;
 import com.flex.tender.payload.request.OfferRequest;
+import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
@@ -20,6 +21,15 @@ public interface OfferMapper {
     @Mapping(target = "publication", source = "publication", dateFormat = "yyyy-MM-dd")
     Offer toEntity(OfferRequest offerRequest);
 
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "companyProfile", source = "companyProfile")
+    @Mapping(target = "bidPrice", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "publication", source = "publication", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "proposition", source = "proposition")
+    @Mapping(target = "statusName", source = "globalStatus", qualifiedByName = "contractorStatusName")
+    ContractorOfferDetailsResponse toContractorDetails(Offer offer);
+    
     OfferDetailsResponse toResponse(Offer offer);
     
     @Mapping(target = "id", source = "offer.id")
@@ -33,7 +43,8 @@ public interface OfferMapper {
     @Mapping(target = "cpvCode", source = "cpv.code")
     @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorLabel")
+    @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "contractorStatusName")
+    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")
     OfferSummaryResponse toContractorSummaryResponse(Offer offer, Cpv cpv);
    
     @Mapping(target = "offerId", source = "offer.id") 
@@ -41,7 +52,7 @@ public interface OfferMapper {
     @Mapping(target = "currencyCode", source = "offer.currency.code")
     @Mapping(target = "bidPrice", source = "offer.bidPrice")
     @Mapping(target = "countryName", source = "offer.companyProfile.country.name")
-    @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorLabel")
+    @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "contractorStatusName")
+    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")
     TenderOfferSummaryResponse toTenderSummaryResponse(Offer offer);
 }

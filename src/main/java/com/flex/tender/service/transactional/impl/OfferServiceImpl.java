@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.transactional.impl;
 
 import static com.flex.tender.model.enumeration.EOfferStatus.*;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
-import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
@@ -22,14 +21,14 @@ import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.OfferService;
 import com.flex.tender.service.UserService;
 import com.flex.tender.service.details.CpvService;
 import com.flex.tender.service.details.TenderDetailsService;
-import com.flex.tender.service.transactional.CompanyProfileService;
+import com.flex.tender.service.transactional.OfferService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
 
@@ -37,24 +36,25 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final TenderDetailsService tenderDetailsService;
     private final OfferRepository offerRepository;
-    private final CompanyProfileService companyProfileService;
     private final CurrencyService currencyService;
     private final FileStorageService fileStorageService;
     private final CpvService cpvService;
 
     @Override
-    @Transactional
-    public OfferSummaryResponse save(PrincipalSummary principalSummary, OfferRequest offerRequest) {
+    public Offer buildEntity(PrincipalSummary principalSummary, OfferRequest offerRequest) {
         Offer offer = offerMapper.toEntity(offerRequest);
         offer.setBidder(userService.findById(principalSummary.userId()));
         Tender tender = tenderDetailsService.findById(offerRequest.tenderId());
         offer.setTender(tender);
-        CompanyProfile bidderCompanyProfile = companyProfileService.save(offerRequest.companyProfile());
-        offer.setCompanyProfile(bidderCompanyProfile);
         offer.setCurrency(currencyService.findById(offerRequest.currencyId()));
         offer.setGlobalStatus(SENT);
         offer.setProposition(fileStorageService.findById(offerRequest.propositionMetadataId()));
-        return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), tender.getCpv()) ;
+        return offer;
+    }
+    
+    @Override
+    public OfferSummaryResponse save(Offer offer) {
+        return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), offer.getTender().getCpv());
     }
 
     @Override
@@ -120,11 +120,6 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer findById(Integer offerId) {
-        return offerRepository.findById(offerId);
-    }
-
-    @Override
     public OfferDetailsResponse findDetailsById(Integer offerId) {
         Offer offer = offerRepository.findById(offerId);
         return offerMapper.toResponse(offer);
@@ -146,7 +141,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer selectWinningOffer(Offer offer, AwardDecision awardDecision) {
+    public Offer applyAwardDecision(Offer offer, AwardDecision awardDecision) {
         offer.setAwardDecision(awardDecision);
         offer.setGlobalStatus(SELECTED);
         offerRepository.update(offer);
@@ -154,7 +149,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer rejectOffer(Offer offer, RejectDecision rejectDecision) {
+    public Offer applyRejectDecision(Offer offer, RejectDecision rejectDecision) {
         offer.setRejectDecision(rejectDecision);
         offer.setGlobalStatus(REJECTED_BY_CONTRACTOR);
         offerRepository.update(offer);
