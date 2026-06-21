@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional.impl;
+package com.flex.tender.service.write.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,9 +9,10 @@ import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.payload.request.RejectOfferDecisionRequest;
 import com.flex.tender.repository.RejectDecisionRepository;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.details.OfferDetailsService;
-import com.flex.tender.service.transactional.OfferService;
-import com.flex.tender.service.transactional.RejectDecisionService;
+import com.flex.tender.service.read.OfferDetailsService;
+import com.flex.tender.service.write.OfferService;
+import com.flex.tender.service.write.RejectDecisionService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

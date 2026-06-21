@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.response.ContractResponse;
-import com.flex.tender.service.transactional.ContractService;
+import com.flex.tender.service.write.ContractService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController

@@ -12,11 +12,12 @@ import com.flex.tender.payload.mapper.TenderMapper;
 import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.service.facade.TenderManager;
-import com.flex.tender.service.transactional.AwardDecisionService;
-import com.flex.tender.service.transactional.CompanyProfileService;
-import com.flex.tender.service.transactional.ContractService;
-import com.flex.tender.service.transactional.RejectDecisionService;
-import com.flex.tender.service.transactional.TenderService;
+import com.flex.tender.service.write.AwardDecisionService;
+import com.flex.tender.service.write.CompanyProfileService;
+import com.flex.tender.service.write.ContractService;
+import com.flex.tender.service.write.RejectDecisionService;
+import com.flex.tender.service.write.TenderService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

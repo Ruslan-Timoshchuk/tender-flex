@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
-import com.flex.tender.service.transactional.AwardDecisionService;
+import com.flex.tender.service.write.AwardDecisionService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController

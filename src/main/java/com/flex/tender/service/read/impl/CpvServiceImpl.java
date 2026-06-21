@@ -1,4 +1,4 @@
-package com.flex.tender.service.details.impl;
+package com.flex.tender.service.read.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,8 @@ import com.flex.tender.model.Cpv;
 import com.flex.tender.payload.mapper.CpvMapper;
 import com.flex.tender.payload.response.CpvResponse;
 import com.flex.tender.repository.CpvRepository;
-import com.flex.tender.service.details.CpvService;
+import com.flex.tender.service.read.CpvService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

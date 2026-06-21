@@ -1,9 +1,10 @@
-package com.flex.tender.service.details.impl;
+package com.flex.tender.service.read.impl;
 
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.Contract;
 import com.flex.tender.repository.ContractRepository;
-import com.flex.tender.service.details.ContractDetailsService;
+import com.flex.tender.service.read.ContractDetailsService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

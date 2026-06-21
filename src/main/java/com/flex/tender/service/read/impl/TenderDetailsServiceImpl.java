@@ -1,4 +1,4 @@
-package com.flex.tender.service.details.impl;
+package com.flex.tender.service.read.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,10 +10,10 @@ import com.flex.tender.payload.mapper.TenderMapper;
 import com.flex.tender.payload.response.BidderTenderDetailsResponse;
 import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
 import com.flex.tender.repository.TenderRepository;
-import com.flex.tender.service.details.AwardDecisionDetailsService;
-import com.flex.tender.service.details.ContractDetailsService;
-import com.flex.tender.service.details.RejectDecisionDetailsService;
-import com.flex.tender.service.details.TenderDetailsService;
+import com.flex.tender.service.read.AwardDecisionDetailsService;
+import com.flex.tender.service.read.ContractDetailsService;
+import com.flex.tender.service.read.RejectDecisionDetailsService;
+import com.flex.tender.service.read.TenderDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @Service

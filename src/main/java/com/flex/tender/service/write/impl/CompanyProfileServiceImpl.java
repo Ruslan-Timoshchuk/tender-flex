@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional.impl;
+package com.flex.tender.service.write.impl;
 
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.CompanyProfile;
@@ -6,7 +6,8 @@ import com.flex.tender.payload.mapper.CompanyProfileMapper;
 import com.flex.tender.payload.request.CompanyProfileRequest;
 import com.flex.tender.repository.CompanyProfileRepository;
 import com.flex.tender.service.CountryService;
-import com.flex.tender.service.transactional.CompanyProfileService;
+import com.flex.tender.service.write.CompanyProfileService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -1,4 +1,4 @@
-package com.flex.tender.service.details;
+package com.flex.tender.service.read;
 
 import com.flex.tender.model.AwardDecision;
 

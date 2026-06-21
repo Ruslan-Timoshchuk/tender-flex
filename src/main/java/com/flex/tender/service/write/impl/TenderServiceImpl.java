@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional.impl;
+package com.flex.tender.service.write.impl;
 
 import static com.flex.tender.model.enumeration.ELanguage.*;
 import static com.flex.tender.model.enumeration.EProcedure.*;
@@ -23,9 +23,10 @@ import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.repository.TenderRepository;
 import com.flex.tender.service.UserService;
-import com.flex.tender.service.details.CpvService;
-import com.flex.tender.service.transactional.OfferService;
-import com.flex.tender.service.transactional.TenderService;
+import com.flex.tender.service.read.CpvService;
+import com.flex.tender.service.write.OfferService;
+import com.flex.tender.service.write.TenderService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

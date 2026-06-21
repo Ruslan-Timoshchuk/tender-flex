@@ -20,9 +20,10 @@ import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
 import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
-import com.flex.tender.service.details.TenderDetailsService;
 import com.flex.tender.service.facade.TenderManager;
-import com.flex.tender.service.transactional.TenderService;
+import com.flex.tender.service.read.TenderDetailsService;
+import com.flex.tender.service.write.TenderService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController

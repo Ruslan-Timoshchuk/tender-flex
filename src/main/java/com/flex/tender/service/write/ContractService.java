@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional;
+package com.flex.tender.service.write;
 
 import java.util.Set;
 import com.flex.tender.model.Contract;

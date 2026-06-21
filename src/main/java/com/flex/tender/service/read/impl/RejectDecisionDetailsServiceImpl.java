@@ -1,10 +1,11 @@
-package com.flex.tender.service.details.impl;
+package com.flex.tender.service.read.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.repository.RejectDecisionRepository;
-import com.flex.tender.service.details.RejectDecisionDetailsService;
+import com.flex.tender.service.read.RejectDecisionDetailsService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

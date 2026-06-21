@@ -1,4 +1,4 @@
-package com.flex.tender.service.transactional.impl;
+package com.flex.tender.service.write.impl;
 
 import static java.time.LocalDate.*;
 import static com.flex.tender.model.enumeration.EContractStatus.*;
@@ -15,7 +15,8 @@ import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.service.ContractTypeService;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
-import com.flex.tender.service.transactional.ContractService;
+import com.flex.tender.service.write.ContractService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
