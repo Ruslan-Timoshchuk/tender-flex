@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.request.RejectOfferDecisionRequest;
-import com.flex.tender.service.write.RejectDecisionService;
-
+import com.flex.tender.service.facade.RejectDecisionManager;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,13 +19,13 @@ public class RejectDecisionController {
 
     public static final String URL_REJECT_OFFER = "/reject-offer";
     
-    private final RejectDecisionService rejectDecisionService;
+    private final RejectDecisionManager rejectDecisionManager;
 
     @Secured(CONTRACTOR)
     @PatchMapping(path = URL_REJECT_OFFER, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> applyRejectDecision(
             @RequestBody RejectOfferDecisionRequest rejectOfferDecisionRequest) {
-        rejectDecisionService.applyRejectDecision(rejectOfferDecisionRequest);
+        rejectDecisionManager.applyRejectDecision(rejectOfferDecisionRequest);
         return ResponseEntity
                  .noContent()
                  .build();
