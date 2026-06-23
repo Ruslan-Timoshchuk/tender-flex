@@ -1,6 +1,6 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.CountryQueries.*;
+import static com.flex.tender.repository.sql.query.CountryMixins.*;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

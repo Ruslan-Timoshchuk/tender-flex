@@ -2,7 +2,7 @@ package com.flex.tender.repository.impl;
 
 import static java.util.stream.Collectors.toSet;
 import static java.lang.String.format;
-import static com.flex.tender.repository.sql.query.OfferQueries.*;
+import static com.flex.tender.repository.sql.query.OfferMixins.*;
 import static java.util.Optional.ofNullable;
 import java.sql.PreparedStatement;
 import java.util.List;

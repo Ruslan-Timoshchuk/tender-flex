@@ -3,8 +3,12 @@ package com.flex.tender.repository.sql.query;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class OfferQueries {
+public class OfferMixins {
 
+    public final String OFFER_ID_COLUMN_SQL = "offer.id AS offer_id";
+    
+    public final String OFFER_JOIN_TENDERS_SQL = "offers offer ON offer.tender_id = tender.id";
+    
     public final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
     public final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(id) FROM offers WHERE tender_id = ?";
     public final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = """
