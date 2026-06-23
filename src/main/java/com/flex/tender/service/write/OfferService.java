@@ -26,8 +26,6 @@ public interface OfferService {
     
     SummaryPage<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer currentPage, Integer offersPerPage);
     
-    SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer currentPage, Integer offersPerPage);
-    
     SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer currentPage, Integer offersPerPage);
 
     OfferCountResponse countByBidder(Integer bidderId);

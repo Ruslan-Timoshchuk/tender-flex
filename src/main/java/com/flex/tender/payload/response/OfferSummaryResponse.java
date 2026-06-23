@@ -5,11 +5,11 @@ package com.flex.tender.payload.response;
  */
 public record OfferSummaryResponse(
         Integer id, 
-        String officialName,
-        String fieldOfTheTender,
+        CompanyProfileResponse companyProfile,
+        CpvResponse cpvOfTheTender,
         Integer bidPrice,
-        CountryResponse country,
         CurrencyResponse currency,
         String submissionDate,
+        String offerStatusName,
         String offerStatusLabel) {
 }

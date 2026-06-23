@@ -1,8 +1,9 @@
 package com.flex.tender.repository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
 
@@ -23,5 +24,7 @@ public interface TenderRepository {
     void update(Tender tender);
 
     Set<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate currentDate);
+
+    Map<Integer, Tender> findByOfferIdIn(List<Integer> offerIds);
 
 }

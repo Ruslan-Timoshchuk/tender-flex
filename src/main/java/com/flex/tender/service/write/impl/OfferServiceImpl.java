@@ -80,27 +80,6 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,
-            Integer pageSize) {
-        Integer offset = (page - 1) * pageSize;
-        Integer totalOffers = offerRepository.countByContractor(contractorId);
-        Integer totalPages = countTotalPages(pageSize, totalOffers);
-        var offers = offerRepository.findByContractorWithPagination(contractorId, pageSize, offset);
-        List<OfferSummaryResponse> offersPage = List.of();
-        if(!offers.isEmpty()) {
-            var offerIds = offers
-                    .stream()
-                    .map(Offer::getId)
-                    .toList();
-            var cpvs = cpvService.findByOfferIdIn(offerIds);
-            offersPage = offers.stream()
-                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, cpvs.get(offer.getId())))
-                  .toList();
-        }
-        return new SummaryPage<>(page, totalPages, offersPage);
-    }
-
-    @Override
     public SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer requestedPage,
             Integer pageSize) {
         Integer offset = requestedPage * pageSize;

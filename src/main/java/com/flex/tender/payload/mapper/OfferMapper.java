@@ -10,7 +10,7 @@ import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
-@Mapper(componentModel = "spring", uses = { FileMetadataMapper.class, OfferStatusLabelMapper.class })
+@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, CurrencyMapper.class, FileMetadataMapper.class, OfferStatusLabelMapper.class })
 public interface OfferMapper {
 
     @Mapping(target = "id", source = "id")
@@ -33,15 +33,16 @@ public interface OfferMapper {
     OfferDetailsResponse toResponse(Offer offer);
     
     @Mapping(target = "id", source = "offer.id")
-    @Mapping(target = "cpvCode", source = "cpv.code")
-    @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
+    @Mapping(target = "cpvOfTheTender", source = "cpv")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "bidderLabel")
     OfferSummaryResponse toBidderSummaryResponse(Offer offer, Cpv cpv);
 
     @Mapping(target = "id", source = "offer.id")
-    @Mapping(target = "cpvCode", source = "cpv.code")
-    @Mapping(target = "fieldOfTheTender", source = "cpv.summary")
+    @Mapping(target = "companyProfile", source = "offer.companyProfile")
+    @Mapping(target = "cpvOfTheTender", source = "cpv")
+    @Mapping(target = "bidPrice", source = "offer.bidPrice")
+    @Mapping(target = "currency", source = "offer.currency")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "contractorStatusName")
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")

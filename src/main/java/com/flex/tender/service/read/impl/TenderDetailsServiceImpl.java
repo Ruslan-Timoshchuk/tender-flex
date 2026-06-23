@@ -1,5 +1,7 @@
 package com.flex.tender.service.read.impl;
 
+import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
@@ -47,6 +49,11 @@ public class TenderDetailsServiceImpl implements TenderDetailsService {
         Tender tender = tenderRepository.findById(tenderId);
         Contract contract = contractDetailsService.findByAwardDecisionId(tenderId);
         return tenderMapper.toBidderTenderDetailsResponse(tender, contract);
+    }
+
+    @Override
+    public Map<Integer, Tender>  findByOfferIdIn(List<Integer> offerIds) {
+        return tenderRepository.findByOfferIdIn(offerIds);
     }
 
 }
