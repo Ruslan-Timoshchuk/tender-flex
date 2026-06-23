@@ -1,14 +1,12 @@
 package com.flex.tender.service.read.impl;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.Cpv;
 import com.flex.tender.payload.mapper.CpvMapper;
 import com.flex.tender.payload.response.CpvResponse;
 import com.flex.tender.repository.CpvRepository;
 import com.flex.tender.service.read.CpvService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,11 +25,6 @@ public class CpvServiceImpl implements CpvService {
                   .stream()
                   .map(cpvMapper::toResponse)
                   .toList();
-    }
-
-    @Override
-    public Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds) {
-        return cpvRepository.findByOfferIdIn(offerIds);
     }
 
     @Override

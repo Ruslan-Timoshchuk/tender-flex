@@ -33,7 +33,10 @@ public interface OfferMapper {
     OfferDetailsResponse toResponse(Offer offer);
     
     @Mapping(target = "id", source = "offer.id")
+    @Mapping(target = "companyProfile", source = "offer.companyProfile")
     @Mapping(target = "cpvOfTheTender", source = "cpv")
+    @Mapping(target = "bidPrice", source = "offer.bidPrice")
+    @Mapping(target = "currency", source = "offer.currency")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "bidderLabel")
     OfferSummaryResponse toBidderSummaryResponse(Offer offer, Cpv cpv);

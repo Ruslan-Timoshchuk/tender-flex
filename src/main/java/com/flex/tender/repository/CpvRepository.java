@@ -9,8 +9,6 @@ public interface CpvRepository {
     List<Cpv> findAll();
 
     Map<Integer, Cpv> findByTenderIdIn(List<Integer> tenderIds);
-    
-    Map<Integer, Cpv> findByOfferIdIn(List<Integer> offerIds);
 
     Cpv findById(Integer id);
 

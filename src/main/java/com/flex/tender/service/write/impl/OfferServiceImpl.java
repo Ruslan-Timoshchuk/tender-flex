@@ -11,21 +11,17 @@ import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.model.enumeration.EOfferStatus;
-import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
-import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.CurrencyService;
 import com.flex.tender.service.FileStorageService;
 import com.flex.tender.service.UserService;
-import com.flex.tender.service.read.CpvService;
 import com.flex.tender.service.read.TenderDetailsService;
 import com.flex.tender.service.write.OfferService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,7 +35,6 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final CurrencyService currencyService;
     private final FileStorageService fileStorageService;
-    private final CpvService cpvService;
 
     @Override
     public Offer buildEntity(PrincipalSummary principalSummary, OfferRequest offerRequest) {
@@ -58,42 +53,6 @@ public class OfferServiceImpl implements OfferService {
         return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), offer.getTender().getCpv());
     }
 
-    @Override
-    public SummaryPage<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer page,
-            Integer pageSize) {
-        Integer offset = (page - 1) * pageSize;
-        Integer totalOffers = offerRepository.countByBidder(bidderId);
-        Integer totalPages = countTotalPages(pageSize, totalOffers);
-        var offers = offerRepository.findByBidderWithPagination(bidderId, pageSize, offset);
-        List<OfferSummaryResponse> offersPage = List.of();
-        if(!offers.isEmpty()) {
-            var offerIds = offers
-                    .stream()
-                    .map(Offer::getId)
-                    .toList();
-            var cpvs = cpvService.findByOfferIdIn(offerIds);
-            offersPage = offers.stream()
-                  .map(offer -> offerMapper.toBidderSummaryResponse(offer, cpvs.get(offer.getId())))
-                  .toList();
-        }
-        return new SummaryPage<>(page, totalPages, offersPage);
-    }
-
-    @Override
-    public SummaryPage<TenderOfferSummaryResponse> findByTenderWithPagination(Integer tenderId, Integer requestedPage,
-            Integer pageSize) {
-        Integer offset = requestedPage * pageSize;
-        Integer totalOffers = offerRepository.countAllByTender(tenderId);
-        Integer totalPages = countTotalPages(pageSize, totalOffers);
-        return new SummaryPage<>(requestedPage, totalPages,
-                offerRepository.findByTenderWithPagination(tenderId, pageSize, offset).stream()
-                        .map(offerMapper::toTenderSummaryResponse).toList());
-    }
-    
-    private Integer countTotalPages(Integer pageSize, Integer totalOffers) {
-        return ((totalOffers + pageSize - 1) / pageSize);
-    }
-    
     @Override
     public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
         return offerRepository.existsByTenderIdAndGlobalStatusIn(tenderId, statuses);

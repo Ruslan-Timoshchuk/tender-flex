@@ -17,8 +17,10 @@ import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
-import com.flex.tender.service.details.OfferDetailsService;
-import com.flex.tender.service.transactional.OfferService;
+import com.flex.tender.service.facade.OfferManager;
+import com.flex.tender.service.read.OfferDetailsService;
+import com.flex.tender.service.write.OfferService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -31,12 +33,13 @@ public class OfferController {
 
     public static final String URL_OFFERS_ID = "/{id}";
     public static final String URL_CONTRACTOR_OFFER_DETAILS = "contractor-details/{offer-id}";
-    public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page/{bidder-id}";
-    public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page/{contractor-id}";
+    public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page";
+    public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page";
     public static final String URL_TENDER_OFFERS_PAGE = "/tender-page/{tender-id}";
     public static final String URL_BIDDER_COUNT = "/bidder-count";
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
 
+    private final OfferManager offerManager;
     private final OfferService offerService;
     private final OfferDetailsService offerDetailsService;
 
@@ -45,7 +48,7 @@ public class OfferController {
     public ResponseEntity<OfferSummaryResponse> save(@AuthenticationPrincipal PrincipalSummary principalSummary,
             @RequestBody OfferRequest offerRequest) {
        return ResponseEntity
-                .ok(offerService.save(principalSummary, offerRequest));
+                .ok(offerManager.save(principalSummary, offerRequest));
     }
     
     @Secured({ CONTRACTOR, BIDDER })
@@ -62,24 +65,24 @@ public class OfferController {
                    .ok(offerDetailsService.findContractorOfferDetailsById(offerId));
     }
 
-    @Secured( BIDDER )
+    @Secured(BIDDER)
     @GetMapping(URL_BIDDER_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByBidderWithPagination(
-            @PathVariable("bidder-id") Integer bidderId,
+            @AuthenticationPrincipal(expression = "userId") Integer bidderId,
             @RequestParam(defaultValue = "1") Integer currentPage,
             @RequestParam(defaultValue = "10") Integer offersPerPage) {
         return ResponseEntity
-                   .ok(offerService.findByBidderWithPagination(bidderId, currentPage, offersPerPage));
+                   .ok(offerDetailsService.findByBidderWithPagination(bidderId, currentPage, offersPerPage));
     }
     
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByContractorWithPagination(
-            @PathVariable("contractor-id") Integer contractorId,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+            @AuthenticationPrincipal(expression = "userId") Integer contractorId,
+            @RequestParam(defaultValue = "1") Integer requestedPage,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
-                   .ok(offerService.findByContractorWithPagination(contractorId, currentPage, offersPerPage));
+                   .ok(offerDetailsService.findByContractorWithPagination(contractorId, requestedPage, pageSize));
     }
     
     @Secured(CONTRACTOR)
@@ -89,7 +92,7 @@ public class OfferController {
             @RequestParam(defaultValue = "0") Integer requestedPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
-                   .ok(offerService.findByTenderWithPagination(tenderId, requestedPage, pageSize));
+                   .ok(offerDetailsService.findByTenderWithPagination(tenderId, requestedPage, pageSize));
     }
 
     @Secured(BIDDER)
