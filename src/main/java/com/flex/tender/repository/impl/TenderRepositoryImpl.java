@@ -34,7 +34,29 @@ public class TenderRepositoryImpl implements TenderRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(TenderRepositoryImpl.class);
 
     public static final String EXECUTING_SQL_QUERY_LOG = "Executing SQL Query: {}";
-    public static final String FIND_BY_OFFER_ID_IN_PATTERN_QUERY ="""
+    public static final String ADD_NEW_QUERY = """
+            INSERT INTO tenders(contractor_id, company_profile_id, procedure_type, language, cpv_id, description,
+                                global_status, publication_date, offer_submission_deadline)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""";
+    public static final String UPDATE_QUERY = """
+            UPDATE tenders 
+            SET procedure_type = ?, language = ?, cpv_id = ?, description = ?, global_status = ?
+            WHERE id = ?""";
+    public static final String COUNT_TENDERS_QUERY = "SELECT count(*) FROM tenders";
+    public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
+    public static final String FIND_BY_ID_QUERY = """
+            SELECT %s 
+            FROM tenders tender 
+            LEFT JOIN %s 
+            LEFT JOIN %s 
+            LEFT JOIN %s 
+            WHERE tender.id = ?
+            """.formatted(
+                TenderMixins.TENDER_COLUMNS_SQL,
+                CpvMixins.CPV_JOIN_TENDERS_SQL,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+    public static final String FIND_BY_OFFER_ID_IN_QUERY ="""
             SELECT %s, %s 
             FROM tenders tender 
             LEFT JOIN %s 
@@ -59,7 +81,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public Tender save(Tender tender) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_TENDER_QUERY, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(ADD_NEW_QUERY, new String[] { "id" });
             statement.setInt(1, tender.getContractor().getId());
             statement.setInt(2, tender.getCompanyProfile().getId());
             statement.setString(3, tender.getProcedure().getType().name());
@@ -77,26 +99,26 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     @Override
     public void update(Tender tender) {
-        jdbcTemplate.update(UPDATE_TENDER_QUERY, tender.getProcedure().getType().name(),
+        jdbcTemplate.update(UPDATE_QUERY, tender.getProcedure().getType().name(),
                 tender.getProcedure().getLanguage().name(), tender.getCpv().getId(), tender.getDescription(),
                 tender.getGlobalStatus().name(), tender.getId());
     }
 
     @Override
-    public Set<Tender> findWithPagination(Integer amountTenders, Integer amountTendersToSkip) {
+    public Set<Tender> findWithPagination(Integer limit, Integer offset) {
         String sqlQuery = format(SELECT_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL,
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, amountTenders, amountTendersToSkip).stream().collect(toSet());
+        return jdbcTemplate.query(sqlQuery, tenderMapper, limit, offset).stream().collect(toSet());
     }
 
     @Override
-    public Set<Tender> findByContractorWithPagination(Integer contractorId, Integer amountTenders,
-            Integer amountTendersToSkip) {
+    public Set<Tender> findByContractorWithPagination(Integer contractorId, Integer limit,
+            Integer offset) {
         String sqlQuery = format(SELECT_CONTRACTOR_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL,
                 TENDER_JOIN_TABLES_SQL_PART_QUERY);
         LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, contractorId, amountTenders, amountTendersToSkip).stream()
+        return jdbcTemplate.query(sqlQuery, tenderMapper, contractorId, limit, offset).stream()
                 .collect(toSet());
     }
 
@@ -112,10 +134,7 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     @Override
     public Tender findById(Integer tenderId) {
-        String sqlQuery = format(FIND_BY_ID_PATTERN_QUERY, TENDER_COLUMNS_SQL,
-                TENDER_JOIN_TABLES_SQL_PART_QUERY);
-        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.queryForObject(sqlQuery, tenderMapper, tenderId);
+        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, tenderMapper, tenderId);
     }
 
     @Override
@@ -130,7 +149,7 @@ public class TenderRepositoryImpl implements TenderRepository {
 
     @Override
     public Map<Integer, Tender> findByOfferIdIn(List<Integer> offerIds) {
-        return jdbc.query(FIND_BY_OFFER_ID_IN_PATTERN_QUERY, Map.of("offerIds", offerIds), offerTenderMapExtractor);
+        return jdbc.query(FIND_BY_OFFER_ID_IN_QUERY, Map.of("offerIds", offerIds), offerTenderMapExtractor);
     }
 
 }
