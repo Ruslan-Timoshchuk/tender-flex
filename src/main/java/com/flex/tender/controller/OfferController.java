@@ -69,17 +69,17 @@ public class OfferController {
     @GetMapping(URL_BIDDER_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByBidderWithPagination(
             @AuthenticationPrincipal(expression = "userId") Integer bidderId,
-            @RequestParam(defaultValue = "1") Integer currentPage,
-            @RequestParam(defaultValue = "10") Integer offersPerPage) {
+            @RequestParam(defaultValue = "1") Integer requestedPage,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
-                   .ok(offerDetailsService.findByBidderWithPagination(bidderId, currentPage, offersPerPage));
+                   .ok(offerDetailsService.findByBidderWithPagination(bidderId, requestedPage, pageSize));
     }
     
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_OFFERS_PAGE)
     public ResponseEntity<SummaryPage<OfferSummaryResponse>> findByContractorWithPagination(
             @AuthenticationPrincipal(expression = "userId") Integer contractorId,
-            @RequestParam(defaultValue = "1") Integer requestedPage,
+            @RequestParam(defaultValue = "0") Integer requestedPage,
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
                    .ok(offerDetailsService.findByContractorWithPagination(contractorId, requestedPage, pageSize));

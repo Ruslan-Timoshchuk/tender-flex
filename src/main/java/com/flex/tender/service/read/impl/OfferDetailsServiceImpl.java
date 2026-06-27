@@ -34,7 +34,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
     @Override
     public SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,
             Integer pageSize) {
-        Integer offset = (page - 1) * pageSize;
+        Integer offset = page * pageSize;
         Integer totalOffers = offerRepository.countByContractor(contractorId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
         var offers = offerRepository.findByContractorWithPagination(contractorId, pageSize, offset);
@@ -59,7 +59,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
     @Override
     public SummaryPage<OfferSummaryResponse> findByBidderWithPagination(Integer bidderId, Integer page,
             Integer pageSize) {
-        Integer offset = (page - 1) * pageSize;
+        Integer offset = page * pageSize;
         Integer totalOffers = offerRepository.countByBidder(bidderId);
         Integer totalPages = countTotalPages(pageSize, totalOffers);
         var offers = offerRepository.findByBidderWithPagination(bidderId, pageSize, offset);
