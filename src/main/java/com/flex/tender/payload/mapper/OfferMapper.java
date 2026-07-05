@@ -2,15 +2,16 @@ package com.flex.tender.payload.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import com.flex.tender.model.Cpv;
 import com.flex.tender.model.Offer;
+import com.flex.tender.model.Tender;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
-@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, CurrencyMapper.class, FileMetadataMapper.class, OfferStatusLabelMapper.class })
+@Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, CurrencyMapper.class,
+        FileMetadataMapper.class, OfferStatusLabelMapper.class })
 public interface OfferMapper {
 
     @Mapping(target = "id", source = "id")
@@ -32,24 +33,27 @@ public interface OfferMapper {
     
     OfferDetailsResponse toResponse(Offer offer);
     
-    @Mapping(target = "id", source = "offer.id")
+    @Mapping(target = "offerId", source = "offer.id")
+    @Mapping(target = "tenderId", source = "tender.id")
     @Mapping(target = "companyProfile", source = "offer.companyProfile")
-    @Mapping(target = "cpvOfTheTender", source = "cpv")
+    @Mapping(target = "cpvOfTheTender", source = "tender.cpv")
     @Mapping(target = "bidPrice", source = "offer.bidPrice")
     @Mapping(target = "currency", source = "offer.currency")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "bidderLabel")
-    OfferSummaryResponse toBidderSummaryResponse(Offer offer, Cpv cpv);
+    @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "bidderStatusName")
+    @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "bidderStatusLabel")
+    OfferSummaryResponse toBidderSummaryResponse(Offer offer, Tender tender);
 
-    @Mapping(target = "id", source = "offer.id")
+    @Mapping(target = "offerId", source = "offer.id")
+    @Mapping(target = "tenderId", source = "tender.id")
     @Mapping(target = "companyProfile", source = "offer.companyProfile")
-    @Mapping(target = "cpvOfTheTender", source = "cpv")
+    @Mapping(target = "cpvOfTheTender", source = "tender.cpv")
     @Mapping(target = "bidPrice", source = "offer.bidPrice")
     @Mapping(target = "currency", source = "offer.currency")
     @Mapping(target = "submissionDate", source = "offer.publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "offerStatusName", source = "offer.globalStatus", qualifiedByName = "contractorStatusName")
     @Mapping(target = "offerStatusLabel", source = "offer.globalStatus", qualifiedByName = "contractorStatusLabel")
-    OfferSummaryResponse toContractorSummaryResponse(Offer offer, Cpv cpv);
+    OfferSummaryResponse toContractorSummaryResponse(Offer offer, Tender tender);
    
     @Mapping(target = "offerId", source = "id") 
     @Mapping(target = "bidderOfficialName", source = "companyProfile.officialName")

@@ -50,7 +50,7 @@ public class OfferServiceImpl implements OfferService {
     
     @Override
     public OfferSummaryResponse save(Offer offer) {
-        return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), offer.getTender().getCpv());
+        return offerMapper.toBidderSummaryResponse(offerRepository.save(offer), offer.getTender());
     }
 
     @Override
@@ -106,11 +106,6 @@ public class OfferServiceImpl implements OfferService {
                     offerRepository.update(activeOffer);
                 });
         return winningOffer;
-    }
-
-    @Override
-    public boolean hasContract(Offer offer) {
-        return offer.getContract() != null && offer.getContract().getId() != null;
     }
 
     @Override

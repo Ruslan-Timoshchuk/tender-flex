@@ -46,7 +46,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
                     .toList();
             var tenders = tenderDetailsService.findByOfferIdIn(offerIds);
             offersPage = offers.stream()
-                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, tenders.get(offer.getId()).getCpv()))
+                  .map(offer -> offerMapper.toContractorSummaryResponse(offer, tenders.get(offer.getId())))
                   .toList();
         }
         return new SummaryPage<>(page, totalPages, offersPage);
@@ -71,7 +71,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
                     .toList();
             var tenders = tenderDetailsService.findByOfferIdIn(offerIds);
             offersPage = offers.stream()
-                  .map(offer -> offerMapper.toBidderSummaryResponse(offer, tenders.get(offer.getId()).getCpv()))
+                  .map(offer -> offerMapper.toBidderSummaryResponse(offer, tenders.get(offer.getId())))
                   .toList();
         }
         return new SummaryPage<>(page, totalPages, offersPage);

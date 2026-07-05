@@ -1,25 +1,22 @@
 package com.flex.tender.payload.mapper;
 
-import static com.flex.tender.model.enumeration.EOfferContractorStatus.*;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
+import com.flex.tender.model.enumeration.EOfferBidderStatus;
 import com.flex.tender.model.enumeration.EOfferContractorStatus;
 import com.flex.tender.model.enumeration.EOfferStatus;
 
 @Component
 public class OfferStatusLabelMapper {
-
-    @Named("bidderLabel")
+    
+    @Named("bidderStatusName")
+    public String toBidderStatusName(EOfferStatus status) {
+        return toBidderStatus(status).name();
+    }
+    
+    @Named("bidderStatusLabel")
     public String toBidderLabel(EOfferStatus status) {
-        return switch (status) {
-            case NOT_SENT -> "Offer hasn't sent";
-            case SENT -> "Offer sent to Contractor";
-            case SELECTED -> "Offer selected by Contractor";
-            case REJECTED_BY_CONTRACTOR -> "Offer rejected by Contractor";
-            case REJECTED_BY_BIDDER -> "Offer rejected by Bidder";
-            case CONTRACT_DECLINED -> "Contract declined by Bidder";
-            case CONTRACT_APPROVED -> "Contract approved by Bidder";
-        };
+        return toBidderStatus(status).getLabel();
     }
     
     @Named("contractorStatusName")
@@ -32,14 +29,26 @@ public class OfferStatusLabelMapper {
         return toContractorStatus(status).getLabel();
     }
     
+    private EOfferBidderStatus toBidderStatus(EOfferStatus status) {
+        return switch (status) {
+            case NOT_SENT -> EOfferBidderStatus.OFFER_HAS_NOT_SENT;
+            case SENT -> EOfferBidderStatus.OFFER_SENT;
+            case SELECTED -> EOfferBidderStatus.OFFER_SELECTED_BY_CONTRACTOR;
+            case REJECTED_BY_CONTRACTOR -> EOfferBidderStatus.OFFER_REJECTED_BY_CONTRACTOR;
+            case REJECTED_BY_BIDDER -> EOfferBidderStatus.OFFER_REJECTED_BY_BIDDER;
+            case CONTRACT_DECLINED -> EOfferBidderStatus.CONTRACT_DECLINED_BY_BIDDER;
+            case CONTRACT_APPROVED -> EOfferBidderStatus.CONTRACT_APPROVED_BY_BIDDER;
+        };
+    }
+    
     private EOfferContractorStatus toContractorStatus(EOfferStatus status) {
         return switch (status) {
-            case SENT -> OFFER_RECEIVED;
-            case SELECTED -> OFFER_SELECTED;
-            case REJECTED_BY_CONTRACTOR -> OFFER_REJECTED_BY_CONTRACTOR;
-            case REJECTED_BY_BIDDER -> OFFER_REJECTED_BY_BIDDER;
-            case CONTRACT_DECLINED -> CONTRACT_DECLINED_BY_BIDDER;
-            case CONTRACT_APPROVED -> CONTRACT_APPROVED_BY_BIDDER;
+            case SENT -> EOfferContractorStatus.OFFER_RECEIVED;
+            case SELECTED -> EOfferContractorStatus.OFFER_SELECTED;
+            case REJECTED_BY_CONTRACTOR -> EOfferContractorStatus.OFFER_REJECTED_BY_CONTRACTOR;
+            case REJECTED_BY_BIDDER -> EOfferContractorStatus.OFFER_REJECTED_BY_BIDDER;
+            case CONTRACT_DECLINED -> EOfferContractorStatus.CONTRACT_DECLINED_BY_BIDDER;
+            case CONTRACT_APPROVED -> EOfferContractorStatus.CONTRACT_APPROVED_BY_BIDDER;
             default -> throw new IllegalArgumentException("Unexpected value: " + status);
         };
     }

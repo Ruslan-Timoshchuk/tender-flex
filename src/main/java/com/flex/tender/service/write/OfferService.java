@@ -36,8 +36,6 @@ public interface OfferService {
     
     Offer handleOnContractDecline(Offer offer);
 
-    boolean hasContract(Offer offer);
-
     Offer handleOnSigningDeadlinePassed(Offer offer);
 
     Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds);

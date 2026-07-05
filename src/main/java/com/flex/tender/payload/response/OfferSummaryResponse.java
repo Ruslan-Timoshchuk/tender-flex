@@ -4,7 +4,8 @@ package com.flex.tender.payload.response;
  * @author Ruslan Timoshchuk
  */
 public record OfferSummaryResponse(
-        Integer id, 
+        Integer offerId, 
+        Integer tenderId,
         CompanyProfileResponse companyProfile,
         CpvResponse cpvOfTheTender,
         Integer bidPrice,

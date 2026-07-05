@@ -8,6 +8,6 @@ public record OfferDetailsResponse(
         CurrencyResponse currency,
         String publication,
         FileMetadataResponse proposition,
-        boolean hasAwardDecision,
-        boolean hasRejectDecision) {
+        String statusName,
+        String statusLabel) {
 }
