@@ -5,9 +5,8 @@ import com.flex.tender.model.CompanyProfile;
 import com.flex.tender.payload.mapper.CompanyProfileMapper;
 import com.flex.tender.payload.request.CompanyProfileRequest;
 import com.flex.tender.repository.CompanyProfileRepository;
-import com.flex.tender.service.CountryService;
+import com.flex.tender.service.read.CountryDetailsService;
 import com.flex.tender.service.write.CompanyProfileService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,12 +15,12 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
 
     private final CompanyProfileRepository companyProfileRepository;
     private final CompanyProfileMapper companyProfileMapper;
-    private final CountryService countryService;
+    private final CountryDetailsService countryDetailsService;
 
     @Override
     public CompanyProfile buildEntity(CompanyProfileRequest companyProfileRequest) {
         CompanyProfile companyProfile = companyProfileMapper.toEntity(companyProfileRequest);
-        companyProfile.setCountry(countryService.findById(companyProfileRequest.countryId()));
+        companyProfile.setCountry(countryDetailsService.findById(companyProfileRequest.countryId()));
         return companyProfile;
     }
     
