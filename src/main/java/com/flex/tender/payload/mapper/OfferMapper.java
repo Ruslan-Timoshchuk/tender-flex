@@ -6,7 +6,7 @@ import com.flex.tender.model.Offer;
 import com.flex.tender.model.Tender;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
-import com.flex.tender.payload.response.OfferDetailsResponse;
+import com.flex.tender.payload.response.BidderOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
@@ -28,10 +28,21 @@ public interface OfferMapper {
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "publication", source = "publication", dateFormat = "dd/MM/yyyy")
     @Mapping(target = "proposition", source = "proposition")
+    @Mapping(target = "statusName", source = "globalStatus", qualifiedByName = "bidderStatusName")
+    @Mapping(target = "statusLabel", source = "globalStatus", qualifiedByName = "bidderStatusLabel")
+    BidderOfferDetailsResponse toBidderDetails(Offer offer);
+    
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "companyProfile", source = "companyProfile")
+    @Mapping(target = "bidPrice", source = "bidPrice")
+    @Mapping(target = "currency", source = "currency")
+    @Mapping(target = "publication", source = "publication", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "proposition", source = "proposition")
     @Mapping(target = "statusName", source = "globalStatus", qualifiedByName = "contractorStatusName")
+    @Mapping(target = "statusLabel", source = "globalStatus", qualifiedByName = "contractorStatusLabel")
     ContractorOfferDetailsResponse toContractorDetails(Offer offer);
     
-    OfferDetailsResponse toResponse(Offer offer);
+    BidderOfferDetailsResponse toResponse(Offer offer);
     
     @Mapping(target = "offerId", source = "offer.id")
     @Mapping(target = "tenderId", source = "tender.id")
@@ -64,4 +75,5 @@ public interface OfferMapper {
     @Mapping(target = "offerStatusName", source = "globalStatus", qualifiedByName = "contractorStatusName")
     @Mapping(target = "offerStatusLabel", source = "globalStatus", qualifiedByName = "contractorStatusLabel")
     TenderOfferSummaryResponse toTenderSummaryResponse(Offer offer);
+
 }

@@ -14,7 +14,6 @@ import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
-import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.CurrencyService;
@@ -56,12 +55,6 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
         return offerRepository.existsByTenderIdAndGlobalStatusIn(tenderId, statuses);
-    }
-
-    @Override
-    public OfferDetailsResponse findDetailsById(Integer offerId) {
-        Offer offer = offerRepository.findById(offerId);
-        return offerMapper.toResponse(offer);
     }
     
     @Override
@@ -111,6 +104,13 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Offer handleOnContractDecline(Offer offer) {
         offer.setGlobalStatus(CONTRACT_DECLINED);
+        offerRepository.update(offer);
+        return offer;
+    }
+    
+    @Override
+    public Offer handleOnContractApprove(Offer offer) {
+        offer.setGlobalStatus(CONTRACT_APPROVED);
         offerRepository.update(offer);
         return offer;
     }

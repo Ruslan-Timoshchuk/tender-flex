@@ -1,6 +1,6 @@
 package com.flex.tender.payload.response;
 
-public record OfferDetailsResponse(
+public record ContractorOfferDetailsResponse(
         Integer id, 
         Integer tenderId,
         CompanyProfileResponse companyProfile,

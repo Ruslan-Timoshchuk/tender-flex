@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.flex.tender.model.Offer;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
+import com.flex.tender.payload.response.BidderOfferDetailsResponse;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
@@ -20,6 +21,11 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
     private final TenderDetailsService tenderDetailsService;
+    
+    @Override
+    public BidderOfferDetailsResponse findBidderOfferDetailsById(Integer id) { 
+        return offerMapper.toBidderDetails(offerRepository.findById(id));
+    }
     
     @Override
     public ContractorOfferDetailsResponse findContractorOfferDetailsById(Integer id) {

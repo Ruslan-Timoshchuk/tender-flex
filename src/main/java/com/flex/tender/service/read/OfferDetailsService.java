@@ -2,14 +2,17 @@ package com.flex.tender.service.read;
 
 import com.flex.tender.model.Offer;
 import com.flex.tender.payload.SummaryPage;
+import com.flex.tender.payload.response.BidderOfferDetailsResponse;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 
 public interface OfferDetailsService {
 
+    BidderOfferDetailsResponse findBidderOfferDetailsById(Integer id);
+    
     ContractorOfferDetailsResponse findContractorOfferDetailsById(Integer id);
-
+    
     Offer findById(Integer id);
 
     SummaryPage<OfferSummaryResponse> findByContractorWithPagination(Integer contractorId, Integer page,

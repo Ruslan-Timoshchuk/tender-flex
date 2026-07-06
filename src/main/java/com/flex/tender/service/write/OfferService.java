@@ -9,7 +9,6 @@ import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferCountResponse;
-import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 
 public interface OfferService {
@@ -19,8 +18,6 @@ public interface OfferService {
     OfferSummaryResponse save(Offer offer);
 
     boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses);
-    
-    OfferDetailsResponse findDetailsById(Integer offerId);
 
     OfferCountResponse countByBidder(Integer bidderId);
     
@@ -35,6 +32,8 @@ public interface OfferService {
     Offer rejectUnsuitableOffers(Offer winningOffer, RejectDecision rejectDecision);
     
     Offer handleOnContractDecline(Offer offer);
+    
+    Offer handleOnContractApprove(Offer offer);
 
     Offer handleOnSigningDeadlinePassed(Offer offer);
 

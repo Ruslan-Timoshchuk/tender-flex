@@ -8,5 +8,6 @@ public record BidderTenderSummaryResponse(
         String tenderStatusName,
         String tenderStatusLabel,
         String offerSubmissionDeadline,
+        String offerStatusName,
         String offerStatusLabel) {
 }

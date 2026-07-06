@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.model.embedded.PrincipalSummary;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.request.OfferRequest;
+import com.flex.tender.payload.response.BidderOfferDetailsResponse;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
 import com.flex.tender.payload.response.OfferCountResponse;
-import com.flex.tender.payload.response.OfferDetailsResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.service.facade.OfferManager;
 import com.flex.tender.service.read.OfferDetailsService;
 import com.flex.tender.service.write.OfferService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -32,6 +31,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 public class OfferController {
 
     public static final String URL_OFFERS_ID = "/{id}";
+    public static final String URL_BIDDER_OFFER_DETAILS = "bidder-details/{offer-id}";
     public static final String URL_CONTRACTOR_OFFER_DETAILS = "contractor-details/{offer-id}";
     public static final String URL_BIDDER_OFFERS_PAGE = "/bidder-page";
     public static final String URL_CONTRACTOR_OFFERS_PAGE = "/contractor-page";
@@ -51,18 +51,18 @@ public class OfferController {
                 .ok(offerManager.save(principalSummary, offerRequest));
     }
     
-    @Secured({ CONTRACTOR, BIDDER })
-    @GetMapping(URL_OFFERS_ID)
-    public ResponseEntity<OfferDetailsResponse> findDetailsById(@PathVariable("id") Integer id) {
+    @Secured(BIDDER)
+    @GetMapping(URL_BIDDER_OFFER_DETAILS)
+    public ResponseEntity<BidderOfferDetailsResponse> loadBidderOfferDetailsById(@PathVariable("offer-id") Integer id) {
         return ResponseEntity
-                   .ok(offerService.findDetailsById(id));
+                   .ok(offerDetailsService.findBidderOfferDetailsById(id));
     }
     
     @Secured(CONTRACTOR)
     @GetMapping(URL_CONTRACTOR_OFFER_DETAILS)
-    public ResponseEntity<ContractorOfferDetailsResponse> findContractorDetailsById(@PathVariable("offer-id") Integer offerId) {
+    public ResponseEntity<ContractorOfferDetailsResponse> loadContractorOfferDetailsById(@PathVariable("offer-id") Integer id) {
         return ResponseEntity
-                   .ok(offerDetailsService.findContractorOfferDetailsById(offerId));
+                   .ok(offerDetailsService.findContractorOfferDetailsById(id));
     }
 
     @Secured(BIDDER)
