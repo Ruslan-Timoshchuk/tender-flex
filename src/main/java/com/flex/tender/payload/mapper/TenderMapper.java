@@ -14,7 +14,7 @@ import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.payload.response.BidderTenderDetailsResponse;
 import com.flex.tender.payload.response.BidderTenderSummaryResponse;
 import com.flex.tender.payload.response.ContractorTenderSummaryResponse;
-import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
+import com.flex.tender.payload.response.TenderDetailsResponse;
 
 @Mapper(componentModel = "spring", uses = { CompanyProfileMapper.class, CpvMapper.class, ContractMapper.class, AwardDecisionMapper.class,
         RejectDecisionMapper.class, TenderStatusLabelMapper.class,
@@ -38,7 +38,7 @@ public interface TenderMapper {
     @Mapping(target = "contract", source = "contract")
     @Mapping(target = "awardDecision", source = "awardDecision")
     @Mapping(target = "rejectDecision", source = "rejectDecision")
-    ContractorTenderDetailsResponse toContractorTenderDetailsResponse(Tender tender, Contract contract,
+    TenderDetailsResponse toContractorTenderDetailsResponse(Tender tender, Contract contract,
             AwardDecision awardDecision, RejectDecision rejectDecision);
 
     @Mapping(target = "id", source = "tender.id")
@@ -67,8 +67,8 @@ public interface TenderMapper {
     @Mapping(target = "tenderStatusName", source = "tenderStatus")
     @Mapping(target = "tenderStatusLabel", source = "tenderStatus", qualifiedByName = "viewLabel")
     @Mapping(target = "offerSubmissionDeadline", source = "offerSubmissionDeadline", dateFormat = "dd/MM/yyyy")
-    @Mapping(target = "offerStatusName", source = "offerStatus")
-    @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "bidderLabel")
+    @Mapping(target = "offerStatusName", source = "offerStatus", qualifiedByName = "bidderStatusName")
+    @Mapping(target = "offerStatusLabel", source = "offerStatus", qualifiedByName = "bidderStatusLabel")
     BidderTenderSummaryResponse toBidderTenderSummary(Integer id, Cpv cpv, String contractorName,
             ETenderStatus tenderStatus, LocalDate offerSubmissionDeadline, EOfferStatus offerStatus);
 

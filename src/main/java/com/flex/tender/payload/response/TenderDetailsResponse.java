@@ -3,7 +3,7 @@ package com.flex.tender.payload.response;
 /**
  * @author Ruslan Timoshchuk
  */
-public record ContractorTenderDetailsResponse(
+public record TenderDetailsResponse(
         Integer id, 
         CompanyProfileResponse companyProfile,
         ProcedureResponse procedure,

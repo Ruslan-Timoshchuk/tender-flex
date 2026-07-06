@@ -9,8 +9,7 @@ import com.flex.tender.model.Contract;
 import com.flex.tender.model.RejectDecision;
 import com.flex.tender.model.Tender;
 import com.flex.tender.payload.mapper.TenderMapper;
-import com.flex.tender.payload.response.BidderTenderDetailsResponse;
-import com.flex.tender.payload.response.ContractorTenderDetailsResponse;
+import com.flex.tender.payload.response.TenderDetailsResponse;
 import com.flex.tender.repository.TenderRepository;
 import com.flex.tender.service.read.AwardDecisionDetailsService;
 import com.flex.tender.service.read.ContractDetailsService;
@@ -35,20 +34,13 @@ public class TenderDetailsServiceImpl implements TenderDetailsService {
     }
 
     @Override
-    public ContractorTenderDetailsResponse loadContractortTenderDetailsById(Integer tenderId) {
+    public TenderDetailsResponse loadTenderDetailsById(Integer tenderId) {
         Tender tender = tenderRepository.findById(tenderId);
-        Contract contract = contractDetailsService.findByAwardDecisionId(tenderId);
         AwardDecision awardDecision = awardDecisionDetailsService.findByTenderId(tenderId);
+        Contract contract = contractDetailsService.findByAwardDecisionId(awardDecision.getId());     
         RejectDecision rejectDecision = rejectDecisionDetailsService.findByTenderId(tenderId);
         return tenderMapper.toContractorTenderDetailsResponse(tender, contract, awardDecision,
                 rejectDecision);
-    }
-
-    @Override
-    public BidderTenderDetailsResponse loadBidderTenderDetailsById(Integer tenderId) {
-        Tender tender = tenderRepository.findById(tenderId);
-        Contract contract = contractDetailsService.findByAwardDecisionId(tenderId);
-        return tenderMapper.toBidderTenderDetailsResponse(tender, contract);
     }
 
     @Override
