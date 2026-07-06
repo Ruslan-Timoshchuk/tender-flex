@@ -14,7 +14,7 @@ import com.flex.tender.payload.mapper.AuthenticationDetailsMapper;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.read.AuthenticationDetailsService;
-import com.flex.tender.service.read.UserService;
+import com.flex.tender.service.read.CustomUserDetailsService;
 
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class AuthenticationDetailsServiceImpl implements AuthenticationDetailsSe
 
     public static final String LOG_MSG_ON_BAD_CREDENTIALS = "Authentication failed for email = {}: the password is invalid ";
 
-    private final UserService userService;
+    private final CustomUserDetailsService customUserService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationDetailsMapper authenticationDetailsMapper;
 
@@ -32,7 +32,7 @@ public class AuthenticationDetailsServiceImpl implements AuthenticationDetailsSe
     @Override
     public PrincipalDetails authenticate(AuthenticationRequest credential) {
         final String email = credential.getEmail();
-        User principal = userService.findByEmail(email);
+        User principal = customUserService.findByEmail(email);
         if (isAuthenticated(credential, principal)) {
             return authenticationDetailsMapper.toPrincipal(principal);
         } else {

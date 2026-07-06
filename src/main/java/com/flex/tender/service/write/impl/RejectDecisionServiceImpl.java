@@ -6,7 +6,7 @@ import com.flex.tender.model.RejectDecision;
 import com.flex.tender.payload.mapper.RejectDecisionMapper;
 import com.flex.tender.payload.request.RejectDecisionRequest;
 import com.flex.tender.repository.RejectDecisionRepository;
-import com.flex.tender.service.FileStorageService;
+import com.flex.tender.service.read.FileStorageService;
 import com.flex.tender.service.write.RejectDecisionService;
 import lombok.RequiredArgsConstructor;
 
@@ -16,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class RejectDecisionServiceImpl implements RejectDecisionService {
 
     private final RejectDecisionMapper rejectDecisionMapper;
-    
     private final FileStorageService fileStorageService;
-   
     private final RejectDecisionRepository rejectDecisionRepository;
 
     @Override
