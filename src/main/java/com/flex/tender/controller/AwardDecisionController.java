@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.flex.tender.payload.request.ApproveContractDecisionRequest;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
 import com.flex.tender.payload.request.DeclineContractDecisionRequest;
 import com.flex.tender.service.facade.AwardDecisionManager;
@@ -20,6 +21,7 @@ public class AwardDecisionController {
 
     public static final String URL_AWARD_OFFER = "/award-offer";
     public static final String URL_DECLINE_CONTRACT = "/decline-contract";
+    public static final String URL_APPROVE_CONTRACT = "/approve-contract";
     
     private final AwardDecisionManager awardDecisionManager;
     
@@ -38,6 +40,16 @@ public class AwardDecisionController {
     public ResponseEntity<Void> declineContract(
             @RequestBody DeclineContractDecisionRequest declineContractDecisionRequest) {
         awardDecisionManager.declineContract(declineContractDecisionRequest);
+        return ResponseEntity
+                 .noContent()
+                 .build();
+    }
+    
+    @Secured(BIDDER)
+    @PatchMapping(path = URL_APPROVE_CONTRACT, consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> approveContract(
+            @RequestBody ApproveContractDecisionRequest approveContractDecisionRequest) {
+        awardDecisionManager.approveContract(approveContractDecisionRequest);
         return ResponseEntity
                  .noContent()
                  .build();

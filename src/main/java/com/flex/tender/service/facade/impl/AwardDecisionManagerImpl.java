@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.Offer;
+import com.flex.tender.payload.request.ApproveContractDecisionRequest;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
 import com.flex.tender.payload.request.DeclineContractDecisionRequest;
 import com.flex.tender.service.facade.AwardDecisionManager;
@@ -42,6 +43,15 @@ public class AwardDecisionManagerImpl implements AwardDecisionManager {
         offerService.handleOnContractDecline(offer);
         Contract contract = contractDetailsService.findByAwardDecisionId(awardDecision.getId());
         contractService.decline(contract);
+    }
+
+    @Override
+    public void approveContract(ApproveContractDecisionRequest approveContractDecisionRequest) {
+        AwardDecision awardDecision = awardDecisionDetailsService.findById(approveContractDecisionRequest.awardDecisionId());
+        Offer offer = offerDetailsService.findById(approveContractDecisionRequest.offerId());
+        offerService.handleOnContractApprove(offer);
+        Contract contract = contractDetailsService.findByAwardDecisionId(awardDecision.getId());
+        contractService.sign(contract);
     }
     
 }
