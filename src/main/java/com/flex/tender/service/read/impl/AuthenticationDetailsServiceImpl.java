@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.read.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +13,13 @@ import com.flex.tender.model.embedded.PrincipalDetails;
 import com.flex.tender.payload.mapper.AuthenticationDetailsMapper;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
-import com.flex.tender.service.AuthenticationService;
-import com.flex.tender.service.UserService;
+import com.flex.tender.service.read.AuthenticationDetailsService;
+import com.flex.tender.service.read.UserService;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationDetailsServiceImpl implements AuthenticationDetailsService {
 
     public static final String LOG_MSG_ON_BAD_CREDENTIALS = "Authentication failed for email = {}: the password is invalid ";
 

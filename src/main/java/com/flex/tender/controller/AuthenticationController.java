@@ -15,9 +15,9 @@ import com.flex.tender.model.embedded.PrincipalDetails;
 import com.flex.tender.model.embedded.JwtAuthenticationToken;
 import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
-import com.flex.tender.service.AuthenticationService;
-import com.flex.tender.service.JwtTokenGenerator;
-import com.flex.tender.service.JwtCookiesService;
+import com.flex.tender.service.read.AuthenticationDetailsService;
+import com.flex.tender.service.read.JwtCookiesService;
+import com.flex.tender.service.read.JwtTokenGenerator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class AuthenticationController {
     public static final String URL_USER_LOGIN = "/login";
     public static final String URL_LOAD_AUTHENTICATION_STATE = "/load-authentication-state";
     
-    private final AuthenticationService authenticationService;
+    private final AuthenticationDetailsService authenticationDetailsService;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final JwtCookiesService jwtCookiesService;
 
@@ -39,11 +39,11 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             throw new BadCredentialsException("Email and password should not be empty");
         }
-        final PrincipalDetails principalDetails = authenticationService.authenticate(credential);
+        final PrincipalDetails principalDetails = authenticationDetailsService.authenticate(credential);
         final JwtAuthenticationToken authenticationToken = jwtTokenGenerator
                 .issueAuthenticationToken(principalDetails);
         final HttpHeaders headers = jwtCookiesService.issueJwtCookie(authenticationToken);
-        final AuthenticationResponse authenticationResponse = authenticationService
+        final AuthenticationResponse authenticationResponse = authenticationDetailsService
                 .resolveAuthenticationResponse(principalDetails, authenticationToken.principalUuid());
         return ResponseEntity
                    .ok()
@@ -55,7 +55,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> loadAuthenticationState(
             @AuthenticationPrincipal(expression = "principalUuid") UUID principalUuid) {
         return ResponseEntity
-                   .ok(authenticationService.loadAuthenticationState(principalUuid));
+                   .ok(authenticationDetailsService.loadAuthenticationState(principalUuid));
     }
     
 }
