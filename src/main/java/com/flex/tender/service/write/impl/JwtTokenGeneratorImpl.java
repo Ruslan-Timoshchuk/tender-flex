@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.write.impl;
 
 import static com.flex.tender.model.constants.JwtClaims.*;
 import java.time.Duration;
@@ -9,8 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.embedded.PrincipalDetails;
+import com.flex.tender.service.write.JwtTokenGenerator;
 import com.flex.tender.model.embedded.JwtAuthenticationToken;
-import com.flex.tender.service.JwtTokenGenerator;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 

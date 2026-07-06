@@ -17,7 +17,7 @@ import com.flex.tender.payload.request.AuthenticationRequest;
 import com.flex.tender.payload.response.AuthenticationResponse;
 import com.flex.tender.service.read.AuthenticationDetailsService;
 import com.flex.tender.service.read.JwtCookiesService;
-import com.flex.tender.service.read.JwtTokenGenerator;
+import com.flex.tender.service.write.JwtTokenGenerator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
