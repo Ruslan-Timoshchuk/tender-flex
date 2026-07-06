@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.read.impl;
 
 import static java.lang.String.format;
 import static java.net.URLDecoder.decode;
@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import com.flex.tender.model.constants.CookieNames;
 import com.flex.tender.model.embedded.JwtAuthenticationToken;
-import com.flex.tender.service.JwtCookiesService;
+import com.flex.tender.service.read.JwtCookiesService;
+
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 

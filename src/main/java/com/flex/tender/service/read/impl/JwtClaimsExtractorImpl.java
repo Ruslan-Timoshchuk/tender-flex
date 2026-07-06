@@ -1,4 +1,4 @@
-package com.flex.tender.service.impl;
+package com.flex.tender.service.read.impl;
 
 import static java.util.stream.Collectors.toSet;
 import static com.flex.tender.model.constants.JwtClaims.*;
@@ -9,7 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.embedded.PrincipalSummary;
-import com.flex.tender.service.JwtClaimsExtractor;
+import com.flex.tender.service.read.JwtClaimsExtractor;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

@@ -1,4 +1,4 @@
-package com.flex.tender.service;
+package com.flex.tender.service.read;
 
 import org.springframework.http.HttpHeaders;
 import com.flex.tender.model.embedded.JwtAuthenticationToken;

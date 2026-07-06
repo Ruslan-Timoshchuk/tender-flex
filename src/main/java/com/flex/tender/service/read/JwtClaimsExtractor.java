@@ -1,4 +1,4 @@
-package com.flex.tender.service;
+package com.flex.tender.service.read;
 
 import java.util.Set;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
