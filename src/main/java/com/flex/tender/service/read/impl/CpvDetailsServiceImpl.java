@@ -6,12 +6,12 @@ import com.flex.tender.model.Cpv;
 import com.flex.tender.payload.mapper.CpvMapper;
 import com.flex.tender.payload.response.CpvResponse;
 import com.flex.tender.repository.CpvRepository;
-import com.flex.tender.service.read.CpvService;
+import com.flex.tender.service.read.CpvDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CpvServiceImpl implements CpvService {
+public class CpvDetailsServiceImpl implements CpvDetailsService {
 
     public static final String CPV_WITH_ID_NOT_FOUND = "Cpv with [id: %s] not found.";
     

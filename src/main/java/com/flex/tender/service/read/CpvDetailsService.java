@@ -4,7 +4,7 @@ import java.util.List;
 import com.flex.tender.model.Cpv;
 import com.flex.tender.payload.response.CpvResponse;
 
-public interface CpvService {
+public interface CpvDetailsService {
 
     List<CpvResponse> findAll();
 
