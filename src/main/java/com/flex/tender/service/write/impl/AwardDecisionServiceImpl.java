@@ -7,7 +7,7 @@ import com.flex.tender.model.FileMetadata;
 import com.flex.tender.payload.mapper.AwardDecisionMapper;
 import com.flex.tender.payload.request.AwardDecisionRequest;
 import com.flex.tender.repository.AwardDecisionRepository;
-import com.flex.tender.service.FileStorageService;
+import com.flex.tender.service.read.FileStorageService;
 import com.flex.tender.service.write.AwardDecisionService;
 import lombok.RequiredArgsConstructor;
 

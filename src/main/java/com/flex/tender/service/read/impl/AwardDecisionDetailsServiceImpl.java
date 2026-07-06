@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.service.read.AwardDecisionDetailsService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
