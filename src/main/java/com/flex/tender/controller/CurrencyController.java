@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.response.CurrencyResponse;
-import com.flex.tender.service.CurrencyService;
+import com.flex.tender.service.read.CurrencyDetailsService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -16,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.base.path}/${api.v1}/${api.currencies.path}")
 public class CurrencyController {
 
-    private final CurrencyService currencyService;
+    private final CurrencyDetailsService currencyDetailsService;
 
     @Secured({ CONTRACTOR, BIDDER })
     @GetMapping
     public ResponseEntity<List<CurrencyResponse>> findAll() {
         return ResponseEntity
-                   .ok(currencyService.findAll());
+                   .ok(currencyDetailsService.findAll());
     }
 
 }
