@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flex.tender.payload.response.ContractTypeResponse;
-import com.flex.tender.service.ContractTypeService;
+import com.flex.tender.service.read.ContractTypeDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -16,13 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.base.path}/${api.v1}/${api.contract.type.path}")
 public class ContractTypeController {
 
-    private final ContractTypeService contractTypeService;
+    private final ContractTypeDetailsService contractTypeDetailsService;
 
-    @Secured( CONTRACTOR )
+    @Secured(CONTRACTOR)
     @GetMapping
     public ResponseEntity<List<ContractTypeResponse>> findAll() {
         return ResponseEntity
-                   .ok(contractTypeService.findAll());
+                   .ok(contractTypeDetailsService.findAll());
     }
 
 }
