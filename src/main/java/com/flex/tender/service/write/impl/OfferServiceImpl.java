@@ -14,9 +14,9 @@ import com.flex.tender.payload.request.OfferRequest;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.read.CurrencyDetailsService;
-import com.flex.tender.service.read.FileStorageService;
 import com.flex.tender.service.read.TenderDetailsService;
 import com.flex.tender.service.read.CustomUserDetailsService;
+import com.flex.tender.service.read.FileStorageDetailsService;
 import com.flex.tender.service.write.OfferService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ public class OfferServiceImpl implements OfferService {
     private final TenderDetailsService tenderDetailsService;
     private final OfferRepository offerRepository;
     private final CurrencyDetailsService currencyService;
-    private final FileStorageService fileStorageService;
+    private final FileStorageDetailsService fileStorageDetailsService;
 
     @Override
     public Offer buildEntity(PrincipalSummary principalSummary, OfferRequest offerRequest) {
@@ -40,7 +40,7 @@ public class OfferServiceImpl implements OfferService {
         offer.setTender(tender);
         offer.setCurrency(currencyService.findById(offerRequest.currencyId()));
         offer.setGlobalStatus(SENT);
-        offer.setProposition(fileStorageService.findById(offerRequest.propositionMetadataId()));
+        offer.setProposition(fileStorageDetailsService.findById(offerRequest.propositionMetadataId()));
         return offer;
     }
     

@@ -1,10 +1,8 @@
 package com.flex.tender.service.read.impl;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.Offer;
-import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.response.BidderOfferDetailsResponse;
@@ -14,7 +12,7 @@ import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.service.read.OfferDetailsService;
-import com.flex.tender.service.read.TenderDetailsService;
+import com.flex.tender.service.read.TenderDetailsBatchService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,7 +21,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
 
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
-    private final TenderDetailsService tenderDetailsService;
+    private final TenderDetailsBatchService tenderDetailsBatchService;
     
     @Override
     public BidderOfferDetailsResponse findBidderOfferDetailsById(Integer id) { 
@@ -53,7 +51,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
                     .stream()
                     .map(Offer::getId)
                     .toList();
-            var tenders = tenderDetailsService.findByOfferIdIn(offerIds);
+            var tenders = tenderDetailsBatchService.findByOfferIdIn(offerIds);
             offersPage = offers.stream()
                   .map(offer -> offerMapper.toContractorSummaryResponse(offer, tenders.get(offer.getId())))
                   .toList();
@@ -78,7 +76,7 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
                     .stream()
                     .map(Offer::getId)
                     .toList();
-            var tenders = tenderDetailsService.findByOfferIdIn(offerIds);
+            var tenders = tenderDetailsBatchService.findByOfferIdIn(offerIds);
             offersPage = offers.stream()
                   .map(offer -> offerMapper.toBidderSummaryResponse(offer, tenders.get(offer.getId())))
                   .toList();
@@ -98,11 +96,6 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
     }
     
     @Override
-    public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
-        return offerRepository.existsByTenderIdAndGlobalStatusIn(tenderId, statuses);
-    }
-    
-    @Override
     public OfferCountResponse countByBidder(Integer bidderId) {
         return new OfferCountResponse(offerRepository.countByBidder(bidderId));
     }
@@ -110,16 +103,6 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
     @Override
     public OfferCountResponse countByContractor(Integer contractorId) {
         return new OfferCountResponse(offerRepository.countByContractor(contractorId));
-    }
-
-    @Override
-    public Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds) {
-        return offerRepository.findByBidderIdAndTenderIdIn(userId, tenderIds);
-    }
-    
-    @Override
-    public Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds) {
-        return offerRepository.countByTenderIdIn(tenderIds);
     }
     
 }

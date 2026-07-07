@@ -18,7 +18,7 @@ import com.flex.tender.payload.request.TenderRequest;
 import com.flex.tender.repository.TenderRepository;
 import com.flex.tender.service.read.CpvDetailsService;
 import com.flex.tender.service.read.CustomUserDetailsService;
-import com.flex.tender.service.read.OfferDetailsService;
+import com.flex.tender.service.read.OfferDetailsBatchService;
 import com.flex.tender.service.write.TenderService;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,7 @@ public class TenderServiceImpl implements TenderService {
     private final CustomUserDetailsService userService;
     private final CpvDetailsService cpvService;
     private final TenderRepository tenderRepository;
-    private final OfferDetailsService offerDetailsService;
+    private final OfferDetailsBatchService offerDetailsBatchService;
 
     @Override
     public Tender buildEntity(PrincipalSummary principalSummary, TenderRequest tenderRequest) {
@@ -63,7 +63,7 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public Tender closeIfNoActiveOffers(Tender tender) {
-        boolean hasActiveOffers = offerDetailsService
+        boolean hasActiveOffers = offerDetailsBatchService
                 .existsByTenderIdAndGlobalStatusIn(tender.getId(), List.of(SENT, SELECTED));
         if (hasActiveOffers) {
             tender.setGlobalStatus(TENDER_CLOSED);
