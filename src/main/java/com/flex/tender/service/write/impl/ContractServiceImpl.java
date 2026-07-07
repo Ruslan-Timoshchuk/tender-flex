@@ -12,7 +12,7 @@ import com.flex.tender.payload.request.ContractRequest;
 import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.service.read.ContractTypeDetailsService;
 import com.flex.tender.service.read.CurrencyDetailsService;
-import com.flex.tender.service.read.FileStorageService;
+import com.flex.tender.service.read.FileStorageDetailsService;
 import com.flex.tender.service.write.ContractService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,14 +25,14 @@ public class ContractServiceImpl implements ContractService {
     private final ContractRepository contractRepository;
     private final ContractTypeDetailsService contractTypeDetailsService;
     private final CurrencyDetailsService currencyDetailsService;
-    private final FileStorageService fileStorageService;
+    private final FileStorageDetailsService fileStorageDetailsService;
     
     @Override 
     public Contract buildEntity(ContractRequest contractRequest) {
         Contract contract = contractMapper.toEntity(contractRequest);
         contract.setContractType(contractTypeDetailsService.findById(contractRequest.contractTypeId()));
         contract.setCurrency(currencyDetailsService.findById(contractRequest.currencyId()));
-        contract.setFileMetadata(fileStorageService.findById(contractRequest.fileMetadataId()));
+        contract.setFileMetadata(fileStorageDetailsService.findById(contractRequest.fileMetadataId()));
         contract.setGlobalStatus(DRAFT);
         return contract;
     }
