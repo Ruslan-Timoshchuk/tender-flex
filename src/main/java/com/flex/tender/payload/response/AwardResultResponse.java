@@ -1,0 +1,8 @@
+package com.flex.tender.payload.response;
+
+public record AwardResultResponse(
+        Integer contractId, 
+        Integer awardId,
+        Integer offerId,
+        String offerStatus) {
+}

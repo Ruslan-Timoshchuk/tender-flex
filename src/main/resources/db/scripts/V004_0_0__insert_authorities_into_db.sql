@@ -1,0 +1,2 @@
+INSERT INTO authorities(title) 
+VALUES ('BIDDER'), ('CONTRACTOR'), ('ADMINISTRATOR')
