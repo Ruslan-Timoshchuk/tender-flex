@@ -19,7 +19,6 @@ import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.service.facade.OfferManager;
 import com.flex.tender.service.read.OfferDetailsService;
-import com.flex.tender.service.write.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -40,7 +39,6 @@ public class OfferController {
     public static final String URL_CONTRACTOR_COUNT = "/contractor-count";
 
     private final OfferManager offerManager;
-    private final OfferService offerService;
     private final OfferDetailsService offerDetailsService;
 
     @Secured(BIDDER)
@@ -100,7 +98,7 @@ public class OfferController {
     public ResponseEntity<OfferCountResponse> countByBidder(
             @AuthenticationPrincipal(expression = "userId") Integer bidderId) {
         return ResponseEntity
-                   .ok(offerService.countByBidder(bidderId));
+                   .ok(offerDetailsService.countByBidder(bidderId));
     }
 
     @Secured(CONTRACTOR)
@@ -108,7 +106,7 @@ public class OfferController {
     public ResponseEntity<OfferCountResponse> countByContractor(
             @AuthenticationPrincipal(expression = "userId") Integer contractorId) {
         return ResponseEntity
-                   .ok(offerService.countByContractor(contractorId));
+                   .ok(offerDetailsService.countByContractor(contractorId));
     }
     
 }

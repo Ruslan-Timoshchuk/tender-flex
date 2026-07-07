@@ -1,12 +1,15 @@
 package com.flex.tender.service.read.impl;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.Offer;
+import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.SummaryPage;
 import com.flex.tender.payload.mapper.OfferMapper;
 import com.flex.tender.payload.response.BidderOfferDetailsResponse;
 import com.flex.tender.payload.response.ContractorOfferDetailsResponse;
+import com.flex.tender.payload.response.OfferCountResponse;
 import com.flex.tender.payload.response.OfferSummaryResponse;
 import com.flex.tender.payload.response.TenderOfferSummaryResponse;
 import com.flex.tender.repository.OfferRepository;
@@ -92,6 +95,31 @@ public class OfferDetailsServiceImpl implements OfferDetailsService {
         return new SummaryPage<>(requestedPage, totalPages,
                 offerRepository.findByTenderWithPagination(tenderId, pageSize, offset).stream()
                         .map(offerMapper::toTenderSummaryResponse).toList());
+    }
+    
+    @Override
+    public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
+        return offerRepository.existsByTenderIdAndGlobalStatusIn(tenderId, statuses);
+    }
+    
+    @Override
+    public OfferCountResponse countByBidder(Integer bidderId) {
+        return new OfferCountResponse(offerRepository.countByBidder(bidderId));
+    }
+
+    @Override
+    public OfferCountResponse countByContractor(Integer contractorId) {
+        return new OfferCountResponse(offerRepository.countByContractor(contractorId));
+    }
+
+    @Override
+    public Map<Integer, Offer> findByBidderIdAndTenderIdIn(Integer userId, List<Integer> tenderIds) {
+        return offerRepository.findByBidderIdAndTenderIdIn(userId, tenderIds);
+    }
+    
+    @Override
+    public Map<Integer, Integer> countOffersByTenderIds(List<Integer> tenderIds) {
+        return offerRepository.countByTenderIdIn(tenderIds);
     }
     
 }
