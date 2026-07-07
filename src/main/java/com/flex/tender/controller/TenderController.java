@@ -21,7 +21,6 @@ import com.flex.tender.payload.response.TenderCountResponse;
 import com.flex.tender.payload.response.TenderDetailsResponse;
 import com.flex.tender.service.facade.TenderManager;
 import com.flex.tender.service.read.TenderDetailsService;
-import com.flex.tender.service.write.TenderService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -36,7 +35,6 @@ public class TenderController {
     public static final String URL_COUNT_ALL = "/count-all";
 
     private final TenderManager tenderManager;
-    private final TenderService tenderService;
     private final TenderDetailsService tenderDetailsService;
 
     @Secured(CONTRACTOR)
@@ -55,7 +53,7 @@ public class TenderController {
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return ResponseEntity
                  .ok()
-                 .body(tenderService.findByContractorWithPagination(contractorId, page, pageSize));
+                 .body(tenderDetailsService.findByContractorWithPagination(contractorId, page, pageSize));
     }
     
     @Secured(BIDDER)
@@ -66,7 +64,7 @@ public class TenderController {
             @RequestParam(defaultValue = "10") Integer tendersPerPage) {
         return ResponseEntity
                  .ok()
-                 .body(tenderService.findByBidderWithPagination(bidderId, currentPage, tendersPerPage));
+                 .body(tenderDetailsService.findByBidderWithPagination(bidderId, currentPage, tendersPerPage));
     }
 
     @Secured({ CONTRACTOR, BIDDER })
@@ -82,14 +80,14 @@ public class TenderController {
     public ResponseEntity<TenderCountResponse> countByContractor(
             @AuthenticationPrincipal(expression = "userId") Integer contractorId) {
         return ResponseEntity
-                   .ok(tenderService.countByContractor(contractorId));
+                   .ok(tenderDetailsService.countByContractor(contractorId));
     }
     
     @Secured(BIDDER)
     @GetMapping(URL_COUNT_ALL)
     public ResponseEntity<TenderCountResponse> countAll() {
         return ResponseEntity
-                   .ok(tenderService.countAll());
+                   .ok(tenderDetailsService.countAll());
     }
 
 }
