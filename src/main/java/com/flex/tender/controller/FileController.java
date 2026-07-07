@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.flex.tender.exception.FileNotExistsException;
 import com.flex.tender.payload.response.FileMetadataResponse;
-import com.flex.tender.service.FileStorageService;
+import com.flex.tender.service.read.FileStorageDetailsService;
+import com.flex.tender.service.write.FileStorageService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,6 +27,7 @@ public class FileController {
     public static final String URI_FILES_KEY = "/{key}";
     
     private final FileStorageService fileStorageService;
+    private final FileStorageDetailsService fileStorageDetailsService;
 
     @Secured({ CONTRACTOR, BIDDER })
     @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
@@ -41,7 +43,7 @@ public class FileController {
     @GetMapping(value = URI_FILES_KEY, produces = APPLICATION_PDF_VALUE)
     public ResponseEntity<Resource> findByKey(@PathVariable("key") String key) throws IOException {
         return ResponseEntity
-                   .ok(fileStorageService.findByKey(key));
+                   .ok(fileStorageDetailsService.findByKey(key));
     }
     
 }
