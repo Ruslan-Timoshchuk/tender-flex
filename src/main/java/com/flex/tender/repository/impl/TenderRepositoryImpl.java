@@ -1,16 +1,9 @@
 package com.flex.tender.repository.impl;
 
-import static java.lang.String.*;
-import static java.util.stream.Collectors.toSet;
-import static com.flex.tender.repository.sql.query.TenderMixins.*;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -31,28 +24,58 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TenderRepositoryImpl implements TenderRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TenderRepositoryImpl.class);
-
-    public static final String EXECUTING_SQL_QUERY_LOG = "Executing SQL Query: {}";
-    public static final String ADD_NEW_QUERY = """
-            INSERT INTO tenders(contractor_id, company_profile_id, procedure_type, language, cpv_id, description,
-                                global_status, publication_date, offer_submission_deadline)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""";
+    public static final String INSERT_QUERY = """
+            INSERT INTO tenders(%s)
+            VALUES (%s)
+            """.formatted(
+                TenderMixins.TENDER_INSERT_COLUMNS,
+                TenderMixins.TENDER_INSERT_VALUE_PARAMETERS);
     public static final String UPDATE_QUERY = """
             UPDATE tenders 
-            SET procedure_type = ?, language = ?, cpv_id = ?, description = ?, global_status = ?
-            WHERE id = ?""";
-    public static final String COUNT_TENDERS_QUERY = "SELECT count(*) FROM tenders";
-    public static final String COUNT_TENDERS_BY_CONTRACTOR_QUERY = "SELECT count(*) FROM tenders WHERE contractor_id = ?";
+            SET %s
+            WHERE id = :id
+            """.formatted(
+                TenderMixins.TENDER_UPDATE_SET_CLAUSE);
+    public static final String FIND_PAGE_QUERY = """
+            SELECT %s 
+            FROM tenders tender 
+            LEFT JOIN %s 
+            LEFT JOIN %s 
+            LEFT JOIN %s 
+            LIMIT :limit OFFSET :offset
+            """.formatted(
+                TenderMixins.TENDER_QUERY_COLUMNS,  
+                CpvMixins.CPV_JOIN_TENDERS_SQL,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+    public static final String FIND_CONTRACTOR_PAGE_QUERY = """
+           SELECT %s 
+           FROM tenders tender 
+           LEFT JOIN %s 
+           LEFT JOIN %s 
+           LEFT JOIN %s 
+           WHERE contractor_id = :contractorId LIMIT :limit OFFSET :offset
+           """.formatted(
+               TenderMixins.TENDER_QUERY_COLUMNS,  
+               CpvMixins.CPV_JOIN_TENDERS_SQL,
+               CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
+               CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+    public static final String COUNT_ALL_QUERY = """
+           SELECT count(*) 
+           FROM tenders""";
+    public static final String COUNT_ALL_BY_CONTRACTOR_QUERY = """
+           SELECT count(*) 
+           FROM tenders 
+           WHERE contractor_id = :contractorId""";
     public static final String FIND_BY_ID_QUERY = """
             SELECT %s 
             FROM tenders tender 
             LEFT JOIN %s 
             LEFT JOIN %s 
             LEFT JOIN %s 
-            WHERE tender.id = ?
+            WHERE tender.id = :tenderId
             """.formatted(
-                TenderMixins.TENDER_COLUMNS_SQL,
+                TenderMixins.TENDER_QUERY_COLUMNS,
                 CpvMixins.CPV_JOIN_TENDERS_SQL,
                 CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
                 CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
@@ -66,13 +89,25 @@ public class TenderRepositoryImpl implements TenderRepository {
             WHERE offer.id IN (:offerIds)
             """.formatted(
                 OfferMixins.OFFER_ID_COLUMN_SQL,
-                TenderMixins.TENDER_COLUMNS_SQL, 
+                TenderMixins.TENDER_QUERY_COLUMNS, 
                 CpvMixins.CPV_JOIN_TENDERS_SQL,
                 CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
                 CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL,
                 OfferMixins.OFFER_JOIN_TENDERS_SQL);
+    public static final String FIND_ACTIVE_WITH_EXPIRED_SUBMISSION_QUERY = """
+            SELECT %s 
+            FROM tenders tender 
+            LEFT JOIN %s 
+            LEFT JOIN %s 
+            LEFT JOIN %s
+            WHERE tender.global_status = :status 
+            AND offer_submission_deadline <= :date
+            """.formatted(
+                TenderMixins.TENDER_QUERY_COLUMNS,
+                CpvMixins.CPV_JOIN_TENDERS_SQL,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);  
     
-    private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate jdbc;
     private final TenderMapper tenderMapper;
     private final OfferTenderMapExtractor offerTenderMapExtractor;
@@ -80,76 +115,87 @@ public class TenderRepositoryImpl implements TenderRepository {
     @Override
     public Tender save(Tender tender) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(ADD_NEW_QUERY, new String[] { "id" });
-            statement.setInt(1, tender.getContractor().getId());
-            statement.setInt(2, tender.getCompanyProfile().getId());
-            statement.setString(3, tender.getProcedure().getType().name());
-            statement.setString(4, tender.getProcedure().getLanguage().name());
-            statement.setInt(5, tender.getCpv().getId());
-            statement.setString(6, tender.getDescription());
-            statement.setString(7, tender.getGlobalStatus().name());
-            statement.setObject(8, tender.getPublicationDate());
-            statement.setObject(9, tender.getOfferSubmissionDeadline());
-            return statement;
-        }, keyHolder);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("userId", tender.getContractor().getId())
+                .addValue("companyProfileId", tender.getCompanyProfile().getId())
+                .addValue("procedureType", tender.getProcedure().getType().name())
+                .addValue("language", tender.getProcedure().getLanguage().name())
+                .addValue("cpvId", tender.getCpv().getId())
+                .addValue("description", tender.getDescription())
+                .addValue("globalStatus", tender.getGlobalStatus().name())
+                .addValue("publicationDate", tender.getPublicationDate())
+                .addValue("offerSubmissionDeadline", tender.getOfferSubmissionDeadline());
+        jdbc.update(
+                INSERT_QUERY, 
+                parameters,
+                keyHolder, 
+                new String[] { "id" });
         tender.setId(keyHolder.getKeyAs(Integer.class));
         return tender;
     }
 
     @Override
     public void update(Tender tender) {
-        jdbcTemplate.update(UPDATE_QUERY, tender.getProcedure().getType().name(),
-                tender.getProcedure().getLanguage().name(), tender.getCpv().getId(), tender.getDescription(),
-                tender.getGlobalStatus().name(), tender.getId());
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("id", tender.getId())
+                .addValue("procedureType", tender.getProcedure().getType().name())
+                .addValue("language", tender.getProcedure().getLanguage().name())
+                .addValue("cpvId", tender.getCpv().getId())
+                .addValue("description", tender.getDescription())
+                .addValue("globalStatus", tender.getGlobalStatus().name());
+        jdbc.update(UPDATE_QUERY, parameters);
     }
 
     @Override
-    public Set<Tender> findWithPagination(Integer limit, Integer offset) {
-        String sqlQuery = format(SELECT_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL,
-                TENDER_JOIN_TABLES_SQL_PART_QUERY);
-        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, limit, offset).stream().collect(toSet());
+    public List<Tender> findWithPagination(Integer limit, Integer offset) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("limit", limit)
+                .addValue("offset", offset);
+        return jdbc.query(FIND_PAGE_QUERY, parameters, tenderMapper);
     }
 
     @Override
-    public Set<Tender> findByContractorWithPagination(Integer contractorId, Integer limit,
+    public List<Tender> findByContractorWithPagination(Integer contractorId, Integer limit,
             Integer offset) {
-        String sqlQuery = format(SELECT_CONTRACTOR_PAGE_PATTERN_QUERY, TENDER_COLUMNS_SQL,
-                TENDER_JOIN_TABLES_SQL_PART_QUERY);
-        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate.query(sqlQuery, tenderMapper, contractorId, limit, offset).stream()
-                .collect(toSet());
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("contractorId", contractorId)
+                .addValue("limit", limit)
+                .addValue("offset", offset);
+        return jdbc.query(FIND_CONTRACTOR_PAGE_QUERY, parameters, tenderMapper);
     }
 
     @Override
     public Integer countByContractor(Integer contractorId) {
-        return jdbcTemplate.queryForObject(COUNT_TENDERS_BY_CONTRACTOR_QUERY, Integer.class, contractorId);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("contractorId", contractorId);
+        return jdbc.queryForObject(COUNT_ALL_BY_CONTRACTOR_QUERY, parameters, Integer.class);
     }
 
     @Override
     public Integer countAll() {
-        return jdbcTemplate.queryForObject(COUNT_TENDERS_QUERY, Integer.class);
+        return jdbc.queryForObject(COUNT_ALL_QUERY, new MapSqlParameterSource(), Integer.class);
     }
 
     @Override
     public Tender findById(Integer tenderId) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, tenderMapper, tenderId);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("tenderId", tenderId);
+        return jdbc.queryForObject(FIND_BY_ID_QUERY, parameters, tenderMapper);
     }
 
     @Override
-    public Set<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate currentDate) {
-        String sqlQuery = format(SELECT_ACTIVE_WITH_EXPIRED_SUBMISSION_PATTERN_QUERY, TENDER_COLUMNS_SQL,
-                TENDER_JOIN_TABLES_SQL_PART_QUERY);
-        LOGGER.debug(EXECUTING_SQL_QUERY_LOG, sqlQuery);
-        return jdbcTemplate
-                .query(sqlQuery, tenderMapper, status.name(), currentDate).stream()
-                .collect(toSet());
+    public List<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate date) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("status", status.name())
+                .addValue("date", date);
+        return jdbc.query(FIND_ACTIVE_WITH_EXPIRED_SUBMISSION_QUERY, parameters, tenderMapper);
     }
 
     @Override
     public Map<Integer, Tender> findByOfferIdIn(List<Integer> offerIds) {
-        return jdbc.query(FIND_BY_OFFER_ID_IN_QUERY, Map.of("offerIds", offerIds), offerTenderMapExtractor);
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("offerIds", offerIds);
+        return jdbc.query(FIND_BY_OFFER_ID_IN_QUERY, parameters, offerTenderMapExtractor);
     }
 
 }
