@@ -37,29 +37,35 @@ public class TenderRepositoryImpl implements TenderRepository {
             """.formatted(
                 TenderMixins.TENDER_UPDATE_SET_CLAUSE);
     public static final String FIND_PAGE_QUERY = """
-            SELECT %s 
+            SELECT %s, %s, %s, %s 
             FROM tenders tender 
             LEFT JOIN %s 
             LEFT JOIN %s 
             LEFT JOIN %s 
             LIMIT :limit OFFSET :offset
             """.formatted(
-                TenderMixins.TENDER_QUERY_COLUMNS,  
-                CpvMixins.CPV_JOIN_TENDERS_SQL,
-                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
-                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+                TenderMixins.TENDER_QUERY_COLUMNS, 
+                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+                CountryMixins.COUNTRY_QUERY_COLUMNS,
+                CpvMixins.CPV_QUERY_COLUMNS,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+                CpvMixins.CPV_JOIN_TENDERS);
     public static final String FIND_CONTRACTOR_PAGE_QUERY = """
-           SELECT %s 
+           SELECT %s, %s, %s, %s 
            FROM tenders tender 
            LEFT JOIN %s 
            LEFT JOIN %s 
            LEFT JOIN %s 
            WHERE contractor_id = :contractorId LIMIT :limit OFFSET :offset
            """.formatted(
-               TenderMixins.TENDER_QUERY_COLUMNS,  
-               CpvMixins.CPV_JOIN_TENDERS_SQL,
-               CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
-               CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+               TenderMixins.TENDER_QUERY_COLUMNS, 
+                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+                CountryMixins.COUNTRY_QUERY_COLUMNS,
+                CpvMixins.CPV_QUERY_COLUMNS,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+                CpvMixins.CPV_JOIN_TENDERS);
     public static final String COUNT_ALL_QUERY = """
            SELECT count(*) 
            FROM tenders""";
@@ -68,34 +74,40 @@ public class TenderRepositoryImpl implements TenderRepository {
            FROM tenders 
            WHERE contractor_id = :contractorId""";
     public static final String FIND_BY_ID_QUERY = """
-            SELECT %s 
+            SELECT %s, %s, %s, %s 
             FROM tenders tender 
             LEFT JOIN %s 
             LEFT JOIN %s 
             LEFT JOIN %s 
             WHERE tender.id = :tenderId
             """.formatted(
-                TenderMixins.TENDER_QUERY_COLUMNS,
-                CpvMixins.CPV_JOIN_TENDERS_SQL,
-                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
-                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);
+                TenderMixins.TENDER_QUERY_COLUMNS, 
+                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+                CountryMixins.COUNTRY_QUERY_COLUMNS,
+                CpvMixins.CPV_QUERY_COLUMNS,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+                CpvMixins.CPV_JOIN_TENDERS);
     public static final String FIND_BY_OFFER_ID_IN_QUERY ="""
-            SELECT %s, %s 
+            SELECT %s, %s, %s, %s, %s 
             FROM tenders tender 
             LEFT JOIN %s 
             LEFT JOIN %s 
             LEFT JOIN %s 
-            LEFT JOIN %s     
+            LEFT JOIN %s      
             WHERE offer.id IN (:offerIds)
             """.formatted(
-                OfferMixins.OFFER_ID_COLUMN_SQL,
+                OfferMixins.OFFER_ID_QUERY_COLUMN,
                 TenderMixins.TENDER_QUERY_COLUMNS, 
-                CpvMixins.CPV_JOIN_TENDERS_SQL,
-                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
-                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL,
-                OfferMixins.OFFER_JOIN_TENDERS_SQL);
+                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+                CountryMixins.COUNTRY_QUERY_COLUMNS,
+                CpvMixins.CPV_QUERY_COLUMNS,
+                OfferMixins.OFFER_JOIN_TENDERS,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+                CpvMixins.CPV_JOIN_TENDERS);
     public static final String FIND_ACTIVE_WITH_EXPIRED_SUBMISSION_QUERY = """
-            SELECT %s 
+            SELECT %s, %s, %s, %s 
             FROM tenders tender 
             LEFT JOIN %s 
             LEFT JOIN %s 
@@ -103,10 +115,13 @@ public class TenderRepositoryImpl implements TenderRepository {
             WHERE tender.global_status = :status 
             AND offer_submission_deadline <= :date
             """.formatted(
-                TenderMixins.TENDER_QUERY_COLUMNS,
-                CpvMixins.CPV_JOIN_TENDERS_SQL,
-                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS_SQL,
-                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES_SQL);  
+                TenderMixins.TENDER_QUERY_COLUMNS, 
+                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+                CountryMixins.COUNTRY_QUERY_COLUMNS,
+                CpvMixins.CPV_QUERY_COLUMNS,
+                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+                CpvMixins.CPV_JOIN_TENDERS);  
     
     private final NamedParameterJdbcTemplate jdbc;
     private final TenderMapper tenderMapper;
