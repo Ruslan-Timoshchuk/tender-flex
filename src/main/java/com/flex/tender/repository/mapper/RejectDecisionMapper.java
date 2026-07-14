@@ -20,11 +20,10 @@ public class RejectDecisionMapper implements RowMapper<RejectDecision> {
     }  
     
     public RejectDecision mapReject(ResultSet resultSet) throws SQLException {
-        return RejectDecision
-                .builder()
-                .id(resultSet.getInt(REJECT_DECISION_ID))
-                .fileMetadata(fileMetadataMapper.mapFileMetadata(resultSet))
-                .build();
+        return RejectDecision.builder()
+                             .id(resultSet.getInt(REJECT_DECISION_ID))
+                             .fileMetadata(fileMetadataMapper.mapFileMetadata(resultSet))
+               .build();
     }
 
 }

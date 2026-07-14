@@ -16,11 +16,10 @@ public class ContractTypeMapper implements RowMapper<ContractType> {
     }
 
     public ContractType mapContractType(ResultSet resultSet) throws SQLException {
-        return ContractType
-                .builder()
-                .id(resultSet.getInt(CONTRACT_TYPE_ID))
-                .title(resultSet.getString(CONTRACT_TYPE_TITLE))
-                .build();
+        return ContractType.builder()
+                           .id(resultSet.getInt(CONTRACT_TYPE_ID))
+                           .title(resultSet.getString(CONTRACT_TYPE_TITLE))
+               .build();
 
     }
 
