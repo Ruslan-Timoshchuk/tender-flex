@@ -42,4 +42,9 @@ public class TenderMixins {
             tender.publication_date,
             tender.offer_submission_deadline
             """;
+    public final String TENDER_ID_QUERY_COLUMN = "tender.id AS tender_id";
+    public final String TENDER_JOIN_CPVS = """
+            tenders tender ON cpv.id = tender.cpv_id
+            """;
+    
 }
