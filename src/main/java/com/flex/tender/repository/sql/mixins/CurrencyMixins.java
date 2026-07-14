@@ -17,7 +17,5 @@ public class CurrencyMixins {
             currencies currency ON 
             currency.id = contract.currency_id
             """;
-    public static final String FIND_ALL_QUERY = "SELECT id AS currency_id, code, symbol FROM currencies";
-    public static final String FIND_BY_ID_QUERY = "SELECT id AS currency_id, code, symbol FROM currencies WHERE id = ?";
 
 }
