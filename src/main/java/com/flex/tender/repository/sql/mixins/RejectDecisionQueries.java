@@ -1,4 +1,4 @@
-package com.flex.tender.repository.sql.query;
+package com.flex.tender.repository.sql.mixins;
 
 import lombok.experimental.UtilityClass;
 

@@ -13,11 +13,12 @@ import com.flex.tender.model.enumeration.ETenderStatus;
 import com.flex.tender.repository.TenderRepository;
 import com.flex.tender.repository.extractor.OfferTenderMapExtractor;
 import com.flex.tender.repository.mapper.TenderMapper;
-import com.flex.tender.repository.sql.query.CompanyProfileMixins;
-import com.flex.tender.repository.sql.query.CountryMixins;
-import com.flex.tender.repository.sql.query.CpvMixins;
-import com.flex.tender.repository.sql.query.OfferMixins;
-import com.flex.tender.repository.sql.query.TenderMixins;
+import com.flex.tender.repository.sql.mixins.CompanyProfileMixins;
+import com.flex.tender.repository.sql.mixins.CountryMixins;
+import com.flex.tender.repository.sql.mixins.CpvMixins;
+import com.flex.tender.repository.sql.mixins.OfferMixins;
+import com.flex.tender.repository.sql.mixins.TenderMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository

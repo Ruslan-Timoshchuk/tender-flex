@@ -1,6 +1,7 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.UserQueries.*;
+import static com.flex.tender.repository.sql.mixins.UserQueries.*;
+
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

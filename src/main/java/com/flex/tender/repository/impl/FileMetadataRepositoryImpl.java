@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.flex.tender.model.FileMetadata;
 import com.flex.tender.repository.FileMetadataRepository;
 import com.flex.tender.repository.mapper.FileMetadataMapper;
-import com.flex.tender.repository.sql.query.FileMetadataMixins;
+import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository

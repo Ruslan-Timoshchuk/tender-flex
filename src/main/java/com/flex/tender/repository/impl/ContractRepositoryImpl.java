@@ -10,10 +10,11 @@ import com.flex.tender.model.Contract;
 import com.flex.tender.model.enumeration.EContractStatus;
 import com.flex.tender.repository.ContractRepository;
 import com.flex.tender.repository.mapper.ContractMapper;
-import com.flex.tender.repository.sql.query.ContractMixins;
-import com.flex.tender.repository.sql.query.ContractTypeMixins;
-import com.flex.tender.repository.sql.query.CurrencyMixins;
-import com.flex.tender.repository.sql.query.FileMetadataMixins;
+import com.flex.tender.repository.sql.mixins.ContractMixins;
+import com.flex.tender.repository.sql.mixins.ContractTypeMixins;
+import com.flex.tender.repository.sql.mixins.CurrencyMixins;
+import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository

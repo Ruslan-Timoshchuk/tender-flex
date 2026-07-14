@@ -1,6 +1,7 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.RejectDecisionQueries.*;
+import static com.flex.tender.repository.sql.mixins.RejectDecisionQueries.*;
+
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

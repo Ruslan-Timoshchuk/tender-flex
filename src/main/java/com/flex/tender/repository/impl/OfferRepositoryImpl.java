@@ -16,11 +16,12 @@ import com.flex.tender.repository.OfferRepository;
 import com.flex.tender.repository.extractor.OfferCountExtractor;
 import com.flex.tender.repository.extractor.TenderOfferMapExtractor;
 import com.flex.tender.repository.mapper.OfferMapper;
-import com.flex.tender.repository.sql.query.CompanyProfileMixins;
-import com.flex.tender.repository.sql.query.CountryMixins;
-import com.flex.tender.repository.sql.query.CurrencyMixins;
-import com.flex.tender.repository.sql.query.FileMetadataMixins;
-import com.flex.tender.repository.sql.query.OfferMixins;
+import com.flex.tender.repository.sql.mixins.CompanyProfileMixins;
+import com.flex.tender.repository.sql.mixins.CountryMixins;
+import com.flex.tender.repository.sql.mixins.CurrencyMixins;
+import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
+import com.flex.tender.repository.sql.mixins.OfferMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository

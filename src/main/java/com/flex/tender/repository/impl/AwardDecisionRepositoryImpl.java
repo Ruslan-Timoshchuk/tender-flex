@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.repository.mapper.AwardDecisionMapper;
-import com.flex.tender.repository.sql.query.AwardDecisionMixins;
-import com.flex.tender.repository.sql.query.FileMetadataMixins;
+import com.flex.tender.repository.sql.mixins.AwardDecisionMixins;
+import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository

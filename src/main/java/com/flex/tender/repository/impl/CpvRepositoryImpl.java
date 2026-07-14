@@ -1,6 +1,7 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.CpvMixins.*;
+import static com.flex.tender.repository.sql.mixins.CpvMixins.*;
+
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
