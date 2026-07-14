@@ -60,12 +60,12 @@ public class TenderRepositoryImpl implements TenderRepository {
            WHERE contractor_id = :contractorId LIMIT :limit OFFSET :offset
            """.formatted(
                TenderMixins.TENDER_QUERY_COLUMNS, 
-                CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
-                CountryMixins.COUNTRY_QUERY_COLUMNS,
-                CpvMixins.CPV_QUERY_COLUMNS,
-                CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
-                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
-                CpvMixins.CPV_JOIN_TENDERS);
+               CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
+               CountryMixins.COUNTRY_QUERY_COLUMNS,
+               CpvMixins.CPV_QUERY_COLUMNS,
+               CompanyProfileMixins.COMPANY_PROFILE_JOIN_TENDERS,
+               CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
+               CpvMixins.CPV_JOIN_TENDERS);
     public static final String COUNT_ALL_QUERY = """
            SELECT count(*) 
            FROM tenders""";
