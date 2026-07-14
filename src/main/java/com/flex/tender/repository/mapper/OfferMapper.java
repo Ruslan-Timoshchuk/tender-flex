@@ -16,7 +16,7 @@ public class OfferMapper implements RowMapper<Offer> {
     
     private final CompanyProfileMapper companyProfileMapper;
     private final CurrencyMapper currencyMapper;
-    private final FileMeatadataMapper fileMeatadataMapper;
+    private final FileMetadataMapper fileMeatadataMapper;
     
     @Override
     public Offer mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -24,15 +24,14 @@ public class OfferMapper implements RowMapper<Offer> {
     }
     
     public Offer mapOffer(ResultSet resultSet) throws SQLException {
-        return Offer
-                .builder()
-                .id(resultSet.getInt(OFFER_ID))       
-                .companyProfile(companyProfileMapper.mapCompanyProfile(resultSet))
-                .globalStatus(EOfferStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
-                .bidPrice(resultSet.getInt(BID_PRICE))
-                .currency(currencyMapper.mapCurrency(resultSet))
-                .publication(resultSet.getObject(PUBLICATION_DATE, LocalDate.class))
-                .proposition(fileMeatadataMapper.mapFileMetadata(resultSet))
+        return Offer.builder()
+                    .id(resultSet.getInt(OFFER_ID))       
+                    .companyProfile(companyProfileMapper.mapCompanyProfile(resultSet))
+                    .globalStatus(EOfferStatus.valueOf(resultSet.getString(GLOBAL_STATUS)))
+                    .bidPrice(resultSet.getInt(BID_PRICE))
+                    .currency(currencyMapper.mapCurrency(resultSet))
+                    .publication(resultSet.getObject(PUBLICATION_DATE, LocalDate.class))
+                    .proposition(fileMeatadataMapper.mapFileMetadata(resultSet))
               .build();
     }
     

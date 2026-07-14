@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AwardDecisionMapper implements RowMapper<AwardDecision> {
     
-    private final FileMeatadataMapper fileMapper;
+    private final FileMetadataMapper fileMapper;
 
     @Override
     public AwardDecision mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -20,11 +20,10 @@ public class AwardDecisionMapper implements RowMapper<AwardDecision> {
     } 
     
     public AwardDecision mapAward(ResultSet resultSet) throws SQLException {
-        return AwardDecision
-                 .builder()
-                 .id(resultSet.getInt(AWARD_DECISION_ID))
-                 .fileMetadata(fileMapper.mapFileMetadata(resultSet))
-                 .build();
+        return AwardDecision.builder()
+                            .id(resultSet.getInt(AWARD_DECISION_ID))
+                            .fileMetadata(fileMapper.mapFileMetadata(resultSet))
+               .build();
     }
  
 }
