@@ -21,7 +21,6 @@ import com.flex.tender.repository.sql.mixins.CountryMixins;
 import com.flex.tender.repository.sql.mixins.CurrencyMixins;
 import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
 import com.flex.tender.repository.sql.mixins.OfferMixins;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -135,19 +134,22 @@ public class OfferRepositoryImpl implements OfferRepository {
     public static final String EXISTS_BY_TENDER_ID_AND_GLOBAL_STATUS_IN = """
             SELECT EXISTS 
             (SELECT 1 FROM offers 
-            WHERE tender_id = :tenderId AND global_status IN (:statuses))""";
+            WHERE tender_id = :tenderId AND global_status IN (:statuses))
+            """;
     public static final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = :bidderId";
     public static final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = """
             SELECT count(offer.id) 
             FROM offers offer 
             LEFT JOIN tenders tender ON offer.tender_id = tender.id 
-            WHERE tender.contractor_id = :contractorId""";
+            WHERE tender.contractor_id = :contractorId
+            """;
     public static final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(id) FROM offers WHERE tender_id = :tenderId";
     public static final String COUNT_OFFERS_BY_TENDER_ID_IN_QUERY = """
             SELECT tender_id, COUNT(*) as offers 
             FROM offers 
             WHERE tender_id IN (:tenderIds) 
-            GROUP BY tender_id""";
+            GROUP BY tender_id
+            """;
     public static final String FIND_BY_ID_QUERY = """
             SELECT %s, %s, %s, %s, %s 
             FROM offers offer 
