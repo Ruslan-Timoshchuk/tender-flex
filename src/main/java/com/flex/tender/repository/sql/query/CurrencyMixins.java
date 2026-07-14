@@ -13,6 +13,10 @@ public class CurrencyMixins {
     public final String CURRENCY_JOIN_OFFERS = """
             currencies currency ON 
             currency.id = offer.currency_id""";
+    public final String CURRENCY_JOIN_CONTRACTS = """
+            currencies currency ON 
+            currency.id = contract.currency_id
+            """;
     public static final String FIND_ALL_QUERY = "SELECT id AS currency_id, code, symbol FROM currencies";
     public static final String FIND_BY_ID_QUERY = "SELECT id AS currency_id, code, symbol FROM currencies WHERE id = ?";
 
