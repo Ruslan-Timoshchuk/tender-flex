@@ -16,7 +16,7 @@ public class FileMetadataMapper implements RowMapper<FileMetadata> {
                            .id(resultSet.getInt(FILE_METADATA_ID))
                            .name(resultSet.getString(FILE_METADATA_NAME))
                            .contentType(resultSet.getString(FILE_METADATA_CONTENT_TYPE))
-                           .awsS3fileKey(resultSet.getString(FILE_METADATA_AWS_S3_FILE_KEY))
+                           .awsS3fileKey(resultSet.getString(FILE_METADATA_AWS3_KEY))
                            .build();
     }
 
