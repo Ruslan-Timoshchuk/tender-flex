@@ -13,7 +13,5 @@ public class ContractTypeMixins {
             contract_types contract_type ON 
             contract_type.id = contract.contract_type_id
             """;
-    public final String FIND_ALL_QUERY = "SELECT id AS contract_type_id, title AS contract_type_name FROM contract_types";
-    public final String FIND_BY_ID_QUERY = "SELECT id AS contract_type_id, title AS contract_type_name FROM contract_types WHERE id = ?";
 
 }
