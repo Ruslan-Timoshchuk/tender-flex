@@ -1,6 +1,6 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.FileMetadataQueries.*;
+import static com.flex.tender.repository.sql.query.FileMetadataMixins.*;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

@@ -1,11 +1,9 @@
 package com.flex.tender.repository.mapper;
 
-import static com.flex.tender.repository.mapper.FileMeatadataMapper.*;
 import static com.flex.tender.repository.sql.column.OfferColumns.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import com.flex.tender.model.Offer;
@@ -34,12 +32,7 @@ public class OfferMapper implements RowMapper<Offer> {
                 .bidPrice(resultSet.getInt(BID_PRICE))
                 .currency(currencyMapper.mapCurrency(resultSet))
                 .publication(resultSet.getObject(PUBLICATION_DATE, LocalDate.class))
-                .proposition(fileMeatadataMapper.
-                        mapFileMetadata(resultSet, 
-                                Map.of(FILE_ID, PROPOSITION_FILE_ID,
-                                       FILE_NAME, PROPOSITION_FILE_NAME,
-                                       FILE_CONTENT_TYPE, PROPOSITION_FILE_CONTENT_TYPE,
-                                       FILE_AWS3_KEY, PROPOSITION_FILE_AWS3_KEY)))
+                .proposition(fileMeatadataMapper.mapFileMetadata(resultSet))
               .build();
     }
     

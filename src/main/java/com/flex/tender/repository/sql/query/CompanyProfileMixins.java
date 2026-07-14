@@ -16,6 +16,9 @@ public class CompanyProfileMixins {
     public final String COMPANY_PROFILE_JOIN_TENDERS ="""
             company_profiles company_profile ON 
             company_profile.id = tender.company_profile_id""";
+    public final String COMPANY_PROFILE_JOIN_OFFERS ="""
+            company_profiles company_profile ON 
+            company_profile.id = offer.company_profile_id""";
     
     public final String ADD_NEW_QUERY = """
             INSERT INTO company_profiles(official_name, registration_number, country_id, city, 

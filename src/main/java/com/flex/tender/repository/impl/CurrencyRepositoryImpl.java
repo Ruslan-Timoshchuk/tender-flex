@@ -1,6 +1,6 @@
 package com.flex.tender.repository.impl;
 
-import static com.flex.tender.repository.sql.query.CurrencyQueries.*;
+import static com.flex.tender.repository.sql.query.CurrencyMixins.*;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

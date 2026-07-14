@@ -5,27 +5,38 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class OfferMixins {
 
+    public final String OFFER_INSER_COLUMNS = """
+            bidder_id, 
+            tender_id, 
+            company_profile_id, 
+            global_status,          
+            bid_price, 
+            currency_id, 
+            publication_date, 
+            proposition_file_id
+            """;
+    public final String OFFER_INSER_VALUE_PARAMETERS = """
+            :userId, 
+            :tenderId, 
+            :companyProfileId, 
+            :globalStatus,          
+            :bidPrice, 
+            :currencyId, 
+            :publicationDate, 
+            :propositionFileId
+            """;
+    public final String OFFER_UPDATE_SET_CLAUSE = """
+            global_status = :globalStatus, 
+            award_decision_id = :awardDecisionId, 
+            reject_decision_id = :rejectDecisionId
+            """;
+    public static final String OFFER_QUERY_COLUMNS = """
+            offer.id AS offer_id, 
+            offer.global_status, 
+            offer.bid_price, 
+            offer.publication_date
+            """;
     public final String OFFER_ID_QUERY_COLUMN = "offer.id AS offer_id";
-    
     public final String OFFER_JOIN_TENDERS = "offers offer ON offer.tender_id = tender.id";
     
-    public final String COUNT_OFFERS_BY_BIDDER_QUERY = "SELECT count(id) FROM offers WHERE bidder_id = ?";
-    public final String COUNT_OFFERS_BY_TENDER_QUERY = "SELECT count(id) FROM offers WHERE tender_id = ?";
-    public final String COUNT_OFFERS_BY_CONTRACTOR_QUERY = """
-           SELECT count(o.id) 
-           FROM offers o 
-           LEFT JOIN tenders t ON o.tender_id = t.id 
-           WHERE contractor_id = ?""";
-    public final String COUNT_OFFERS_BY_TENDER_ID_IN_QUERY = """
-           SELECT tender_id, COUNT(*) as offers 
-           FROM offers 
-           WHERE tender_id IN (:tenderIds) 
-           GROUP BY tender_id""";
-    public final String EXISTS_BY_TENDER_ID_AND_GLOBAL_STATUS_IN = """
-           SELECT EXISTS 
-           (SELECT 1 FROM offers 
-           WHERE tender_id = :tenderId AND global_status IN (:statuses))""";
-    public final String FIND_BY_BIDDER_ID_AND_TENDER_ID_IN_PATTERN_QUERY = """
-            SELECT %s FROM offers offer %s 
-            WHERE offer.bidder_id = :bidderId AND offer.tender_id IN (:tenderIds)""";
 }
