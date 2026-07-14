@@ -1,6 +1,6 @@
 package com.flex.tender.service.read;
 
-import java.util.Set;
+import java.util.List;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.enumeration.EContractStatus;
 
@@ -10,6 +10,6 @@ public interface ContractDetailsService {
     
     Contract findByAwardDecisionId(Integer awardDecisionId);
 
-    Set<Contract> findAll(EContractStatus globalStatus);
+    List<Contract> findAll(EContractStatus globalStatus);
 
 }
