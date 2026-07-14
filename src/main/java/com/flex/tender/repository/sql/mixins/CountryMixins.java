@@ -13,9 +13,7 @@ public class CountryMixins {
             """;
     public final String COUNTRY_JOIN_COMPANY_PROFILES = """
             countries country ON 
-            country.id = company_profile.country_id""";
-    
-    public final String FIND_ALL_QUERY = "SELECT id AS country_id, name, iso_code, phone_code FROM countries";
-    public final String FIND_BY_ID_QUERY = "SELECT id AS country_id, name, iso_code, phone_code FROM countries WHERE id = ?";
+            country.id = company_profile.country_id
+            """;
     
 }
