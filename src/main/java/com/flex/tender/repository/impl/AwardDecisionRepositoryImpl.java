@@ -10,7 +10,6 @@ import com.flex.tender.repository.AwardDecisionRepository;
 import com.flex.tender.repository.mapper.AwardDecisionMapper;
 import com.flex.tender.repository.sql.mixins.AwardDecisionMixins;
 import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
