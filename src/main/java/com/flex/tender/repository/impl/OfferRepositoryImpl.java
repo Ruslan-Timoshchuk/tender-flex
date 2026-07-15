@@ -22,7 +22,6 @@ import com.flex.tender.repository.sql.mixins.CurrencyMixins;
 import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
 import com.flex.tender.repository.sql.mixins.OfferMixins;
 import com.flex.tender.repository.sql.mixins.TenderMixins;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -260,7 +259,11 @@ public class OfferRepositoryImpl implements OfferRepository {
     public boolean existsByTenderIdAndGlobalStatusIn(Integer tenderId, List<EOfferStatus> statuses) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("tenderId", tenderId)
-                .addValue("statuses", statuses);
+                .addValue(
+                          "statuses", 
+                          statuses.stream()
+                                  .map(Enum::name)
+                                  .toList());
         return Boolean.TRUE
                 .equals(jdbc.queryForObject(EXISTS_BY_TENDER_ID_AND_GLOBAL_STATUS_IN, parameters, Boolean.class));
     }

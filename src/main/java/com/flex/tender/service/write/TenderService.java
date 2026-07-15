@@ -20,4 +20,6 @@ public interface TenderService {
 
     void handleOnContractApprove(Tender tender);
 
+    void handleOnContractDecline(Tender tender);
+
 }

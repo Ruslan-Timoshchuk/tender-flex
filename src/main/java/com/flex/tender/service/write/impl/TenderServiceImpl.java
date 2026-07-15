@@ -80,8 +80,17 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public void handleOnContractApprove(Tender tender) {
+        closeTender(tender);
+    }
+
+    @Override
+    public void handleOnContractDecline(Tender tender) {
+        closeTender(tender);
+    }
+
+    private void closeTender(Tender tender) {
         tender.setGlobalStatus(TENDER_CLOSED);
         tenderRepository.update(tender);
-    }  
+    }
 
 }

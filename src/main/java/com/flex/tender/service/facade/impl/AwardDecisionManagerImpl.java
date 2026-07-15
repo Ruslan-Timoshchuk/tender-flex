@@ -1,23 +1,25 @@
 package com.flex.tender.service.facade.impl;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.flex.tender.model.AwardDecision;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.Tender;
+import com.flex.tender.model.enumeration.EOfferStatus;
 import com.flex.tender.payload.request.ApproveContractDecisionRequest;
 import com.flex.tender.payload.request.AwardOfferDecisionRequest;
 import com.flex.tender.payload.request.DeclineContractDecisionRequest;
 import com.flex.tender.service.facade.AwardDecisionManager;
 import com.flex.tender.service.read.AwardDecisionDetailsService;
 import com.flex.tender.service.read.ContractDetailsService;
+import com.flex.tender.service.read.OfferDetailsBatchService;
 import com.flex.tender.service.read.OfferDetailsService;
 import com.flex.tender.service.read.TenderDetailsService;
 import com.flex.tender.service.write.ContractService;
 import com.flex.tender.service.write.OfferService;
 import com.flex.tender.service.write.TenderService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +30,7 @@ public class AwardDecisionManagerImpl implements AwardDecisionManager {
     private final AwardDecisionDetailsService awardDecisionDetailsService;
     private final OfferDetailsService offerDetailsService;
     private final OfferService offerService;
+    private final OfferDetailsBatchService offerDetailsBatchService;
     private final ContractDetailsService contractDetailsService;
     private final ContractService contractService;
     private final TenderDetailsService tenderDetailsService;
@@ -44,11 +47,17 @@ public class AwardDecisionManagerImpl implements AwardDecisionManager {
 
     @Override
     public void declineContract(DeclineContractDecisionRequest declineContractDecisionRequest) {
-        AwardDecision awardDecision = awardDecisionDetailsService.findById(declineContractDecisionRequest.awardDecisionId());
+        AwardDecision awardDecision = awardDecisionDetailsService
+                .findById(declineContractDecisionRequest.awardDecisionId());
         Offer offer = offerDetailsService.findById(declineContractDecisionRequest.offerId());
         offerService.handleOnContractDecline(offer);
         Contract contract = contractDetailsService.findByAwardDecisionId(awardDecision.getId());
         contractService.decline(contract);
+        if (!offerDetailsBatchService.existsByTenderIdAndGlobalStatusIn(declineContractDecisionRequest.tenderId(),
+                List.of(EOfferStatus.SENT))) {
+            Tender tender = tenderDetailsService.findById(declineContractDecisionRequest.tenderId());
+            tenderService.handleOnContractDecline(tender);
+        }
     }
 
     @Override
