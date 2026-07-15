@@ -47,5 +47,9 @@ public class TenderMixins {
             tenders tender ON 
             cpv.id = tender.cpv_id
             """;
+    public final String TENDER_JOIN_OFFERS = """
+            tenders tender ON 
+            tender.id = offer.tender_id
+            """;
     
 }

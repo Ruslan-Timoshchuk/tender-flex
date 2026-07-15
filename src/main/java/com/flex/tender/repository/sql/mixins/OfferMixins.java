@@ -39,6 +39,7 @@ public class OfferMixins {
     public final String OFFER_ID_QUERY_COLUMN = "offer.id AS offer_id";
     public final String OFFER_JOIN_TENDERS = """
             offers offer ON 
-            offer.tender_id = tender.id""";
+            offer.tender_id = tender.id
+            """;
     
 }

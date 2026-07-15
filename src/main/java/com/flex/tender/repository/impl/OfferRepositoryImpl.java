@@ -21,6 +21,8 @@ import com.flex.tender.repository.sql.mixins.CountryMixins;
 import com.flex.tender.repository.sql.mixins.CurrencyMixins;
 import com.flex.tender.repository.sql.mixins.FileMetadataMixins;
 import com.flex.tender.repository.sql.mixins.OfferMixins;
+import com.flex.tender.repository.sql.mixins.TenderMixins;
+
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -64,6 +66,7 @@ public class OfferRepositoryImpl implements OfferRepository {
            LEFT JOIN %s 
            LEFT JOIN %s
            LEFT JOIN %s 
+           LEFT JOIN %s 
            WHERE contractor_id = :contractorId LIMIT :limit OFFSET :offset
            """.formatted(
                OfferMixins.OFFER_QUERY_COLUMNS,
@@ -74,7 +77,8 @@ public class OfferRepositoryImpl implements OfferRepository {
                CompanyProfileMixins.COMPANY_PROFILE_JOIN_OFFERS,
                CountryMixins.COUNTRY_JOIN_COMPANY_PROFILES,
                CurrencyMixins.CURRENCY_JOIN_OFFERS,
-               FileMetadataMixins.FILE_METADATA_JOIN_OFFERS);
+               FileMetadataMixins.FILE_METADATA_JOIN_OFFERS,
+               TenderMixins.TENDER_JOIN_OFFERS);
     public static final String FIND_BY_TENDER_PAGE_QUERY = """
            SELECT %s, %s, %s, %s, %s 
            FROM offers offer 
