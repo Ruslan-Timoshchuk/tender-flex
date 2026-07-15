@@ -30,7 +30,7 @@ public class ContractMixins {
             min_price = :minPrice, 
             max_price = :maxPrice, 
             currency_id = :currencyId,
-            file_id = :fileMetadataId, 
+            file_metadata_id = :fileMetadataId, 
             global_status = :globalStatus, 
             signed_deadline = :signedDeadline, 
             signed_date = :signedDate
