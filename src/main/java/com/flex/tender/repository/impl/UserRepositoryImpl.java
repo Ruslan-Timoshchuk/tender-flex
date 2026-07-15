@@ -28,10 +28,15 @@ public class UserRepositoryImpl implements UserRepository {
                 AuthorityMixins.AUTHORITY_JOIN_USERS_AUTHORITIES);
     public static final String FIND_BY_ID_QUERY = """
             SELECT %s, %s
-            FROM users user 
+            FROM users usr 
             LEFT JOIN %s  
             LEFT JOIN %s 
-            WHERE user.id = :id""";
+            WHERE usr.id = :id
+            """.formatted(
+                    UserMixins.USER_QUERY_COLUMNS,
+                    AuthorityMixins.AUTHORITY_QUERY_COLUMNS,
+                    AuthorityMixins.USER_AUTHORITY_JOIN_USERS,
+                    AuthorityMixins.AUTHORITY_JOIN_USERS_AUTHORITIES);
     
     private final NamedParameterJdbcTemplate jdbc;
     private final UserExtractor userExtractor;

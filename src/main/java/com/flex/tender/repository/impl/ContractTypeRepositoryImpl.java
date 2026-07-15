@@ -22,7 +22,9 @@ public class ContractTypeRepositoryImpl implements ContractTypeRepository {
     public static final String FIND_BY_ID_QUERY = """
             SELECT %s 
             FROM contract_types contract_type 
-            WHERE id = :id""";
+            WHERE id = :id
+            """.formatted(
+                ContractTypeMixins.CONTRACT_TYPE_QUERY_COLUMNS);
 
     private final NamedParameterJdbcTemplate jdbc;
     private final ContractTypeMapper contractTypeMapper;

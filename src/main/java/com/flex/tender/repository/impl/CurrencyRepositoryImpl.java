@@ -23,7 +23,8 @@ public class CurrencyRepositoryImpl implements CurrencyRepository {
            SELECT %s 
            FROM currencies currency 
            WHERE id = :id
-           """;
+           """.formatted(
+               CurrencyMixins.CURRENCY_QUERY_COLUMNS);
     
     private final NamedParameterJdbcTemplate jdbc;
     private final CurrencyMapper currencyMapper;
