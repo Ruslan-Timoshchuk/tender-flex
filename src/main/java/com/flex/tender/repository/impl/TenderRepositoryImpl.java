@@ -18,7 +18,6 @@ import com.flex.tender.repository.sql.mixins.CountryMixins;
 import com.flex.tender.repository.sql.mixins.CpvMixins;
 import com.flex.tender.repository.sql.mixins.OfferMixins;
 import com.flex.tender.repository.sql.mixins.TenderMixins;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository

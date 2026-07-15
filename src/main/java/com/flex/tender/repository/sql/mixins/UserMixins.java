@@ -3,7 +3,7 @@ package com.flex.tender.repository.sql.mixins;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class UserQueries {
+public class UserMixins {
 
     public final String FIND_BY_EMAIL_QUERY = """
             SELECT ur.id AS user_id, ur.first_name, ur.last_name, ur.email, 
