@@ -24,10 +24,13 @@ public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
                 RejectDecisionMixins.REJECT_DECISION_INSERT_VALUE_PARAMETERS);
     public static final String FIND_BY_ID_QUERY = """
             SELECT %s, %s 
-            FROM rejects reject
+            FROM rejects reject_decision
             LEFT JOIN %s 
-            WHERE reject.id = :id
-            """;
+            WHERE reject_decision.id = :id
+            """.formatted(
+                RejectDecisionMixins.REJECT_DECISION_QUERY_COLUMNS,
+                FileMetadataMixins.FILE_METADATA_QUERY_COLUMNS,
+                FileMetadataMixins.FILE_METADATA_JOIN_REJECT_DECISIONS);
     public static final String FIND_BY_TENDER_ID_QUERY = """
             SELECT %s, %s 
             FROM rejects reject_decision

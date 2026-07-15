@@ -207,7 +207,8 @@ public class OfferRepositoryImpl implements OfferRepository {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("globalStatus", offer.getGlobalStatus().name())
                 .addValue("awardDecisionId", awardDecisionId)
-                .addValue("rejectDecisionId", rejectDecisionId);
+                .addValue("rejectDecisionId", rejectDecisionId)
+                .addValue("id", offer.getId());
         jdbc.update(UPDATE_QUERY, parameters);
     }
 
