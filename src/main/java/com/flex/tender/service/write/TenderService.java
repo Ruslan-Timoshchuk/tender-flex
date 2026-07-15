@@ -18,4 +18,6 @@ public interface TenderService {
 
     void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate);
 
+    void handleOnContractApprove(Tender tender);
+
 }
