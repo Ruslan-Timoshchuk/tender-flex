@@ -26,11 +26,11 @@ public class FileMetadataMixins {
             file_metadata.id = offer.proposition_file_id""";
     public final String FILE_METADATA_JOIN_AWARD_DECISIONS = """
             files file_metadata ON 
-            file_metadata.id = award.award_file_id
+            file_metadata.id = award_decision.award_file_id
             """;
     public final String FILE_METADATA_JOIN_REJECT_DECISIONS = """
             files file_metadata ON 
-            file_metadata.id = reject.reject_file_id
+            file_metadata.id = reject_decision.reject_file_id
             """;
     public final String FILE_METADATA_JOIN_CONTRACTS = """
             files file_metadata ON 

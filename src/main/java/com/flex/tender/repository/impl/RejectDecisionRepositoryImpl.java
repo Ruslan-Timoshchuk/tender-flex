@@ -30,9 +30,9 @@ public class RejectDecisionRepositoryImpl implements RejectDecisionRepository {
             """;
     public static final String FIND_BY_TENDER_ID_QUERY = """
             SELECT %s, %s 
-            FROM rejects reject
+            FROM rejects reject_decision
             LEFT JOIN %s 
-            WHERE rt.tender_id = :tenderId
+            WHERE reject_decision.tender_id = :tenderId
             """.formatted(
                 RejectDecisionMixins.REJECT_DECISION_QUERY_COLUMNS,
                 FileMetadataMixins.FILE_METADATA_QUERY_COLUMNS,

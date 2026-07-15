@@ -5,6 +5,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class AwardDecisionColumns {
 
-    public final String AWARD_DECISION_ID = "award_id";
+    public final String AWARD_DECISION_ID = "award_decision_id";
     
 }
