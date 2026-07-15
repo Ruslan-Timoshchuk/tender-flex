@@ -8,7 +8,7 @@ public class CurrencyMixins {
     public final String CURRENCY_QUERY_COLUMNS = """
             currency.id AS currency_id, 
             currency.code, 
-            currency.symbol,
+            currency.symbol
             """;
     public final String CURRENCY_JOIN_OFFERS = """
             currencies currency ON 
