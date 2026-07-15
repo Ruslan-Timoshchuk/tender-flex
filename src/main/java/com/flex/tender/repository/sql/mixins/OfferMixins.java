@@ -31,7 +31,7 @@ public class OfferMixins {
             reject_decision_id = :rejectDecisionId
             """;
     public final String OFFER_QUERY_COLUMNS = """
-            offer.id AS offer_id, 
+            offer.id AS offer_id,
             offer.global_status, 
             offer.bid_price, 
             offer.publication_date

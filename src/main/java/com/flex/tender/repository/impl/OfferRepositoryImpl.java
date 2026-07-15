@@ -98,7 +98,7 @@ public class OfferRepositoryImpl implements OfferRepository {
                CurrencyMixins.CURRENCY_JOIN_OFFERS,
                FileMetadataMixins.FILE_METADATA_JOIN_OFFERS);
     public static final String FIND_BY_BIDDER_ID_AND_TENDER_ID_IN_QUERY = """
-            SELECT %s, %s, %s, %s, %s 
+            SELECT %s, %s, %s, %s, %s, %s 
             FROM offers offer 
             LEFT JOIN %s
             LEFT JOIN %s 
@@ -107,6 +107,7 @@ public class OfferRepositoryImpl implements OfferRepository {
             WHERE offer.bidder_id = :bidderId 
             AND offer.tender_id IN (:tenderIds)
             """.formatted(
+                TenderMixins.TENDER_ID_QUERY_COLUMN,    
                 OfferMixins.OFFER_QUERY_COLUMNS,
                 CompanyProfileMixins.COMPANY_PROFILE_QUERY_COLUMNS,
                 CountryMixins.COUNTRY_QUERY_COLUMNS,
