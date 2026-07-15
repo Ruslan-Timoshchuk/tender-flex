@@ -30,7 +30,7 @@ public class OfferMixins {
             award_decision_id = :awardDecisionId, 
             reject_decision_id = :rejectDecisionId
             """;
-    public static final String OFFER_QUERY_COLUMNS = """
+    public final String OFFER_QUERY_COLUMNS = """
             offer.id AS offer_id, 
             offer.global_status, 
             offer.bid_price, 
