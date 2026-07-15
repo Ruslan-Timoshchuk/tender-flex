@@ -31,8 +31,8 @@ public class OfferRepositoryImpl implements OfferRepository {
             INSERT INTO offers(%s)
             VALUES (%s)
             """.formatted(
-                OfferMixins.OFFER_INSER_COLUMNS,
-                OfferMixins.OFFER_INSER_VALUE_PARAMETERS);
+                OfferMixins.OFFER_INSERT_COLUMNS,
+                OfferMixins.OFFER_INSERT_VALUE_PARAMETERS);
     public static final String UPDATE_QUERY = """
             UPDATE offers
             SET %s

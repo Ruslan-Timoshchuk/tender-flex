@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class OfferMixins {
 
-    public final String OFFER_INSER_COLUMNS = """
+    public final String OFFER_INSERT_COLUMNS = """
             bidder_id, 
             tender_id, 
             company_profile_id, 
@@ -15,7 +15,7 @@ public class OfferMixins {
             publication_date, 
             proposition_file_id
             """;
-    public final String OFFER_INSER_VALUE_PARAMETERS = """
+    public final String OFFER_INSERT_VALUE_PARAMETERS = """
             :userId, 
             :tenderId, 
             :companyProfileId, 
