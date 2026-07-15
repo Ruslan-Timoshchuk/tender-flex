@@ -28,6 +28,10 @@ public class FileMetadataMixins {
             files file_metadata ON 
             file_metadata.id = award.award_file_id
             """;
+    public final String FILE_METADATA_JOIN_REJECT_DECISIONS = """
+            files file_metadata ON 
+            file_metadata.id = reject.reject_file_id
+            """;
     public final String FILE_METADATA_JOIN_CONTRACTS = """
             files file_metadata ON 
             file_metadata.id = contract.file_metadata_id
