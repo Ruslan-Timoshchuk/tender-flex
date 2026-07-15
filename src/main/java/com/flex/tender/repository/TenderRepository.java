@@ -3,7 +3,6 @@ package com.flex.tender.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import com.flex.tender.model.Tender;
 import com.flex.tender.model.enumeration.ETenderStatus;
 
@@ -11,9 +10,9 @@ public interface TenderRepository {
     
     Tender save(Tender tender);
 
-    Set<Tender> findWithPagination(Integer amountTenders, Integer amountTendersToSkip);
+    List<Tender> findWithPagination(Integer limit, Integer offset);
     
-    Set<Tender> findByContractorWithPagination(Integer contractorId, Integer amountTenders, Integer amountTendersToSkip);
+    List<Tender> findByContractorWithPagination(Integer contractorId, Integer limit, Integer offset);
 
     Integer countByContractor(Integer userId); 
     
@@ -23,7 +22,7 @@ public interface TenderRepository {
 
     void update(Tender tender);
 
-    Set<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate currentDate);
+    List<Tender> findActiveWhereSubmissionIsExpired(ETenderStatus status, LocalDate date);
 
     Map<Integer, Tender> findByOfferIdIn(List<Integer> offerIds);
 

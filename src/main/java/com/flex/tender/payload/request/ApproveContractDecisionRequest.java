@@ -5,5 +5,6 @@ package com.flex.tender.payload.request;
  */
 public record ApproveContractDecisionRequest(
         Integer offerId,
-        Integer awardDecisionId) {
+        Integer awardDecisionId,
+        Integer tenderId) {
 }

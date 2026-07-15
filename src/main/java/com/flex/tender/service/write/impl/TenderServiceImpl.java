@@ -76,6 +76,21 @@ public class TenderServiceImpl implements TenderService {
     public void closeActiveWithExpiredSubmission(ETenderStatus status, LocalDate currentDate) {
         tenderRepository.findActiveWhereSubmissionIsExpired(status, currentDate)
                 .forEach(this::closeIfNoActiveOffers);
-    }  
+    }
+
+    @Override
+    public void handleOnContractApprove(Tender tender) {
+        closeTender(tender);
+    }
+
+    @Override
+    public void handleOnContractDecline(Tender tender) {
+        closeTender(tender);
+    }
+
+    private void closeTender(Tender tender) {
+        tender.setGlobalStatus(TENDER_CLOSED);
+        tenderRepository.update(tender);
+    }
 
 }

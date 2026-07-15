@@ -20,7 +20,7 @@ public class AuthorityMapper implements RowMapper<Authority> {
         return Authority.builder()
                         .id(resultSet.getInt(AUTHORITY_ID))
                         .title(EAuthority.valueOf(resultSet.getString(AUTHORITY_TITLE)))
-                        .build();
+               .build();
     }
 
 }

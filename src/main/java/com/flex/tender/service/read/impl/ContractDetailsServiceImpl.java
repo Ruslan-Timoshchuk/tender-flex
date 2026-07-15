@@ -1,6 +1,6 @@
 package com.flex.tender.service.read.impl;
 
-import java.util.Set;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import com.flex.tender.model.Contract;
 import com.flex.tender.model.enumeration.EContractStatus;
@@ -25,7 +25,7 @@ public class ContractDetailsServiceImpl implements ContractDetailsService {
     }
     
     @Override
-    public Set<Contract> findAll(EContractStatus globalStatus) {
+    public List<Contract> findAll(EContractStatus globalStatus) {
         return contractRepository.findAll(globalStatus);
     }
     

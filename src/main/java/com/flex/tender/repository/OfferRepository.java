@@ -2,7 +2,6 @@ package com.flex.tender.repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import com.flex.tender.model.Offer;
 import com.flex.tender.model.enumeration.EOfferStatus;
 
@@ -12,11 +11,11 @@ public interface OfferRepository {
     
     void update(Offer offer);
     
-    Set<Offer> findByBidderWithPagination(Integer bidderId, Integer amountOffers, Integer amountOffersToSkip);
+    List<Offer> findByBidderWithPagination(Integer bidderId, Integer limit, Integer offset);
     
-    Set<Offer> findByContractorWithPagination(Integer contractorId, Integer amountOffers, Integer amountOffersToSkip);
+    List<Offer> findByContractorWithPagination(Integer contractorId, Integer limit, Integer offset);
     
-    Set<Offer> findByTenderWithPagination(Integer tenderId, Integer amountOffers, Integer amountOffersToSkip);
+    List<Offer> findByTenderWithPagination(Integer tenderId, Integer limit, Integer offset);
     
     Integer countByBidder(Integer bidderId);
     

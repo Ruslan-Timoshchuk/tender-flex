@@ -12,12 +12,16 @@ public class FileMetadataMapper implements RowMapper<FileMetadata> {
 
     @Override
     public FileMetadata mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return mapFileMetadata(resultSet);
+    }
+    
+    public FileMetadata mapFileMetadata(ResultSet resultSet) throws SQLException {
         return FileMetadata.builder()
                            .id(resultSet.getInt(FILE_METADATA_ID))
                            .name(resultSet.getString(FILE_METADATA_NAME))
                            .contentType(resultSet.getString(FILE_METADATA_CONTENT_TYPE))
-                           .awsS3fileKey(resultSet.getString(FILE_METADATA_AWS_S3_FILE_KEY))
-                           .build();
+                           .awsS3fileKey(resultSet.getString(FILE_METADATA_AWS3_KEY))
+               .build();
     }
-
+    
 }

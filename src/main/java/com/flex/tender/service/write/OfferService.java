@@ -24,5 +24,5 @@ public interface OfferService {
     Offer handleOnContractApprove(Offer offer);
 
     Offer handleOnSigningDeadlinePassed(Offer offer);
-
+    
 }
